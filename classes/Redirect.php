@@ -1,4 +1,8 @@
 <?php
+/*
+UserSpice 43
+by Curtis Parham and Dan Hoover at http://UserSpice.com
+*/
 class Redirect {
 	public static function to($location = null){
 		if ($location) {
@@ -10,10 +14,10 @@ class Redirect {
 						break;
 				}
 			}
-   	 		if (!headers_sent()){    
+   	 		if (!headers_sent()){
         		header('Location: '.$location);
         		exit();
-        	} else {  
+        	} else {
 		        echo '<script type="text/javascript">';
 		        echo 'window.location.href="'.$location.'";';
 		        echo '</script>';
@@ -21,7 +25,7 @@ class Redirect {
 		        echo '<meta http-equiv="refresh" content="0;url='.$location.'" />';
 		        echo '</noscript>'; exit;
 		   	 	}
-		}	
+		}
 	}
-	
+
 }

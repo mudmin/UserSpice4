@@ -11,28 +11,8 @@ by Curtis Parham and Dan Hoover at http://UserSpice.com
 <?php if (!securePage($_SERVER['PHP_SELF'])){die();} ?>
 <?php
 //PHP Goes Here!
-$errors = [];
-$successes = [];
-
-//Forms posted
-if(!empty($_POST))
-{
-  $token = $_POST['csrf'];
-if(!Token::check($token)){
-  die('Token doesn\'t match!');
-}
-  $deletions = $_POST['delete'];
-  if ($deletion_count = deleteUsers($deletions)){
-    $successes[] = lang("ACCOUNT_DELETIONS_SUCCESSFUL", array($deletion_count));
-  }
-  else {
-    $errors[] = lang("SQL_ERROR");
-  }
-}
-
-$userData = fetchAllUsers(); //Fetch information for all users
-
-
+$userQ = $db->query("SELECT * FROM users");
+$users = $userQ->results();
 ?>
 <div id="page-wrapper">
 
@@ -43,18 +23,27 @@ $userData = fetchAllUsers(); //Fetch information for all users
       <div class="col-sm-12">
 
         <!-- Left Column -->
-        <div class="class col-sm-1"></div>
+        <div class="class col-sm-4"></div>
 
         <!-- Main Center Column -->
-        <div class="class col-sm-10">
-          <!-- Content Goes Here. Class width can be adjusted -->
-          <h1>
-            Administrate Users
-          </h1>
-          <?php
-          echo resultBlock($errors,$successes);
+        <div class="class col-sm-2">
 
-          include("views/userspice/_admin_users.php");
+          <h1>
+                <div class="input-group">
+                  <!-- USE TWITTER TYPEAHEAD JSON WITH API TO SEARCH -->
+                  <input class="form-control" id="system-search" name="q" placeholder="Search Users..." required>
+                  <span class="input-group-btn">
+                      <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                  </span>
+              </div>
+          </form><br>
+                      View All Users
+          </h1>
+          <form action="#" method="get">
+          <?php
+
+
+          include("views/userspice/_view_all_users.php");
 ?>
 
           <!-- End of main content section -->

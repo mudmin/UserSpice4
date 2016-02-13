@@ -1,7 +1,7 @@
 <?php
 /*
-UserSpice 4
-by Dan Hoover at http://UserSpice.com
+UserSpice 43
+by Curtis Parham and Dan Hoover at http://UserSpice.com
 */
 
 $publickey = $your_public_key; // the Site key you received when you registered

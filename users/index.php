@@ -1,11 +1,12 @@
 <?php
 /*
-UserSpice 4
-by Dan Hoover at http://UserSpice.com
+UserSpice 43
+by Curtis Parham and Dan Hoover at http://UserSpice.com
 */
 ?>
 <?php
-if($user->isLoggedIn()){
+require_once("../core/init.php");
+if(isset($user) && $user->isLoggedIn()){
   Redirect::to('account.php');
 }else{
   Redirect::to('login.php');

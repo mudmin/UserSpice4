@@ -1,4 +1,4 @@
-The new UserSpice installer is, well, new.  It might not work on every system. Never fear, though. There's always another way. 
+The new UserSpice installer is, well, new.  It might not work on every system. Never fear, though. There's always another way.
 
 Step 1
 Simply import the sql dump (located in core/install/includes in the zip file you downloaded)into your database using phpmyadmin or your sql tool of choice.
@@ -8,8 +8,8 @@ Make three sets of changes to this init.php file.
 	a. Put your localhost and live server in the top section (you'll have to do it 2x for each server)
 	b. Fill in your database credentials
 	c. Fill in your recaptcha keys (or use the test ones included)
-	
-Step 3. 
-Delete everything inside your core folder and copy the new init.php in there. 
+
+Step 3.
+Delete everything inside your core folder and copy the new init.php in there.
 
 That's it. Visit the forums at UserSpice.com if you have any issues and remember, this is new software. We will have bugs to work out.

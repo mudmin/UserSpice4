@@ -1,4 +1,8 @@
 <?php
+/*
+UserSpice 43
+by Curtis Parham and Dan Hoover at http://UserSpice.com
+*/
 class Input {
 	public static function exists($type = 'post'){
 		switch ($type) {

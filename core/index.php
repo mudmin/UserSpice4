@@ -142,8 +142,9 @@ if (version_compare(phpversion(), $php_ver, '<')) {
             $errors = 1;
             ?>
             <strong><font color="red">Unwriteable<br />
-            Attempting to automatically fix this.  Please refresh the page and see if this error goes away.
-            </font></strong>
+            </font>
+          It is really important that you be able to write to the init file! If you don't know how to chmod your init file, <a href="http://www.userspice.com/installation-issues/">please read this guide at UserSpice.com.</a>
+          </strong>
             <?php
           }
           ?>
@@ -230,7 +231,7 @@ if (version_compare(phpversion(), $php_ver, '<')) {
           <?php
         } elseif ($errors===1){
           ?>
-          <font color="red"><strong>You have errors listed in the System Requirement Check that must be corrected before continuing. If you have an unwritable <?=$config_file?>, it is suggested that you chmod that file to 666 for installation and then chmod it to 644 after installation.
+          <font color="red"><strong>You have errors listed in the System Requirement Check that must be corrected before continuing. If you have an unwritable <?=$config_file?>, it is suggested that you chmod that file to 666 for installation and then chmod it to 644 after installation. <a href="http://www.userspice.com/installation-issues/">please read this guide</a>, or if you are comfortable importing a SQL dump and editing an init.php file manually, you can follow the "if install fails" instructions in the root folder.
            </font></strong>
           <?php
         }

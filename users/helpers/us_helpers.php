@@ -1,4 +1,9 @@
-<?php // UserSpice Specific Functions
+<?php
+/*
+UserSpice 43
+by Curtis Parham and Dan Hoover at http://UserSpice.com
+*/
+ // UserSpice Specific Functions
 function testUS(){
 echo "<br>";
 echo "UserSpice Functions have been properly included";
@@ -303,6 +308,7 @@ foreach($permission as $id){
     foreach($users as $id){
       $query1 = $db->query("DELETE FROM users WHERE id = ?",array($id));
       $query2 = $db->query("DELETE FROM user_permission_matches WHERE id = ?",array($id));
+      $query3 = $db->query("DELETE FROM profiles WHERE id = ?",array($id));
       $i++;
     }
     return $i;
@@ -341,7 +347,7 @@ foreach($permission as $id){
     //If user is not logged in, deny access
     elseif(!$user->isLoggedIn())
     {
-      Redirect::to(env().'users/login.php');
+      Redirect::to(env('client').'users/login.php');
       return false;
     }
     else {

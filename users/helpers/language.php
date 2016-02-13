@@ -1,7 +1,7 @@
 <?php
 /*
-UserCake Version: 3.1.0beta
-
+UserSpice 43
+by Curtis Parham and Dan Hoover at http://UserSpice.com
 */
 
 /*

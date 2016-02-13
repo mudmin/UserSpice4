@@ -1,12 +1,12 @@
 <?php
 /*
-UserSpice 4
+UserSpice 43
 by Dan Hoover at http://UserSpice.com
 */
 ?>
-<?php require_once("includes/us_header.php"); ?>
+<?php require_once("includes/userspice/us_header.php"); ?>
 
-<?php require_once("includes/us_navigation.php"); ?>
+<?php require_once("includes/userspice/us_navigation.php"); ?>
 
 <?php if (!securePage($_SERVER['PHP_SELF'])){die();} ?>
 <?php
@@ -16,6 +16,28 @@ by Dan Hoover at http://UserSpice.com
 // }
 
 //PHP Goes Here!
+delete_user_online(); //Deletes sessions older than 30 minutes
+//Find users who have logged in in X amount of time.
+$date = date("Y-m-d H:i:s");
+// echo $date."<br>";
+$hour = date("Y-m-d H:i:s", strtotime("-1 hour", strtotime($date)));
+$today = date("Y-m-d H:i:s", strtotime("-1 day", strtotime($date)));
+$week = date("Y-m-d H:i:s", strtotime("-1 week", strtotime($date)));
+$month = date("Y-m-d H:i:s", strtotime("-1 month", strtotime($date)));
+
+$usersHourQ = $db->query("SELECT * FROM users WHERE last_login > ?",array($hour));
+$usersHour = $usersHourQ->results();
+$hourCount = $usersHourQ->count();
+
+$usersTodayQ = $db->query("SELECT username FROM users WHERE last_login > ?",array($today));
+$dayCount = $usersTodayQ->count();
+
+$usersWeekQ = $db->query("SELECT username FROM users WHERE last_login > ?",array($week));
+$weekCount = $usersWeekQ->count();
+
+$usersMonthQ = $db->query("SELECT username FROM users WHERE last_login > ?",array($month));
+$monthCount = $usersMonthQ->count();
+
 $usersQ = $db->query("SELECT * FROM users");
 $user_count = $usersQ->count();
 
@@ -63,6 +85,12 @@ if($settings->site_offline != $_POST['site_offline']) {
   $fields=array('site_offline'=>$site_offline);
   $db->update('settings',1,$fields);
 }
+if($settings->track_guest != $_POST['track_guest']) {
+  $track_guest = Input::get('track_guest');
+  $fields=array('track_guest'=>$track_guest);
+  $db->update('settings',1,$fields);
+}
+
 Redirect::to('admin.php');
 }
 
@@ -100,7 +128,6 @@ if($settings->css3 != $_POST['css3']) {
   $db->update('settings',1,$fields);
 }
 
-
 Redirect::to('admin.php');
 }
 
@@ -115,293 +142,30 @@ Redirect::to('admin.php');
         <h1 class="page-header">
           Administrator Control Panel
         </h1>
-      </div>
     </div>
 
     <!-- /.row -->
+<?php
+// $date = date("Y-m-d H:i:s");
+// echo $date;
+// $thirtyMin = $date = strtotime(date('Y-m-d H:i:s') . ' -30 minutes');
+// echo $thirtyMin;
+// $date = new DateTime();
+// echo $date->format("d-m-Y H:i:s").'<br />';
 
-
-    <div class="row">
-      <div class="col-lg-3 col-md-6">
-        <div class="panel panel-primary">
-          <div class="panel-heading">
-            <div class="row">
-              <div class="col-xs-3">
-                <i class="fa fa-file-text fa-5x"></i>
-              </div>
-              <div class="col-xs-9 text-right">
-                You have
-                <?php
-                echo  "<div class='huge'>{$page_count}</div>"
-                ?>
-                <div>Pages</div>
-              </div>
-            </div>
-          </div>
-          <a href="admin_pages.php">
-            <div class="panel-footer">
-              <span class="pull-left">Manage Them</span>
-              <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-              <div class="clearfix"></div>
-            </div>
-          </a>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-6">
-        <div class="panel panel-green">
-          <div class="panel-heading">
-            <div class="row">
-              <div class="col-xs-3">
-                <i class="fa fa-lock fa-5x"></i>
-              </div>
-              <div class="col-xs-9 text-right">
-                You have
-                <?php
-                echo  "<div class='huge'>{$level_count}</div>"
-                ?>
-                <div>Permission Levels</div>
-              </div>
-            </div>
-          </div>
-          <a href="admin_permissions.php">
-            <div class="panel-footer">
-              <span class="pull-left">Manage Them</span>
-              <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-              <div class="clearfix"></div>
-            </div>
-          </a>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-6">
-        <div class="panel panel-yellow">
-          <div class="panel-heading">
-            <div class="row">
-              <div class="col-xs-3">
-                <i class="fa fa-user fa-5x"></i>
-              </div>
-              <div class="col-xs-9 text-right">
-                You have
-                <?php
-                echo  "<div class='huge'>{$user_count}</div>"
-                ?>
-                <div> Users</div>
-              </div>
-            </div>
-          </div>
-          <a href="admin_users.php">
-            <div class="panel-footer">
-              <span class="pull-left">Manage Them</span>
-              <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-              <div class="clearfix"></div>
-            </div>
-          </a>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-6">
-        <div class="panel panel-red">
-          <div class="panel-heading">
-            <div class="row">
-              <div class="col-xs-3">
-                <i class="fa fa-paper-plane fa-5x"></i>
-              </div>
-              <div class="col-xs-9 text-right">
-                You have
-
-                <div class='huge'>9</div>
-
-                <div>Email Settings</div>
-              </div>
-            </div>
-          </div>
-          <?php if($user->data()->id==1){ ?>
-            <a href='email_settings.php'>
-              <div class='panel-footer'>
-                <span class='pull-left'>
-                  Manage Them</span>
-                  <span class='pull-right'><i class='fa fa-arrow-circle-right'></i></span>
-                  <div class='clearfix'></div>
-                </div>
-              </a>
-              <?php }else{ ?>
-                <div class='panel-footer'>
-                  <span class='pull-left'>
-                    Restricted Area</span>
-                    <span class='pull-right'><i class='fa fa-arrow-circle-right'></i></span>
-                    <div class='clearfix'></div>
-                  </div>
-                  <?php } ?>
-
-
-                </div>
-              </div>
-            </div>
-            <!-- /.row -->
-            <div class="row">
-              <div class="col-xs-12 col-sm-6 col-md-4 col-sm-offset-1 col-md-offset-1">
-                <div class="panel panel-default">
-                  <!-- Default panel contents -->
-                  <form class="" action="admin.php" name="settings" method="post">
-
-                    <input class='btn btn-danger' type='submit' name="settings" value='Update Settings' class='submit' />
-
-                    <div class="panel-heading" align="center"><strong ><h4 >UserSpice Settings</h4>(some are not working yet!) </strong></div>
-
-  <!-- List group -->
-  <table class="table table-striped">
-   <thead>
-     <tr>
-       <th>Option</th>
-       <th>Setting</th>
-     </tr>
-   </thead>
-   <tbody>
-
-     <!-- Site Name -->
-<tr>
-<td><label for="site_name">Site Name</label></td>
-<td>
-<input type="text" class="form-control" name="site_name" id="site_name" value="<?=$settings->site_name?>">
-</td>
-</tr>
-     <!-- Recaptcha Option -->
-<tr>
-<td><label for="recaptcha">Recaptcha</label></td>
-<td><select id="recaptcha" class="form-control" name="recaptcha">
-  <option value="1" <?php if($settings->recaptcha==1) echo 'selected="selected"'; ?> >Enabled</option>
-<option value="0" <?php if($settings->recaptcha==0) echo 'selected="selected"'; ?> >Disabled</option>
-<label for="recaptcha" class="form-control"></label></select></td>
-</tr>
-
-<!-- Login Via Username or Email -->
-<tr>
-<td><label for="login_type">Login Using (disabled)</label></td>
-<td><select id="login_type" class="form-control" name="login_type">
-<option value="email" <?php if($settings->login_type=='email') echo 'selected="selected"'; ?> >Email</option>
-<option value="username" <?php if($settings->login_type=='username') echo 'selected="selected"'; ?> >Username</option>
-<label for="login_type" class="form-control"></label></select></td>
-</tr>
-
-<!-- Force SSL -->
-<tr>
-<td><label for="force_ssl">Force SSL (disabled)</label></td>
-<td><select id="force_ssl" class="form-control" name="force_ssl">
-<option value="1" <?php if($settings->force_ssl==1) echo 'selected="selected"'; ?> >Yes</option>
-<option value="0" <?php if($settings->force_ssl==0) echo 'selected="selected"'; ?> >No</option>
-<label for="force_ssl" class="form-control"></label></select></td>
-</tr>
-
-<!-- Force Password Reset -->
-<tr>
-<td><label for="force_pr">Force Password Reset (disabled)</label></td>
-<td><select id="force_pr" class="form-control" name="force_pr">
-<option value="1" <?php if($settings->force_pr==1) echo 'selected="selected"'; ?> >Yes</option>
-<option value="0" <?php if($settings->force_pr==0) echo 'selected="selected"'; ?> >No</option>
-<label for="force_pr" class="form-control"></label></select></td>
-</tr>
-
-<!-- Site Offline -->
-<tr>
-<td><label for="site_offline">Site Offline</label></td>
-<td><select id="site_offline" class="form-control" name="site_offline">
-<option value="1" <?php if($settings->site_offline==1) echo 'selected="selected"'; ?> >Yes</option>
-<option value="0" <?php if($settings->site_offline==0) echo 'selected="selected"'; ?> >No</option>
-<label for="site_offline" class="form-control"></label></select></td>
-</tr>
-<input type="hidden" name="csrf" value="<?=Token::generate();?>" >
-
-
-
-
-</form>
-</tbody>
-</table>
-</div>
-</div>
-<div class="row">
-  <div class="col-xs-12 col-sm-6 col-md-4 col-sm-offset-1 col-md-offset-1">
-    <div class="panel panel-default">
-      <form class="" action="admin.php" name="css" method="post">
-
-        <input class='btn btn-large btn-primary' type='submit' name="css" value='Save CSS Settings' class='submit' />
-        <!-- Test CSS Settings -->
-        <br>
-        <strong><h4 align="center">UserSpice CSS Settings</h4></strong>
-        <br>
-        <label for="us_css1">Primary Color Scheme (Loaded 1st)</label>
-        <select class="form-control" name="us_css1">
-          <option selected="selected"><?=$settings->us_css1?></option>
-          <?php foreach(glob('css/color_schemes/*.css') as $filename){
-            // $rest = substr($filename, 7);
-            echo "<option value=".$filename.">".$filename."</li>";
-          }
-          ?>
-
-        </select>
-
-        <br>
-        <label for="us_css2">Secondary UserSpice CSS (Loaded 2nd)</label>
-        <select class="form-control" name="us_css2">
-          <option selected="selected"><?=$settings->us_css2?></option>
-          <?php foreach(glob('css/*.css') as $filename){
-            // $rest = substr($filename, 7);
-            echo "<option value=".$filename.">".$filename."</li>";
-          }
-          ?>
-        </select>
-
-        <br>
-        <label for="us_css3">Custom UserSpice CSS (Loaded 3rd)</label>
-        <select class="form-control" name="us_css3">
-          <option selected="selected"><?=$settings->us_css3?></option>
-          <?php foreach(glob('css/*.css') as $filename){
-            // $rest = substr($filename, 7);
-            echo "<option value=".$filename.">".$filename."</li>";
-          }
-          ?>
-        </select>
-        <br>
-        <strong><h4 align="center">Front End CSS Settings</h4></strong>
-        <br>
-        <label for="css1"> Primary Color Scheme (Loaded First)</label>
-        <select class="form-control" name="css1">
-          <option selected="selected"><?=$settings->css1?></option>
-
-          <?php foreach(glob('css/color_schemes/*.css') as $filename){
-            // $rest = substr($filename, 7);
-            echo "<option value=".$filename.">".$filename."</li>";
-          }
-          ?>
-  </select>
-
-        <br>
-        <label for="css2">Secondary Front End CSS (Loaded 2nd)</label>
-        <select class="form-control" name="css2">
-            <option selected="selected"><?=$settings->css2?></option>
-          <?php foreach(glob('css/*.css') as $filename){
-            // $rest = substr($filename, 7);
-            echo "<option value=".$filename.">".$filename."</li>";
-          }
-          ?>
-
-        </select>
-
-        <br>
-        <label for="css3">Custom Front End CSS (Loaded 3rd)</label>
-        <select class="form-control" name="css3">
-          <option selected="selected"><?=$settings->css3?></option>
-          <?php foreach(glob('css/*.css') as $filename){
-            // $rest = substr($filename, 7);
-            echo "<option value=".$filename.">".$filename."</li>";
-          }
-          ?>
-
-        </select>
-      </form>
-    </div>
+// $date = date("Y-m-d H:i:s");
+// echo $date."<br>";
+// $datetime_from = date("Y-m-d H:i:s", strtotime("-45 minutes", strtotime($date)));
+// echo $datetime_from;
+?>
+<!-- Top Admin Panels -->
+<?php require_once("views/admin_panel/_top_panels.php");?>
+<?php require_once("views/admin_panel/_css_settings.php");?>
+<?php require_once("views/admin_panel/_main_settings.php");?>
 
     <!-- footers -->
-    <?php require_once("includes/us_page_footer.php"); // the final html footer copyright row + the external js calls ?>
+    <?php require_once("includes/userspice/us_page_footer.php"); // the final html footer copyright row + the external js calls ?>
 
     <!-- Place any per-page javascript here -->
 
-    <?php require_once("includes/us_html_footer.php"); // currently just the closing /body and /html ?>
+    <?php require_once("includes/userspice/us_html_footer.php"); // currently just the closing /body and /html ?>

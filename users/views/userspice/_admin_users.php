@@ -1,5 +1,13 @@
+<div class="input-group">
+<!-- USE TWITTER TYPEAHEAD JSON WITH API TO SEARCH -->
+<input class="form-control" id="system-search" name="q" placeholder="Search..." required>
+<span class="input-group-btn">
+  <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+</span>
+</div>
+</form><br>
 <form name='adminUsers' action='<?=$_SERVER['PHP_SELF']?>' method='post'>
-<table class='table table-hover'>
+<table class='table table-hover table-list-search'>
 <input type="hidden" name="csrf" value="<?=Token::generate();?>" >
 <tr>
 <th>Delete</th><th>Username</th><th>Email</th><th>First Name</th><th>Last Name</th><th>Join Date</th><th>Last Sign In</th>

@@ -1,4 +1,8 @@
 <?php
+/*
+UserSpice 43
+by Curtis Parham and Dan Hoover at http://UserSpice.com
+*/
 class DB {
 	private static $_instance = null;
 	private $_pdo, $_query, $_error = false, $_results, $_resultsArray, $_count = 0, $_lastId;

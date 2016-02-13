@@ -1,7 +1,7 @@
 <?php
 /*
-UserSpice 4
-by Dan Hoover at http://UserSpice.com
+UserSpice 43
+by Curtis Parham and Dan Hoover at http://UserSpice.com
 */
 ?>
 </div>
@@ -42,7 +42,7 @@ p {
   <!-- /#wrapper -->
 
   <!-- jQuery -->
-  <script src="users/js/jquery.js"></script>
+  <script src="js/jquery.js"></script>
 
   <!-- Bootstrap Core JavaScript -->
-  <script src="users/js/bootstrap.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>

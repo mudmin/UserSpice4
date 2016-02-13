@@ -1,15 +1,9 @@
-<?php
-/*
-UserSpice 4
-by Dan Hoover at http://UserSpice.com
-*/
-?>
-<?php if (file_exists("core/index.php")) {
-	header("Location: core/index.php");} ?>
+<?php ob_start(); if(!file_exists("core/index.php")){require_once("users/includes/frontend/header.php");
+}else{
+header("Location: core/index.php");
+}
 
-<?php require_once("users/includes/header.php"); ?>
-
-<?php require_once("users/includes/navigation.php"); ?>
+require_once("users/includes/frontend/navigation.php"); ?>
 
         <div id="page-wrapper">
 
@@ -35,8 +29,8 @@ by Dan Hoover at http://UserSpice.com
 
 <!-- Content Ends Here -->
 <!-- footers -->
-<?php require_once("users/includes/page_footer.php"); // the final html footer copyright row + the external js calls ?>
+<?php require_once("users/includes/frontend/page_footer.php"); // the final html footer copyright row + the external js calls ?>
 
 <!-- Place any per-page javascript here -->
 
-<?php require_once("users/includes/html_footer.php"); // currently just the closing /body and /html ?>
+<?php require_once("users/includes/frontend/html_footer.php"); // currently just the closing /body and /html ?>

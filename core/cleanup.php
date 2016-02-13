@@ -14,9 +14,12 @@ else
 
 rrmdir("install");
 ?>
-Everything SHOULD be installed properly.  If you get an error when you visit the homepage, take a good look at the error. You will most likely have an extra / or be missing a / from the path shown in the error message. Just edit /core/init.ini to reflect the proper path and you should be good to go.<br><br>
+<p align="center">Everything SHOULD be installed properly. If you get an error when you visit the homepage,<br> take a good look at the error. You will most likely have an <strong>extra / </strong><br> or be <strong>missing a /</strong> from the path shown in the error message. <br>Just <strong>edit /core/init.ini</strong> to reflect the proper path and you should be good to go.</p>
 
-<h3 align="center"><a class="button" href="../index.php">Visit UserSpice Homepage</a></h3>
+<p align="center">If you had <strong>errors</strong> at the top of this page, you MUST go into the /core folder and <strong>delete everything except init.php.</strong><br> Leaving these files present is a security vulnerability.</p>
+
+
+<h3 align="center"><a class="button" href="../index.php">Check Out UserSpice!</a></h3>
 <?php
 function rrmdir($dir) {
   if (is_dir($dir)) {

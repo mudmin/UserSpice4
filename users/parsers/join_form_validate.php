@@ -1,7 +1,6 @@
 <?php
 require_once '../../core/init.php';
 require_once '../helpers/helpers.php';
-
 $validate = new Validate();
 $validation = $validate->check($_POST,array(
   'username' => array(

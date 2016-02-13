@@ -1,12 +1,11 @@
-<?php
+<?php ob_start();
 /*
-UserSpice 4
-by Dan Hoover at http://UserSpice.com
+UserSpice 43
+by Curtis Parham and Dan Hoover at http://UserSpice.com
 */
-?>
-<?php require_once("users/includes/header.php"); ?>
+?><?php require_once("users/includes/frontend/header.php"); ?>
 
-<?php require_once("users/includes/navigation.php"); ?>
+<?php require_once("users/includes/frontend/navigation.php"); ?>
 
 <?php if (!securePage($_SERVER['PHP_SELF'])){die();} ?>
 
@@ -33,8 +32,8 @@ by Dan Hoover at http://UserSpice.com
 
 
 <!-- Content Ends Here -->
-<?php require_once("users/includes/page_footer.php"); // the final html footer copyright row + the external js calls ?>
+<?php require_once("users/includes/frontend/page_footer.php"); // the final html footer copyright row + the external js calls ?>
 
 <!-- Place any per-page javascript here -->
 
-<?php require_once("users/includes/html_footer.php"); // currently just the closing /body and /html ?>
+<?php require_once("users/includes/frontend/html_footer.php"); // currently just the closing /body and /html ?>

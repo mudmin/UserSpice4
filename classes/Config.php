@@ -1,5 +1,8 @@
 <?php
-//echo "config included";
+/*
+UserSpice 43
+by Curtis Parham and Dan Hoover at http://UserSpice.com
+*/
 
 //if you are ever questioning if your classes are being included, uncomment the line above and the words "config included" should show at the top of your page.
 class Config {

@@ -3,7 +3,6 @@ $errors = [];
 $successes = [];
 echo resultBlock($errors,$successes);
 ?>
-
 <form name='adminPermissions' action='<?=$_SERVER['PHP_SELF']?>' method='post'>
   <h2>Create a new permission group</h2>
   <p>
@@ -12,7 +11,15 @@ echo resultBlock($errors,$successes);
   </p>
 <br>
   <h2>Choose a permission group to edit</h2>
-  <table class='table table-hover'>
+  <div class="input-group col-sm-6">
+  <!-- USE TWITTER TYPEAHEAD JSON WITH API TO SEARCH -->
+  <input class="form-control" id="system-search" name="q" placeholder="Search Permission Levels..." required>
+  <span class="input-group-btn">
+    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+  </span>
+  </div>
+  </form><br>
+  <table class='table table-hover table-list-search'>
     <tr>
       <th>Delete</th><th>Permission Name</th>
     </tr>

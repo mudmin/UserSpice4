@@ -1,13 +1,13 @@
 <?php
 /*
-UserSpice 4
-by Dan Hoover at http://UserSpice.com
+UserSpice 43
+by Curtis Parham and Dan Hoover at http://UserSpice.com
 */
 ?>
-<?php require_once("includes/us_header.php"); ?>
+<?php require_once("includes/userspice/us_header.php"); ?>
 <!-- stuff can go here -->
 
-<?php require_once("includes/us_navigation.php"); ?>
+<?php require_once("includes/userspice/us_navigation.php"); ?>
 
 <?php if (!securePage($_SERVER['PHP_SELF'])){die();} ?>
 <?php
@@ -110,8 +110,8 @@ $permissionData = fetchAllPermissions();
 
     <!-- /.row -->
     <!-- footers -->
-    <?php require_once("includes/us_page_footer.php"); // the final html footer copyright row + the external js calls ?>
+    <?php require_once("includes/userspice/us_page_footer.php"); // the final html footer copyright row + the external js calls ?>
 
     <!-- Place any per-page javascript here -->
 
-    <?php require_once("includes/us_html_footer.php"); // currently just the closing /body and /html ?>
+    <?php require_once("includes/userspice/us_html_footer.php"); // currently just the closing /body and /html ?>

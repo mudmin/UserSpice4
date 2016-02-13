@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 06, 2016 at 10:30 PM
+-- Generation Time: Feb 12, 2016 at 02:16 AM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `pages` (
   `page` varchar(100) NOT NULL,
   `private` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=20 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=24 ;
 
 --
 -- Dumping data for table `pages`
@@ -101,7 +101,10 @@ INSERT INTO `pages` (`id`, `page`, `private`) VALUES
 (16, 'logout.php', 0),
 (17, 'user_settings.php', 1),
 (18, 'verify.php', 0),
-(19, 'login_email.php', 0);
+(19, 'login_email.php', 0),
+(20, 'profile.php', 1),
+(21, 'view_all_users.php', 1),
+(22, 'edit_profile.php', 1);
 
 -- --------------------------------------------------------
 
@@ -134,7 +137,7 @@ CREATE TABLE IF NOT EXISTS `permission_page_matches` (
   `permission_id` int(15) NOT NULL,
   `page_id` int(15) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=25 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=31 ;
 
 --
 -- Dumping data for table `permission_page_matches`
@@ -153,7 +156,34 @@ INSERT INTO `permission_page_matches` (`id`, `permission_id`, `page_id`) VALUES
 (21, 2, 4),
 (22, 2, 3),
 (23, 1, 2),
-(24, 2, 2);
+(24, 2, 2),
+(25, 1, 20),
+(26, 2, 20),
+(27, 1, 21),
+(28, 2, 21),
+(29, 1, 22),
+(30, 2, 22);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `profiles`
+--
+
+CREATE TABLE IF NOT EXISTS `profiles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `bio` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
+
+--
+-- Dumping data for table `profiles`
+--
+
+INSERT INTO `profiles` (`id`, `user_id`, `bio`) VALUES
+(1, 1, '<h1>This is the Admin''s bio.</h1>'),
+(2, 2, 'This is the Standard User''s Bio.');
 
 -- --------------------------------------------------------
 
@@ -174,6 +204,7 @@ CREATE TABLE IF NOT EXISTS `settings` (
   `css3` varchar(255) NOT NULL,
   `site_name` varchar(100) NOT NULL,
   `language` varchar(255) NOT NULL,
+  `track_guest` int(1) NOT NULL,
   `site_offline` int(1) NOT NULL,
   `force_pr` int(1) NOT NULL,
   `reserved1` varchar(100) NOT NULL,
@@ -188,8 +219,8 @@ CREATE TABLE IF NOT EXISTS `settings` (
 -- Dumping data for table `settings`
 --
 
-INSERT INTO `settings` (`id`, `recaptcha`, `force_ssl`, `login_type`, `us_css1`, `us_css2`, `us_css3`, `css1`, `css2`, `css3`, `site_name`, `language`, `site_offline`, `force_pr`, `reserved1`, `reserverd2`, `custom1`, `custom2`, `custom3`) VALUES
-(1, 0, 0, 'username', 'css/color_schemes/standard.css', 'css/sb-admin.css', 'css/custom.css', 'css/color_schemes/standard.css', 'css/sb-admin.css', 'css/custom.css', 'UserSpice', 'en', 0, 0, '', '', '', '', '');
+INSERT INTO `settings` (`id`, `recaptcha`, `force_ssl`, `login_type`, `us_css1`, `us_css2`, `us_css3`, `css1`, `css2`, `css3`, `site_name`, `language`, `track_guest`, `site_offline`, `force_pr`, `reserved1`, `reserverd2`, `custom1`, `custom2`, `custom3`) VALUES
+(1, 0, 0, 'username', 'css/color_schemes/standard.css', 'css/sb-admin.css', 'css/custom.css', 'css/color_schemes/standard.css', 'css/sb-admin.css', 'css/custom.css', 'UserSpice', 'en', 1, 0, 0, '', '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -229,15 +260,38 @@ CREATE TABLE IF NOT EXISTS `users` (
   `custom5` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `EMAIL` (`email`) USING BTREE
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
 
 --
 -- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `email`, `username`, `password`, `fname`, `lname`, `permissions`, `logins`, `account_owner`, `account_id`, `company`, `stripe_cust_id`, `billing_phone`, `billing_srt1`, `billing_srt2`, `billing_city`, `billing_state`, `billing_zip_code`, `join_date`, `last_login`, `email_verified`, `vericode`, `title`, `active`, `custom1`, `custom2`, `custom3`, `custom4`, `custom5`) VALUES
-(1, 'admin@gmail.com', 'admin', '$2y$12$1v06jm2KMOXuuo3qP7erTuTIJFOnzhpds1Moa8BadnUUeX0RV3ex.', 'Admin', 'User', 1, 0, 1, 0, 'UserSpice', '', '0', '', '', '', '', '', '2016-01-12 21:25:23', '2016-02-06 22:16:25', 1, '322418', '', 1, '', '', '', '', ''),
-(2, 'testguy@aol.com', 'user', '$2y$12$C5HfzeP0v2V3WF59uaFBS.02vl09b7.DmzVQWoqPgxnGQg9vNyuqK', 'Standard', 'User', 1, 0, 1, 0, 'My Company', '', '', '', '', '', '', '', '2016-02-01 20:44:10', '2016-02-02 20:58:07', 1, '194812', '', 1, '', '', '', '', '');
+(1, 'userspicephp@gmail.com', 'admin', '$2y$12$1v06jm2KMOXuuo3qP7erTuTIJFOnzhpds1Moa8BadnUUeX0RV3ex.', 'Admin', 'User', 1, 0, 1, 0, 'UserSpice', '', '0', '', '', '', '', '', '2016-01-12 21:25:23', '2016-02-12 01:15:24', 1, '322418', '', 1, '', '', '', '', ''),
+(2, 'testguy@aol.com', 'user', '$2y$12$C5HfzeP0v2V3WF59uaFBS.02vl09b7.DmzVQWoqPgxnGQg9vNyuqK', 'Standard', 'User', 1, 0, 1, 0, 'My Company', '', '', '', '', '', '', '', '2016-02-01 20:44:10', '2016-02-10 23:55:37', 1, '194812', '', 1, '', '', '', '', '');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users_online`
+--
+
+CREATE TABLE IF NOT EXISTS `users_online` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `ip` varchar(15) NOT NULL,
+  `timestamp` varchar(15) NOT NULL,
+  `username` varchar(100) NOT NULL,
+  `session` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=26 ;
+
+--
+-- Dumping data for table `users_online`
+--
+
+INSERT INTO `users_online` (`id`, `ip`, `timestamp`, `username`, `session`) VALUES
+(24, '127.0.0.1', '1455232815', '', ''),
+(25, '::1', '1455239676', '', '');
 
 -- --------------------------------------------------------
 
@@ -251,14 +305,7 @@ CREATE TABLE IF NOT EXISTS `users_session` (
   `hash` varchar(255) NOT NULL,
   `uagent` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
-
---
--- Dumping data for table `users_session`
---
-
-INSERT INTO `users_session` (`id`, `user_id`, `hash`, `uagent`) VALUES
-(1, 1, '4a45fbd4c7b4e934cc0ba41ded2ea1f13417bc44300e277a0455024b7d3831cc', 'Mozilla (Windows NT 6.1; Win64; x64) AppleWebKit (KHTML, like Gecko) Chrome Safari');
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=20 ;
 
 -- --------------------------------------------------------
 
@@ -271,7 +318,7 @@ CREATE TABLE IF NOT EXISTS `user_permission_matches` (
   `user_id` int(11) NOT NULL,
   `permission_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=75 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=85 ;
 
 --
 -- Dumping data for table `user_permission_matches`
@@ -284,7 +331,17 @@ INSERT INTO `user_permission_matches` (`id`, `user_id`, `permission_id`) VALUES
 (71, 42, 1),
 (72, 43, 1),
 (73, 3, 1),
-(74, 4, 1);
+(74, 4, 1),
+(75, 3, 1),
+(76, 4, 1),
+(77, 5, 1),
+(78, 6, 1),
+(79, 7, 1),
+(80, 8, 1),
+(81, 9, 1),
+(82, 10, 1),
+(83, 11, 1),
+(84, 12, 1);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

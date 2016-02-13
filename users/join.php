@@ -1,15 +1,15 @@
 <?php
 /*
-UserSpice 4
-by Dan Hoover at http://UserSpice.com
+UserSpice 43
+by Curtis Parham and Dan Hoover at http://UserSpice.com
 */
 // error_reporting(E_ALL);
 // ini_set('display_errors', 1);
 ini_set("allow_url_fopen", 1);
 ?>
-<?php require_once("includes/us_header.php"); ?>
+<?php require_once("includes/userspice/us_header.php"); ?>
 
-<?php require_once("includes/us_navigation.php"); ?>
+<?php require_once("includes/userspice/us_navigation.php"); ?>
 <?php if (!securePage($_SERVER['PHP_SELF'])){die();} ?>
 <?php
 $settingsQ = $db->query("SELECT * FROM settings");
@@ -41,19 +41,11 @@ $settings = $settingsQ->first();
 
 
 <!-- footers -->
-<?php require_once("includes/us_page_footer.php"); // the final html footer copyright row + the external js calls ?>
+<?php require_once("includes/userspice/us_page_footer.php"); // the final html footer copyright row + the external js calls ?>
 
 <!-- Place any per-page javascript here -->
 
 <script>
-  function two_step_back(){
-    // jQuery('#payment-errors').html("");
-    // jQuery('#step1').css("display","block");
-    // jQuery('#step2').css("display","none");
-    // jQuery('#next_button').css("display","inline-block");
-    // jQuery('#back_button').css("display","none");
-    // jQuery('#pay_submit').css("display","none");
-  }
 //Nothing is actually being sent to stripe at this time.
   function validateJoin(){
     var data = jQuery('form[id="payment-form"]').serialize();
@@ -116,4 +108,4 @@ $settings = $settingsQ->first();
 <?php 	if($settings->recaptcha == 1){ ?>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <?php } ?>
-<?php require_once("includes/us_html_footer.php"); // currently just the closing /body and /html ?>
+<?php require_once("includes/userspice/us_html_footer.php"); // currently just the closing /body and /html ?>

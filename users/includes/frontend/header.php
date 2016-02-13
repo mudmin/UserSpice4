@@ -1,7 +1,7 @@
 <?php
 /*
-UserSpice 4
-by Dan Hoover at http://UserSpice.com
+UserSpice 43
+by Curtis Parham and Dan Hoover at http://UserSpice.com
 */
  ?>
  <?php require_once("core/init.php"); ?>
@@ -11,6 +11,9 @@ by Dan Hoover at http://UserSpice.com
  $settingsQ = $db->query("Select * FROM settings");
  $settings = $settingsQ->first();
  if ($settings->site_offline==1){die("The site is currently offline.");}
+ if($settings->track_guest == 1){
+ new_user_online();
+ }
  ?>
 
 <!DOCTYPE html>

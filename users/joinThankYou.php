@@ -1,13 +1,12 @@
 <?php
 /*
-UserSpice 4
-by Dan Hoover at http://UserSpice.com
+UserSpice 43
+by Curtis Parham and Dan Hoover at http://UserSpice.com
 */
  ?>
-<!-- If you want to use UserSpice's core classes and helpers, be sure to include these files. -->
-<?php require_once("includes/us_header.php"); ?>
+<?php require_once("includes/userspice/us_header.php"); ?>
 
-<?php require_once("includes/us_navigation.php"); ?>
+<?php require_once("includes/userspice/us_navigation.php"); ?>
 <?php
 $settingsQ = $db->query("SELECT * FROM settings");
 $settings = $settingsQ->first();
@@ -130,7 +129,6 @@ if($act == 1) {
   }
 
     //display thank you page
-    include 'includes/us_header.php';
     include 'views/join/_joinThankYou.php';
   }
 
@@ -160,8 +158,8 @@ if($act == 1) {
 
 <!-- Content Ends Here -->
 <!-- footers -->
-<?php require_once("includes/us_page_footer.php"); // the final html footer copyright row + the external js calls ?>
+<?php require_once("includes/userspice/us_page_footer.php"); // the final html footer copyright row + the external js calls ?>
 
 <!-- Place any per-page javascript here -->
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-<?php require_once("includes/us_html_footer.php"); // currently just the closing /body and /html ?>
+<?php require_once("includes/userspice/us_html_footer.php"); // currently just the closing /body and /html ?>

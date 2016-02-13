@@ -1,6 +1,11 @@
 <?php
+/*
+UserSpice 43
+by Curtis Parham and Dan Hoover at http://UserSpice.com
+*/
 //echo "helpers included";
 require_once("us_helpers.php");
+require_once("users_online.php");
 require_once("language.php");
 
 

@@ -1,15 +1,15 @@
 <?php
 /*
-UserSpice 4
-by Dan Hoover at http://UserSpice.com
+UserSpice 43
+by Curtis Parham and Dan Hoover at http://UserSpice.com
 */
 // error_reporting(E_ALL);
 // ini_set('display_errors', 1);
 ini_set("allow_url_fopen", 1);
 ?>
-<?php require_once("includes/us_header.php"); ?>
+<?php require_once("includes/userspice/us_header.php"); ?>
 
-<?php require_once("includes/us_navigation.php"); ?>
+<?php require_once("includes/userspice/us_navigation.php"); ?>
 <?php
 $settingsQ = $db->query("SELECT * FROM settings");
 $settings = $settingsQ->first();
@@ -111,11 +111,11 @@ if ($response != null && $response->success) {
 
     <!-- Content Ends Here -->
     <!-- footers -->
-    <?php require_once("includes/us_page_footer.php"); // the final html footer copyright row + the external js calls ?>
+    <?php require_once("includes/userspice/us_page_footer.php"); // the final html footer copyright row + the external js calls ?>
 
     <!-- Place any per-page javascript here -->
 
 <?php 	if($settings->recaptcha == 1){ ?>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <?php } ?>
-    <?php require_once("includes/us_html_footer.php"); // currently just the closing /body and /html ?>
+    <?php require_once("includes/userspice/us_html_footer.php"); // currently just the closing /body and /html ?>

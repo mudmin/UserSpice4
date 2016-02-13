@@ -1,18 +1,21 @@
 <?php
 ob_start();
 /*
-UserSpice 4
-by Dan Hoover at http://UserSpice.com
+UserSpice 43
+by Curtis Parham and Dan Hoover at http://UserSpice.com
 */
 ?>
 <?php require_once("../core/init.php"); ?>
 <?php require_once("helpers/helpers.php"); ?>
 <?php $db = DB::getInstance(); ?>
 <?php
+
 $settingsQ = $db->query("Select * FROM settings");
 $settings = $settingsQ->first();
 //dnd($settings);
-
+if($settings->track_guest == 1){
+new_user_online();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

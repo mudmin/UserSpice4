@@ -1,5 +1,11 @@
+<?php
+/*
+UserSpice 43
+by Curtis Parham and Dan Hoover at http://UserSpice.com
+*/
+?>
 <!-- Navigation -->
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
   <!-- Brand and toggle get grouped for better mobile display -->
   <div class="navbar-header">
 
@@ -18,7 +24,7 @@
   <?php
   if($user->isLoggedIn()) {
   ?>
-    <li class='dropdown'><a href='users/account.php' class='btn btn-primary'>Account Info</a></li>
+    <li class='dropdown'><a href='users/account.php' class='btn btn-default'>Account Info</a></li>
 
     <li class='dropdown'><a href='users/logout.php' class='btn btn-danger'>Sign Out</a></li>
     <?php
@@ -29,7 +35,7 @@
   <?php
 }}else {
   ?>
-    <p> <li class='dropdown'><a href='users/login.php' class='btn btn-success'>Sign In</a> </li>
+    <p> <li class='dropdown'><a href='users/login.php' class='btn btn-info'>Sign In</a> </li>
 
     <li class='dropdown'><a href='users/join.php' class='btn btn-danger'>Sign Up</a></p></li>
   <?php

@@ -1,8 +1,10 @@
 <?php
+/*
+UserSpice 43
+by Curtis Parham and Dan Hoover at http://UserSpice.com
+*/
 class User {
 	private $_db, $_data, $_sessionName, $_isLoggedIn, $_cookieName;
-
-
 
 	public function __construct($user = null){
 		$this->_db = DB::getInstance();
@@ -30,6 +32,8 @@ class User {
 		}else
 		$user_id = $this->_db->lastId();
 		$query = $this->_db->insert("user_permission_matches",['user_id'=>$user_id,'permission_id'=>1]);
+		// return $user_id;
+		$query2 = $this->_db->insert("profiles",['user_id'=>$user_id, 'bio'=>'This is your bio']);
 		return $user_id;
 	}
 
@@ -80,6 +84,9 @@ class User {
 						Cookie::put($this->_cookieName, $hash, Config::get('remember/cookie_expiry'));
 					}
 					$this->_db->update('users',$this->data()->id,['last_login'=>date("Y-m-d H:i:s")]);
+					//expermental
+					// $fields=array('session'=>$session, 'time'=>$time);
+					// $first = $db->insert($table,$fields);
 					return true;
 				}
 			}
