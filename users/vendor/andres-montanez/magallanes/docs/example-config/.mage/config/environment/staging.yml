@@ -1,0 +1,32 @@
+#staging
+deployment:
+  user: root
+  from: ./
+  to: /var/www
+  scm:
+    branch: master
+releases:
+  enabled: true
+  max: 5
+  symlink: current
+  directory: releases
+hosts:
+  - localhost
+  - 127.0.0.1
+tasks:
+  pre-deploy:
+#    - sampleTask
+#    - failTask
+    - scm/update
+  on-deploy:
+    - privileges
+#    - sampleTask
+    - sampleTaskRollbackAware
+    - taskWithParameters:
+        booleanOption: true
+    - taskWithParameters
+  post-release:
+#    - sampleTask
+  post-deploy:
+    - sampleTask
+verbose_logging: false

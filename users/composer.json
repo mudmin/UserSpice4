@@ -1,0 +1,10 @@
+{
+  "require": {
+    "stripe/stripe-php": "3.*",
+    "nesbot/carbon": "1.*",
+    "swiftmailer/swiftmailer": "@stable",
+    "robmorgan/phinx": "^0.4.6",
+    "andres-montanez/magallanes": "~1.0.1"
+  }
+
+}
