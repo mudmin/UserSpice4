@@ -113,7 +113,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <a href='register.php'><i class='fa fa-fw fa-desktop'></i> Register</a>
   </li> -->
   <li>
-    <a href='forgot-password.php'><i class='fa fa-fw fa-wrench'></i> Forgot Password</a>
+    <a href='forgot_password.php'><i class='fa fa-fw fa-wrench'></i> Forgot Password</a>
   </li>
   <?php
   //   if ($emailActivation)
