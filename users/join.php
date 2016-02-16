@@ -1,7 +1,21 @@
 <?php
 /*
-UserSpice 43
+UserSpice 4
+An Open Source PHP User Management System
 by Curtis Parham and Dan Hoover at http://UserSpice.com
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 // error_reporting(E_ALL);
 // ini_set('display_errors', 1);
@@ -34,8 +48,7 @@ $settings = $settingsQ->first();
     <!-- Page Heading -->
 <div class="row">
   <div class="col-sm-12">
-    <div class="class col-sm-3"></div>
-    <div class="class col-sm-6">
+    <div class="col-sm-6 col-sm-offset-3">
 <?php include 'views/join/_join_form.php'; ?>
 
 
@@ -46,8 +59,9 @@ $settings = $settingsQ->first();
 <!-- Place any per-page javascript here -->
 
 <script>
-//Nothing is actually being sent to stripe at this time.
   function validateJoin(){
+		jQuery('#payment-errors').html("");
+		jQuery('.has-error').removeClass("has-error");
     var data = jQuery('form[id="payment-form"]').serialize();
     jQuery.ajax({
       url : 'parsers/join_form_validate.php',
@@ -55,12 +69,8 @@ $settings = $settingsQ->first();
       data : data,
       success : function(data){
         if(data == 'success'){
-          // jQuery('#payment-errors').html("");
-          // jQuery('#step1').css("display","none");
-          // jQuery('#step2').css("display","block");
-          // jQuery('#next_button').css("display","none");
-          // jQuery('#back_button').css("display","inline-block");
-          // jQuery('#pay_submit').css("display","inline-block");
+          jQuery('#payment-errors').html("");
+          jQuery('#payment-form').submit();
         }else{
           jQuery('#payment-errors').html(data);
         }
@@ -69,36 +79,11 @@ $settings = $settingsQ->first();
     });
   }
 
-  Stripe.setPublishableKey('<?=STRIPE_PUBLIC;?>');
-
-  function stripeResponseHandler(status, response) {
-    var $form = $('#payment-form');
-
-    if (response.error) {
-      // Show the errors on the form
-      $form.find('.payment-errors').text(response.error.message);
-      $form.find('button').prop('disabled', false);
-    } else {
-      // response contains id and card, which contains additional card details
-      var token = response.id;
-      // Insert the token into the form so it gets submitted to the server
-      $form.append($('<input type="hidden" name="stripeToken" />').val(token));
-      // and submit
-      $form.get(0).submit();
-    }
-  };
-
   jQuery(function($) {
   $('#payment-form').submit(function(event) {
     var $form = $(this);
-
     // Disable the submit button to prevent repeated clicks
     $form.find('button').prop('disabled', true);
-
-    Stripe.card.createToken($form, stripeResponseHandler);
-
-    // Prevent the form from submitting with the default action
-    return false;
   });
 });
 

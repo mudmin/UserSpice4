@@ -1,7 +1,21 @@
 <?php
 /*
-UserSpice 43
+UserSpice 4
+An Open Source PHP User Management System
 by Curtis Parham and Dan Hoover at http://UserSpice.com
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 class User {
 	private $_db, $_data, $_sessionName, $_isLoggedIn, $_cookieName;
@@ -66,11 +80,9 @@ class User {
 			Session::put($this->_sessionName, $this->data()->id);
 		} else {
 			$user = $this->find($username);
-
 			if ($user) {
 				if (password_verify($password,$this->data()->password)) {
 					Session::put($this->_sessionName, $this->data()->id);
-
 					if ($remember) {
 						$hash = Hash::unique();
 						$hashCheck = $this->_db->get('users_session' , array('user_id', '=', $this->data()->id));
@@ -83,10 +95,7 @@ class User {
 
 						Cookie::put($this->_cookieName, $hash, Config::get('remember/cookie_expiry'));
 					}
-					$this->_db->update('users',$this->data()->id,['last_login'=>date("Y-m-d H:i:s")]);
-					//expermental
-					// $fields=array('session'=>$session, 'time'=>$time);
-					// $first = $db->insert($table,$fields);
+					$this->_db->query("UPDATE users SET last_login = ?, logins = logins + 1 WHERE id = ?",[date("Y-m-d H:i:s"),$this->data()->id]);
 					return true;
 				}
 			}

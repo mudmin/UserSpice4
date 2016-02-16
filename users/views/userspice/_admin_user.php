@@ -3,8 +3,12 @@
     <h3>User Information</h3>
     <div id='regbox'>
       <p>
-        <label>ID:</label>
+        <label>User ID:</label>
         <?=$userdetails->id?>
+      <p>
+        <label>Logins: </label>
+        <?=$userdetails->logins?>
+      </p>
       </p>
       <p>
         <label>Username:
@@ -22,10 +26,10 @@
         <label>Email:
           <input class='form-control' type='text' name='email' value='<?=$userdetails->email?>' /></label>
         </p>
-        <label> Account Active?:
+        <!-- Will be implemented in a later release -->
+        <!-- <label> Account Active?:
             <input type="radio" name="active" value="1" <?php echo ($userdetails->active==1)?'checked':''; ?> size="25">Yes</input></label>
-            <input type="radio" name="active" value="0" <?php echo ($userdetails->active==0)?'checked':''; ?> size="25">No</input></label>
-
+            <input type="radio" name="active" value="0" <?php echo ($userdetails->active==0)?'checked':''; ?> size="25">No</input></label> -->
           <p>
           </div>
         </td>

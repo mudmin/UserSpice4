@@ -18,12 +18,12 @@
             <h3>Public or Private?</h3>
             <p>
               <label>Private:</label>
-
               <?php
               //Display private checkbox
               $checked = ($pageDetails->private == 1)? ' checked' : ''; ?>
                 <input type='checkbox' name='private' id='private' value='Yes'<?=$checked;?>>
             </p>
+      <a href="admin_pages.php" class="button">Back</a>
           </div>
           </td><td>
           <h3>Page Access</h3>

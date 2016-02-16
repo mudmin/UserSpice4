@@ -66,7 +66,8 @@ body {
 .top-nav>.open>a:hover,
 .top-nav>.open>a:focus {
     color: #fff;
-    background-color: #000;
+	background-color: #000;
+    
 }
 
 .top-nav>.open>.dropdown-menu {

@@ -10,7 +10,7 @@
 <table class='table table-hover table-list-search'>
 <input type="hidden" name="csrf" value="<?=Token::generate();?>" >
 <tr>
-<th>Delete</th><th>Username</th><th>Email</th><th>First Name</th><th>Last Name</th><th>Join Date</th><th>Last Sign In</th>
+<th>Delete</th><th>Username</th><th>Email</th><th>First Name</th><th>Last Name</th><th>Join Date</th><th>Last Sign In</th><th>Logins</th>
 </tr>
 <?php
 //Cycle through users
@@ -24,6 +24,7 @@ foreach ($userData as $v1) {
 <td><?=$v1->lname?></td>
 <td><?=$v1->join_date?></td>
 <td><?=$v1->last_login?></td>
+<td><?=$v1->logins?></td>
 </tr>
 <?php } ?>
 

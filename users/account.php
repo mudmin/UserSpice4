@@ -1,7 +1,21 @@
 <?php
 /*
-UserSpice 43
+UserSpice 4
+An Open Source PHP User Management System
 by Curtis Parham and Dan Hoover at http://UserSpice.com
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 ?>
 <?php require_once("includes/userspice/us_header.php"); ?>
@@ -40,7 +54,7 @@ $userdetails = fetchUserDetails(NULL, NULL, $get_info_id); //Fetch user details
 <div class="col-md-4"></div>
 <div class="col-md-4">
 <div class="panel panel-primary">
-<header class="panel-heading"><h3 class="panel-title">Profile</h3></header>
+<header class="panel-heading"><h4 class="panel-title">Profile</h4></header>
   <div class="panel-body">
     <!-- <div class="row"> -->
 
@@ -49,6 +63,7 @@ $userdetails = fetchUserDetails(NULL, NULL, $get_info_id); //Fetch user details
         <h1><?php $liu = ucfirst($user->data()->username); echo $liu; ?></h1>
         <p><?=ucfirst($user->data()->fname)." ".ucfirst($user->data()->lname)?></p>
         <p>Member Since:<?=$signupdate?></p>
+        <p>Number of Logins: <?=$user->data()->logins?></p>
         <a href="edit_profile.php">Edit Your Public Profile</a><br>
         <a href="view_all_users.php">View All Users</a><br><br>
       <a href="user_settings.php" class="btn btn-primary left-block img-thumbnail">Edit Account Info</a>

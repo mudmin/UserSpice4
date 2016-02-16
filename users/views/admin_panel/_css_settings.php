@@ -8,6 +8,13 @@
         <br>
         <strong><h4 align="center">UserSpice CSS Settings</h4></strong>
         <br>
+          <label for="css_sample">Show CSS Samples</label>
+          <select id="css_sample" class="form-control" name="css_sample">
+            <option value="1" <?php if($settings->css_sample==1) echo 'selected="selected"'; ?> >Enabled</option>
+            <option value="0" <?php if($settings->css_sample==0) echo 'selected="selected"'; ?> >Disabled</option>
+            <label for="css_sample" class="form-control"></label></select>
+        <br>
+
         <label for="us_css1">Primary Color Scheme (Loaded 1st)</label>
         <select class="form-control" name="us_css1">
           <option selected="selected"><?=$settings->us_css1?></option>

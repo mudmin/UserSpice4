@@ -1,6 +1,6 @@
 <?php
 /*
-UserSpice 43
+UserSpice 4
 by Dan Hoover at http://UserSpice.com
 */
 ?>
@@ -29,8 +29,9 @@ $usersHourQ = $db->query("SELECT * FROM users WHERE last_login > ?",array($hour)
 $usersHour = $usersHourQ->results();
 $hourCount = $usersHourQ->count();
 
-$usersTodayQ = $db->query("SELECT username FROM users WHERE last_login > ?",array($today));
+$usersTodayQ = $db->query("SELECT * FROM users WHERE last_login > ?",array($today));
 $dayCount = $usersTodayQ->count();
+$usersDay = $usersTodayQ->results();
 
 $usersWeekQ = $db->query("SELECT username FROM users WHERE last_login > ?",array($week));
 $weekCount = $usersWeekQ->count();
@@ -95,6 +96,11 @@ Redirect::to('admin.php');
 }
 
 if(!empty($_POST)){
+  if($settings->css_sample != $_POST['css_sample']) {
+    $css_sample = Input::get('css_sample');
+    $fields=array('css_sample'=>$css_sample);
+    $db->update('settings',1,$fields);
+  }
 
   if($settings->us_css1 != $_POST['us_css1']) {
     $us_css1 = Input::get('us_css1');
@@ -145,21 +151,10 @@ Redirect::to('admin.php');
     </div>
 
     <!-- /.row -->
-<?php
-// $date = date("Y-m-d H:i:s");
-// echo $date;
-// $thirtyMin = $date = strtotime(date('Y-m-d H:i:s') . ' -30 minutes');
-// echo $thirtyMin;
-// $date = new DateTime();
-// echo $date->format("d-m-Y H:i:s").'<br />';
 
-// $date = date("Y-m-d H:i:s");
-// echo $date."<br>";
-// $datetime_from = date("Y-m-d H:i:s", strtotime("-45 minutes", strtotime($date)));
-// echo $datetime_from;
-?>
 <!-- Top Admin Panels -->
 <?php require_once("views/admin_panel/_top_panels.php");?>
+<?php if($settings->css_sample == 1){     require_once("views/admin_panel/_css_test.php");}?>
 <?php require_once("views/admin_panel/_css_settings.php");?>
 <?php require_once("views/admin_panel/_main_settings.php");?>
 

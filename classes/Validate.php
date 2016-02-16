@@ -1,7 +1,21 @@
 <?php
 /*
-UserSpice 43
+UserSpice 4
+An Open Source PHP User Management System
 by Curtis Parham and Dan Hoover at http://UserSpice.com
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 class Validate{
 	private $_passed = false,
@@ -20,7 +34,7 @@ class Validate{
 				$value = trim($source[$item]);
 				$value = sanitize($value);
 
-				if ($rule === 'required' && empty($value)) {
+				if ($rule === 'required' && empty($value) && $rule_value === true) {
 					$this->addError(["{$display} is required",$item]);
 				} else if(!empty($value)){
 					switch ($rule) {
@@ -84,9 +98,14 @@ class Validate{
 		return $this;
 	}
 
-	private function addError($error){
-		$this->_errors[] = $error;
-	}
+	public function addError($error){
+			$this->_errors[] = $error;
+			if(empty($this->_errors)){
+				$this->_passed = true;
+			}else{
+				$this->_passed = false;
+			}
+		}
 
 	public function errors(){
 		return $this->_errors;
