@@ -81,29 +81,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <li>
           <a href='user_settings.php'><i class='fa fa-fw fa-pencil-square-o'></i> User Settings</a>
         </li>
-        <!-- <li>
-        <a href='logout.php'><i class='fa fa-fw fa-angellist'></i> Logout</a>
-      </li> -->
-
-
-      <?php
-      //Links for permission level 2 (default admin)
-      //if ($loggedInUser->checkPermission(array(2))){
-      ?>
-      <li>
-        <a href='admin_users.php'><i class='fa fa-fw fa-users'></i> Admin Users</a>
-      </li>
-      <li>
-        <a href='admin_permissions.php'><i class='fa fa-fw fa-code'></i> Admin Permissions</a>
-      </li>
-      <li>
-        <a href='admin_pages.php'><i class='fa fa-fw fa-newspaper-o'></i> Admin Pages</a>
       </li>
       <?php
-    }
-    // }
+
     //Links for users not logged in
-    else {
+  }else {
       ?>
 
       <!-- <li>
