@@ -2,7 +2,7 @@
 /*
 UserSpice 4
 An Open Source PHP User Management System
-by Curtis Parham and Dan Hoover at http://UserSpice.com
+by the UserSpice Team at http://UserSpice.com
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -93,7 +93,45 @@ $count = 0;
           <!-- Content Goes Here. Class width can be adjusted -->
 
 
-          <?php include('views/userspice/_admin_permissions.php'); ?>
+			<?php
+			$errors = [];
+			$successes = [];
+			echo resultBlock($errors,$successes);
+			?>
+			<form name='adminPermissions' action='<?=$_SERVER['PHP_SELF']?>' method='post'>
+			  <h2>Create a new permission group</h2>
+			  <p>
+				<label>Permission Name:</label>
+				<input type='text' name='name' />
+			  </p>
+
+			  <br>
+			  <table class='table table-hover table-list-search'>
+				<tr>
+				  <th>Delete</th><th>Permission Name</th>
+				</tr>
+
+				<?php
+				//List each permission level
+				foreach ($permissionData as $v1) {
+				  ?>
+				  <tr>
+					<td><input type='checkbox' name='delete[<?=$permissionData[$count]->id?>]' id='delete[<?=$permissionData[$count]->id?>]' value='<?=$permissionData[$count]->id?>'></td>
+					<td><a href='admin_permission.php?id=<?=$permissionData[$count]->id?>'><?=$permissionData[$count]->name?></a></td>
+				  </tr>
+				  <?php
+				  $count++;
+				}
+				?>
+
+			  </table>
+
+
+			  <input type="hidden" name="csrf" value="<?=Token::generate();?>" >
+
+			  <input class='btn btn-primary' type='submit' name='Submit' value='Add/Update/Delete' />
+
+			</form>
 
           <!-- End of main content section -->
         </div>

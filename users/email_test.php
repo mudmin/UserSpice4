@@ -2,7 +2,7 @@
 /*
 UserSpice 4
 An Open Source PHP User Management System
-by Curtis Parham and Dan Hoover at http://UserSpice.com
+by the UserSpice Team at http://UserSpice.com
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -34,10 +34,10 @@ $query = $db->query("SELECT * FROM email");
 $results = $query->first();
 
 if(!empty($_POST)){
-  $to = $_POST['test_acct'];
-  $subject = 'Testing Your Email Settings!';
-  $body = 'This is the body of your test email';
-  email($to,$subject,$body);
+	$to = $_POST['test_acct'];
+	$subject = 'Testing Your Email Settings!';
+	$body = 'This is the body of your test email';
+	$mail_result=email($to,$subject,$body);
 }
 
 ?>
@@ -59,7 +59,19 @@ if(!empty($_POST)){
             Test your email settings.
           </h1><br>
           It's a good idea to test to make sure you can actually receive system emails before forcing your users to verify theirs. <br><br>
-          <form class="" name="test_email" action="email_test.php" method="post">
+          <?php
+			if (!empty($_POST)){
+				if($mail_result){
+					echo 'Mail sent successfully<br/>';
+				}else{
+					echo 'Mail ERROR<br/>';
+				}
+
+			}
+		  
+		  ?>
+		  
+		  <form class="" name="test_email" action="email_test.php" method="post">
             <label>Send test to (Ideally different than your from address):
               <input required size='50' class='form-control' type='text' name='test_acct' value='' /></label>
 

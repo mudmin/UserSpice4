@@ -2,7 +2,7 @@
 /*
 UserSpice 4
 An Open Source PHP User Management System
-by Curtis Parham and Dan Hoover at http://UserSpice.com
+by the UserSpice Team at http://UserSpice.com
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ $validation = new Validate();
 //PHP Goes Here!
 $errors = [];
 $successes = [];
-$userId = $_GET['id'];
+$userId = Input::get('id');
 //Check if selected user exists
 if(!userIdExists($userId)){
   Redirect::to("admin_users.php"); die();
@@ -180,73 +180,105 @@ $useravatar = '<img src="'.$grav.'" class="img-responsive img-thumbnail" alt="">
 ?>
 <div id="page-wrapper">
 
-  <div class="container">
+<div class="container">
 
-       <?php    echo resultBlock($errors,$successes); ?>
-      <?=$validation->display_errors();?>
-  	<h1><?=$userdetails->username?></h1>
-    <div class="row">
-  		<div class="col-sm-3"><!--left col-->
-
-			  <div class="well text-center hidden-xs"><?php echo $useravatar;?></div>
-
-          <div class="panel panel-default hidden-xs">
-            <div class="panel-heading">User Info <i class="fa fa-link fa-1x"></i></div>
-				 <ul class="list-group">
-					<li class="list-group-item text-right"><span class="pull-left"><strong>Joined</strong></span> <?=$userdetails->join_date?></li>
-					<li class="list-group-item text-right"><span class="pull-left"><strong>Last seen</strong></span> <?=$userdetails->last_login?></li>
-					<li class="list-group-item text-right"><span class="pull-left"><strong>Full name</strong></span> <?=$userdetails->fname?> <?=$userdetails->lname?></li>
-				  </ul>
-          </div>
-
-          <div class="panel panel-default hidden-xs">
-            <div class="panel-heading">Email <i class="fa fa-link fa-1x"></i></div>
-			 <ul class="list-group">
-            <li class="list-group-item text-right"><span class="pull-left"><strong>Email</strong></span> <?=$userdetails->email?></li>
-			</ul>
-          </div>
+<?=resultBlock($errors,$successes);?>
+<?=$validation->display_errors();?>
 
 
-          <div class="panel panel-default hidden-xs">
-            <div class="panel-heading">Activity <i class="fa fa-link fa-1x"></i></div>
-				 <ul class="list-group">
-            <li class="list-group-item text-right"><span class="pull-left"><strong>Logins</strong></span> <?=$userdetails->logins?></li>
-          </ul>
-           </div>
+<div class="row">
+	<div class="col-xs-12 col-sm-2"><!--left col-->
+	<?php echo $useravatar;?>
+	</div><!--/col-2-->
+	
+	<div class="col-xs-12 col-sm-10">
+	<form class="form" name='adminUser' action='admin_user.php?id=<?=$userId?>' method='post'>
+	
+	<h3>User Information</h3>
+	<div class="panel panel-default">
+	<div class="panel-heading">User ID: <?=$userdetails->id?></div>
+	<div class="panel-body">
+	
+	<label>Joined: </label> <?=$userdetails->join_date?><br/>
+	
+	<label>Last seen: </label> <?=$userdetails->last_login?><br/>
+	
+	<label>Logins: </label> <?=$userdetails->logins?><br/>
 
-        </div><!--/col-3-->
+	<label>Username:</label>
+	<input  class='form-control' type='text' name='username' value='<?=$userdetails->username?>' />
+	
+	<label>Email:</label>
+	<input class='form-control' type='text' name='email' value='<?=$userdetails->email?>' />
 
-    	<div class="col-sm-9">
+	<label>First Name:</label>
+	<input  class='form-control' type='text' name='fname' value='<?=$userdetails->fname?>' />
 
-          <ul class="nav nav-tabs" id="myTab">
-            <li class="active"><a href="#perms" data-toggle="tab">Permissions</a></li>
-            <li><a href="#info" data-toggle="tab">User Info</a></li>
-          </ul>
-     		<form class="form-inline" name='adminUser' action='<?=$_SERVER['PHP_SELF']?>?id=<?=$userId?>' method='post'>
-          <div class="tab-content">
+	<label>Last Name:</label>
+	<input  class='form-control' type='text' name='lname' value='<?=$userdetails->lname?>' />
 
+	</div>
+	</div>
+		
+	<h3>Permissions</h3>
+	<div class="panel panel-default">
+		<div class="panel-heading">Remove These Permission(s):</div>
+		<div class="panel-body">
+		<?php
+		//NEW List of permission levels user is apart of
 
-		 <div class="tab-pane active" id="perms">
-		   <?php include("views/userspice/_admin_user2.php");
-          ?>
-			</div>
+		$perm_ids = [];
+		foreach($userPermission as $perm){
+			$perm_ids[] = $perm->permission_id;
+		}
 
-		 <div class="tab-pane" id="info">
-		   <?php include("views/userspice/_admin_user.php");
-          ?>
-			</div>
-		    <input type="hidden" name="csrf" value="<?=Token::generate();?>" >
-			<label>&nbsp;</label>
-			<input class='btn btn-primary' type='submit' value='Update' class='submit' />
-			<a class='btn btn-warning' href="admin_users.php">Cancel</a>
-		</form>
-          </div><!--/tab-content-->
+		foreach ($permissionData as $v1){
+		if(in_array($v1->id,$perm_ids)){ ?>
+		  <input type='checkbox' name='removePermission[]' id='removePermission[]' value='<?=$v1->id;?>' /> <?=$v1->name;?>
+		<?php 
+		}
+		}
+		?>
 
-        </div><!--/col-9-->
-    </div><!--/row-->
+		</div>
+	</div>
 
-  </div>
-  </div>
+	<div class="panel panel-default">
+		<div class="panel-heading">Add These Permission(s):</div>
+		<div class="panel-body">
+		<?php
+		foreach ($permissionData as $v1){
+		if(!in_array($v1->id,$perm_ids)){ ?>
+		  <input type='checkbox' name='addPermission[]' id='addPermission[]' value='<?=$v1->id;?>' /> <?=$v1->name;?>
+			<?php 
+		}
+		}
+		?>
+		</div>
+	</div>
+
+	<div class="panel panel-default">
+		<div class="panel-heading">Miscellaneous:</div>
+		<div class="panel-body">
+		<label> Block?:</label>
+		<select name="active" class="form-control">
+			<option <?php if ($userdetails->permissions==1){echo "selected='selected'";} ?> value="1">No</option>
+			<option <?php if ($userdetails->permissions==0){echo "selected='selected'";} ?>value="0">Yes</option>
+		</select>
+		</div>
+	</div>	
+
+	<input type="hidden" name="csrf" value="<?=Token::generate();?>" />
+	<input class='btn btn-primary' type='submit' value='Update' class='submit' />
+	<a class='btn btn-warning' href="admin_users.php">Cancel</a>
+	
+	</form>
+
+	</div><!--/col-9-->
+</div><!--/row-->
+
+</div>
+</div>
 
 
 <?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; // the final html footer copyright row + the external js calls ?>

@@ -2,7 +2,7 @@
 /*
 UserSpice 4
 An Open Source PHP User Management System
-by Curtis Parham and Dan Hoover at http://UserSpice.com
+by the UserSpice Team at http://UserSpice.com
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -52,211 +52,169 @@ if($act==1){
 } else {
 	$pre = 1;
 }
-?>
 
-<?php
-if(!empty($_POST)){
-	
-	$csrf = Input::get('csrf');
+$token = Input::get('csrf');
+if(Input::exists()){
+	if(!Token::check($token)){
+		die('Token doesn\'t match!');
+	}
+}
+
+$reCaptchaValid=FALSE;
+
+if(Input::exists()){
+
 	$username = Input::get('username');
 	$fname = Input::get('fname');
 	$lname = Input::get('lname');
 	$email = Input::get('email');
 	$company = Input::get('company');
+	$agreement_checkbox = Input::get('agreement_checkbox');
 	
-	if (Token::check($csrf)){
-		$db = DB::getInstance();
-		$settingsQ = $db->query("SELECT * FROM settings");
-		$settings = $settingsQ->first();
-		$validation = new Validate();
-		$validation->check($_POST,array(
-		  'username' => array(
-			'display' => 'Username',
-			'required' => true,
-			'min' => 5,
-			'max' => 35,
-		  ),
-		  'fname' => array(
-			'display' => 'First Name',
-				'required' => true,
-				'min' => 2,
-				'max' => 35,
-		  ),
-		  'lname' => array(
-			'display' => 'Last Name',
-			'required' => true,
-			'min' => 2,
-			'max' => 35,
-		  ),
-		  'email' => array(
-			'display' => 'Email',
-			'required' => true,
-			'valid_email' => true,
-			'unique' => 'users',
-		  ),
-		  'company' => array(
-			'display' => 'Company Name',
-			'required' => false,
-			'min' => 0,
-			'max' => 75,
-		  ),
-		  'password' => array(
-			'display' => 'Password',
-			'required' => true,
-			'min' => 6,
-			'max' => 25,
-		  ),
-		  'confirm' => array(
-			'display' => 'Confirm Password',
-			'required' => true,
-			'matches' => 'password',
-		  ),
-		));
-
-		if($validation->passed()){
-			//bold('SUCCESS');
-			$form_valid=TRUE;
-			
-			//Logic if ReCAPTCHA is turned ON
-			if($settings->recaptcha == 1){
-				require_once("includes/recaptcha.config.php");
-				//reCAPTCHA 2.0 check
-				$response = null;
-
-				// check secret key
-				$reCaptcha = new ReCaptcha($privatekey);
-
-				// if submitted check response
-				if ($_POST["g-recaptcha-response"]) {
-					$response = $reCaptcha->verifyResponse(
-						$_SERVER["REMOTE_ADDR"],
-						$_POST["g-recaptcha-response"]);
-				}
-				if ($response != null && $response->success) {
-					//add user to the database
-					$user = new User();
-					$join_date = date("Y-m-d H:i:s");
-					$params = array(
-						'fname' => Input::get('fname'),
-						'email' => $email,
-						'vericode' => $vericode,
-					);
-
-					if($act == 1) {
-						//Verify email address settings
-						$to = $email;
-						$subject = 'Welcome to UserSpice!';
-						$body = email_body('verify.php',$params);
-						email($to,$subject,$body);
-					}
-					try {
-						// echo "Trying to create user";
-						$user->create(array(
-							'username' => Input::get('username'),
-							'fname' => Input::get('fname'),
-							'lname' => Input::get('lname'),
-							'email' => Input::get('email'),
-							'password' =>
-							password_hash(Input::get('password'), PASSWORD_BCRYPT, array('cost' => 12)),
-							'permissions' => 1,
-							'account_owner' => 1,
-							'stripe_cust_id' => '',
-							'join_date' => $join_date,
-							'company' => Input::get('company'),
-							'email_verified' => $pre,
-							'active' => 1,
-							'vericode' => $vericode,
-						));
-					} catch (Exception $e) {
-						die($e->getMessage());
-					}
-				}
-				
-			}else{
-				//Logic if ReCAPTCHA is turned OFF
-				//add user to the database
-				$user = new User();
-				$join_date = date("Y-m-d H:i:s");
-				$params = array(
-					'fname' => Input::get('fname'),
-					'email' => $email,
-					'vericode' => $vericode,
-				);
-
-				if($act == 1) {
-					//Verify email address settings
-					$to = $email;
-					$subject = 'Welcome to UserSpice!';
-					$body = email_body('verify.php',$params);
-					email($to,$subject,$body);
-				}
-				try {
-					// echo "Trying to create user";
-					$user->create(array(
-						'username' => Input::get('username'),
-						'fname' => Input::get('fname'),
-						'lname' => Input::get('lname'),
-						'email' => Input::get('email'),
-						'password' =>
-						password_hash(Input::get('password'), PASSWORD_BCRYPT, array('cost' => 12)),
-						'permissions' => 1,
-						'account_owner' => 1,
-						'stripe_cust_id' => '',
-						'join_date' => $join_date,
-						'company' => Input::get('company'),
-						'email_verified' => $pre,
-						'active' => 1,
-						'vericode' => $vericode,
-					));
-				} catch (Exception $e) {
-					die($e->getMessage());
-				}
-			} //else for recaptcha
-			Redirect::to($us_url_root.'users/joinThankYou.php');
-			
-		}else{
-			$form_valid=FALSE;
-		}
-		//
-		//bold('CSRF PASSED');
+	if ($agreement_checkbox=='on'){
+		$agreement_checkbox=TRUE;
 	}else{
-		//bold('CSRF FAILED');
-		die('Token doesn\'t match!');
-		
+		$agreement_checkbox=FALSE;
 	}
-	//bold('POST SET');
-} //if $_POST not empty
 
-?>
+	$db = DB::getInstance();
+	$settingsQ = $db->query("SELECT * FROM settings");
+	$settings = $settingsQ->first();
+	$validation = new Validate();
+	$validation->check($_POST,array(
+	  'username' => array(
+		'display' => 'Username',
+		'required' => true,
+		'min' => 5,
+		'max' => 35,
+	  ),
+	  'fname' => array(
+		'display' => 'First Name',
+		'required' => true,
+		'min' => 2,
+		'max' => 35,
+	  ),
+	  'lname' => array(
+		'display' => 'Last Name',
+		'required' => true,
+		'min' => 2,
+		'max' => 35,
+	  ),
+	  'email' => array(
+		'display' => 'Email',
+		'required' => true,
+		'valid_email' => true,
+		'unique' => 'users',
+	  ),
+	  'company' => array(
+		'display' => 'Company Name',
+		'required' => false,
+		'min' => 0,
+		'max' => 75,
+	  ),
+	  'password' => array(
+		'display' => 'Password',
+		'required' => true,
+		'min' => 6,
+		'max' => 25,
+	  ),
+	  'confirm' => array(
+		'display' => 'Confirm Password',
+		'required' => true,
+		'matches' => 'password',
+	  ),
+	));
+	
+	//if the agreement_checkbox is not checked, add error
+	if (!$agreement_checkbox){
+		$validation->addError(["Please read and accept terms and conditions"]);
+	}
+	
+	if($validation->passed() && $agreement_checkbox){			
+		//Logic if ReCAPTCHA is turned ON
+		if($settings->recaptcha == 1){
+			require_once("includes/recaptcha.config.php");
+			//reCAPTCHA 2.0 check
+			$response = null;
 
-<?php
-//this is the standard, no cost register form
-//If some of this code looks funny it's because it is prepared for
-//an additional join form with stripe payment options.
+			// check secret key
+			$reCaptcha = new ReCaptcha($privatekey);
+
+			// if submitted check response
+			if ($_POST["g-recaptcha-response"]) {
+				$response = $reCaptcha->verifyResponse(
+					$_SERVER["REMOTE_ADDR"],
+					$_POST["g-recaptcha-response"]);
+			}
+			if ($response != null && $response->success) {
+				// account creation code goes here
+				$reCaptchaValid=TRUE;
+				$form_valid=TRUE;
+			}else{
+				$reCaptchaValid=FALSE;
+				$form_valid=FALSE;
+				$validation->addError(["Please check the reCaptcha box."]);
+			}
+			
+		} //else for recaptcha
+		
+		if($reCaptchaValid || $settings->recaptcha == 0){
+			
+			//add user to the database
+			$user = new User();
+			$join_date = date("Y-m-d H:i:s");
+			$params = array(
+				'fname' => Input::get('fname'),
+				'email' => $email,
+				'vericode' => $vericode,
+			);
+
+			if($act == 1) {
+				//Verify email address settings
+				$to = $email;
+				$subject = 'Welcome to UserSpice!';
+				$body = email_body('_email_template_verify.php',$params);
+				email($to,$subject,$body);
+			}
+			try {
+				// echo "Trying to create user";
+				$user->create(array(
+					'username' => Input::get('username'),
+					'fname' => Input::get('fname'),
+					'lname' => Input::get('lname'),
+					'email' => Input::get('email'),
+					'password' =>
+					password_hash(Input::get('password'), PASSWORD_BCRYPT, array('cost' => 12)),
+					'permissions' => 1,
+					'account_owner' => 1,
+					'stripe_cust_id' => '',
+					'join_date' => $join_date,
+					'company' => Input::get('company'),
+					'email_verified' => $pre,
+					'active' => 1,
+					'vericode' => $vericode,
+				));
+			} catch (Exception $e) {
+				die($e->getMessage());
+			}
+			Redirect::to($us_url_root.'users/joinThankYou.php');
+		}
+	
+	} //Validation and agreement checbox
+} //Input exists
+
 ?>
 <div id="page-wrapper">
-	<div class="container">
-	<!-- Page Heading -->
-		<div class="row">
-			<div class="col-md-12">
-				<?php 
-				if (!$form_valid && !empty($_POST)){
-					echo display_errors($validation->errors());					
-				}
-				?>
-				<?php require 'views/join/_join_form.php'; ?>
-			</div>
-		</div>
-	</div>
+<div class="container">
+<?php
+require 'views/_join.php';
+?>
+
+</div>
 </div>
 
 <!-- footers -->
 <?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; // the final html footer copyright row + the external js calls ?>
-
-<!-- Place any per-page javascript here -->
-<script>
-
-</script>
 
 <?php 	if($settings->recaptcha == 1){ ?>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>

@@ -2,7 +2,7 @@
 /*
 UserSpice 4
 An Open Source PHP User Management System
-by Curtis Parham and Dan Hoover at http://UserSpice.com
+by the UserSpice Team at http://UserSpice.com
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,24 +24,27 @@ require_once $abs_us_root.$us_url_root.'users/includes/header.php';
 require_once $abs_us_root.$us_url_root.'users/includes/navigation.php';
 ?>
 
-<?php if (!securePage($_SERVER['PHP_SELF'])){die();} ?>
+<?php //if (!securePage($_SERVER['PHP_SELF'])){die();} ?>
 
-        <div id="page-wrapper">
-            <div class="container-fluid">
-                <!-- Page Heading -->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="page-header">
-                            Welcome to UserSpice
-                            <small>An Open Source PHP User Management Framework</small>
-                        </h1>
-                    </div>
-                </div>
-                <!-- /.row -->
-<!-- Content goes here -->
+<div id="page-wrapper">
+	<div class="container-fluid">
+		<!-- Page Heading -->
+		<div class="row">
+			<div class="col-sm-12">
+				<h1 class="page-header">
+					Welcome to UserSpice
+					<small>An Open Source PHP User Management Framework</small>
+				</h1>
+				<!-- Content goes here -->
 
 
-<!-- Content Ends Here -->
+				<!-- Content Ends Here -->
+			</div> <!-- /.col -->
+		</div> <!-- /.row -->
+	</div> <!-- /.container -->
+</div> <!-- /.wrapper -->
+               
+
 <?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; // the final html footer copyright row + the external js calls ?>
 
 <!-- Place any per-page javascript here -->

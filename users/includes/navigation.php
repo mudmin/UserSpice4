@@ -2,7 +2,7 @@
 /*
 UserSpice 4
 An Open Source PHP User Management System
-by Curtis Parham and Dan Hoover at http://UserSpice.com
+by the UserSpice Team at http://UserSpice.com
 
 Feb 02 2016 - Ported US3.2.1 top-nav
 
@@ -85,12 +85,15 @@ $lang = array_merge($lang,array(
 					<li><a href="<?=$us_url_root?>users/join.php" class=""><i class="fa fa-plus-square"></i> <?=lang("SIGNUP_TEXT","");?></a></li>
 					<li class="dropdown"><a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="fa fa-life-ring"></i><?=lang("NAVTOP_HELPTEXT","");?> <b class="caret"></b></a>
 					<ul class="dropdown-menu">
-					<li><a href="<?=$us_url_root?>users/forgot-password.php"><i class="fa fa-wrench"></i> Forgot Password</a></li>
-					<li><a href="<?=$us_url_root?>users/resend-activation.php"><i class="fa fa-exclamation-triangle"></i> Resend Activation Email</a></li>
+					<li><a href="<?=$us_url_root?>users/forgot_password.php"><i class="fa fa-wrench"></i> Forgot Password</a></li>
+					<li><a href="<?=$us_url_root?>users/verify_resend.php"><i class="fa fa-exclamation-triangle"></i> Resend Activation Email</a></li>
 					</ul>
 					</li>
 				<?php } //end of conditional for menu display ?>
 			</ul> <!-- End of UL for navigation link list -->
 		</div> <!-- End of Div for right side navigation list -->
+
+	<?php require_once $abs_us_root.$us_url_root.'usersc/includes/navigation.php';?>
+
 	</div> <!-- End of Div for navigation bar -->
 </div> <!-- End of Div for navigation bar styling -->

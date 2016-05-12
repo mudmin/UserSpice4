@@ -2,7 +2,7 @@
 /*
 UserSpice 4
 An Open Source PHP User Management System
-by Curtis Parham and Dan Hoover at http://UserSpice.com
+by the UserSpice Team at http://UserSpice.com
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,8 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <?php require_once $abs_us_root.$us_url_root.'users/includes/header.php'; ?>
 <?php require_once $abs_us_root.$us_url_root.'users/includes/navigation.php'; ?>
 <div id="page-wrapper">
-
-  <div class="container">
+<div class="container">
 <?php
 $settingsQ = $db->query("SELECT * FROM settings");
 $settings = $settingsQ->first();
@@ -34,12 +33,10 @@ $results = $query->first();
 $act = $results->email_act;
 
 if($act == 1) {
-	include 'views/join/_joinThankYouVerify.php';
+	require 'views/_joinThankYou_verify.php';
+}else{
+	require 'views/_joinThankYou.php';
 }
-if($act == 0) {
-	include 'views/join/_joinThankYou.php';
-}
-
 
 ?>
 </div>

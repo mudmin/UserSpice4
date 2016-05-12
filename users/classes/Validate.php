@@ -2,7 +2,7 @@
 /*
 UserSpice 4
 An Open Source PHP User Management System
-by Curtis Parham and Dan Hoover at http://UserSpice.com
+by the UserSpice Team at http://UserSpice.com
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -82,10 +82,10 @@ class Validate{
 							}
 							break;
 
-							case 'valid_email':
-								if(!filter_var($value,FILTER_VALIDATE_EMAIL)){
-									$this->addError(["{$display} must be a valid email address.",$item]);
-								}
+						case 'valid_email':
+							if(!filter_var($value,FILTER_VALIDATE_EMAIL)){
+								$this->addError(["{$display} must be a valid email address.",$item]);
+							}
 							break;
 					}
 				}
@@ -100,7 +100,7 @@ class Validate{
 	}
 
 	public function addError($error){
-		$this->_errors = $error;
+		$this->_errors[] = $error;
 		if(empty($this->_errors)){
 			$this->_passed = true;
 		}else{

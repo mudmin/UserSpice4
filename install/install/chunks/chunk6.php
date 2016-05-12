@@ -32,6 +32,11 @@ if(Cookie::exists(Config::get('remember/cookie_name')) && !Session::exists(Confi
 	}
 }
 
+//Set Time Zone string
+//php.net/manual/en/timezones.php
+$timezone_string="America/Toronto";
+date_default_timezone_set($timezone_string);
+
 //Check to see that user is logged in on a temporary password
 $user = new User();
 

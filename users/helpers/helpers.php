@@ -2,7 +2,7 @@
 /*
 UserSpice 4
 An Open Source PHP User Management System
-by Curtis Parham and Dan Hoover at http://UserSpice.com
+by the UserSpice Team at http://UserSpice.com
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -95,29 +95,66 @@ function display_successes($successes = array()){
 	return $html;
 }
 
-function email($to=array(),$subject,$body,$attachment=false){
-	//Email Settings
+function email($to,$subject,$body,$attachment=false){
 	$db = DB::getInstance();
 	$query = $db->query("SELECT * FROM email");
 	$results = $query->first();
+	
 	$from = $results->from_email;
-	$transport = Swift_SmtpTransport::newInstance($results->smtp_server, $results->smtp_port)
-	  ->setUsername($results->email_login)
-	  ->setPassword($results->email_pass)
-	  ;
-	$mailer = Swift_Mailer::newInstance($transport);
-	$message = Swift_Message::newInstance()
-		->setSubject($subject)
-		->setFrom($from)
-		->setTo($to)
-		->setBody($body,'text/html');
-		$result = $mailer->send($message);
+	$from_name=$results->from_name;
+	$smtp_server=$results->smtp_server;
+	$smtp_port=$results->smtp_port;
+	$smtp_username=$results->email_login;
+	$smtp_password=$results->email_pass;
+	$smtp_transport=$results->transport;
+
+	$mail = new PHPMailer;
+
+	//$mail->SMTPDebug = 3;                               // Enable verbose debug output
+
+	$mail->isSMTP();                                      // Set mailer to use SMTP
+	$mail->Host = $smtp_server;  // Specify main and backup SMTP servers
+	$mail->SMTPAuth = true;                               // Enable SMTP authentication
+	$mail->Username = $smtp_username;                 // SMTP username
+	$mail->Password = $smtp_password;                           // SMTP password
+	$mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
+	$mail->Port = $smtp_port;                                    // TCP port to connect to
+
+	$mail->setFrom($from, $from_name);
+	
+	$mail->addAddress($to);     // Add a recipient, name is optional
+	
+	$mail->isHTML(true);                                  // Set email format to HTML
+
+	$mail->Subject = $subject;
+	$mail->Body    = $body;
+
+	$result = $mail->send();
+	
+	return $result;
 }
 
 function email_body($template,$options = array()){
+	$abs_us_root=$_SERVER['DOCUMENT_ROOT'];
+
+	$self_path=explode("/", $_SERVER['PHP_SELF']);
+	$self_path_length=count($self_path);
+	$file_found=FALSE;
+
+	for($i = 1; $i < $self_path_length; $i++){
+		array_splice($self_path, $self_path_length-$i, $i);
+		$us_url_root=implode("/",$self_path)."/";
+		
+		if (file_exists($abs_us_root.$us_url_root.'z_us_root.php')){
+			$file_found=TRUE;
+			break;
+		}else{
+			$file_found=FALSE;
+		}
+	}	
 	extract($options);
 	ob_start();
-	require env().'users/views/emails/'.$template;
+	require $abs_us_root.$us_url_root.'users/views/'.$template;
 	return ob_get_clean();
 }
 

@@ -2,7 +2,7 @@
 /*
 UserSpice 4
 An Open Source PHP User Management System
-by Curtis Parham and Dan Hoover at http://UserSpice.com
+by the UserSpice Team at http://UserSpice.com
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ $errors=[];
 $successes=[];
 $userId = $user->data()->id;
 $grav = get_gravatar(strtolower(trim($user->data()->email)));
-// dnd($user->data());
+
 $validation = new Validate();
 $userdetails=$user->data();
 
@@ -66,7 +66,7 @@ if(!empty($_POST)) {
 		));
 		if($validation->passed()){
 			//echo 'Username changes are disabled by commenting out this field and disabling input in the form/view';
-			$db->update('users',$userId,$fields);
+			//$db->update('users',$userId,$fields);
 			
 			$successes[]="Username updated.";
 		}else{
@@ -209,22 +209,67 @@ if(!empty($_POST)) {
 	$email=$userdetails->email;
 }
 ?>
- <div id="page-wrapper">
-	<div class="container">
-		<div class="well">
-			<div class="row">
-				<div class="col-xs-12 col-md-2">
-					<p><img src="<?=$grav; ?>" class="img-thumbnail" alt="Generic placeholder thumbnail"></p>
-				</div>
-				<div class="col-xs-12 col-md-10">
-					<h1>Update your user settings</h1>
-					<?php include("views/userspice/_user_settings.php"); ?>
-				</div>
-			</div>
-		</div>
+<div id="page-wrapper">
+<div class="container">
+<div class="well">
+<div class="row">
+<div class="col-xs-12 col-md-2">
+<p><img src="<?=$grav; ?>" class="img-thumbnail" alt="Generic placeholder thumbnail"></p>
+</div>
+<div class="col-xs-12 col-md-10">
+<h1>Update your user settings</h1>
+<span class="bg-danger"><?=display_errors($errors);?></span>
+<span><?=display_successes($successes);?></span>
+
+<form name='updateAccount' action='user_settings.php' method='post'>
+	
+	<div class="form-group">
+		<label>Username</label>
+		<input  class='form-control' type='text' name='username' value='<?=$displayname?>' />
+	</div>
+	
+	<div class="form-group">
+		<label>First Name</label>
+		<input  class='form-control' type='text' name='fname' value='<?=$fname?>' />
+	</div>
+	
+	<div class="form-group">
+		<label>Last Name</label>
+		<input  class='form-control' type='text' name='lname' value='<?=$lname?>' />
+	</div>
+	
+	<div class="form-group">
+		<label>Email</label>
+		<input class='form-control' type='text' name='email' value='<?=$email?>' />
+	</div>
+	
+	<div class="form-group">
+		<label>Old Password (required to change password)</label>
+		<input class='form-control' type='password' name='old' />
+	</div>
+	
+	<div class="form-group">
+		<label>New Password (8 character minimum)</label>
+		<input class='form-control' type='password' name='password' />
+	</div>
+	
+	<div class="form-group">
+		<label>Confirm Password</label>
+		<input class='form-control' type='password' name='confirm' />
+	</div>
+	
+	<input type="hidden" name="csrf" value="<?=Token::generate();?>" />
+
+	<p><input class='btn btn-primary' type='submit' value='Update' class='submit' /></p>
+	<p><a class="btn btn-info" href="account.php">Cancel</a></p>
+
+</form>
+</div>
+</div>
+</div>
 
 
-	</div> <!-- /container -->
+</div> <!-- /container -->
 
 </div> <!-- /#page-wrapper -->
 

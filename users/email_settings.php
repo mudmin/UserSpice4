@@ -2,7 +2,7 @@
 /*
 UserSpice 4
 An Open Source PHP User Management System
-by Curtis Parham and Dan Hoover at http://UserSpice.com
+by the UserSpice Team at http://UserSpice.com
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -114,23 +114,62 @@ if(!empty($_POST)){
 ?>
 <div id="page-wrapper">
 
-  <div class="container-fluid">
+  <div class="container">
 
     <!-- Page Heading -->
     <div class="row">
       <div class="col-sm-12">
 
-        <!-- Left Column -->
-        <div class="class col-sm-4"></div>
-
-        <!-- Main Center Column -->
-        <div class="class col-sm-3" align="center">
           <!-- Content Goes Here. Class width can be adjusted -->
 
-<?php include("views/userspice/_email_settings.php") ?>
+<h1>Setup your email server</h1>
+<p>
+  These settings control all things email-related for the server including emailing your users and verifying the user's email address.
+</p>
+</p>It is <strong>HIGHLY</strong> recommended that you test your email settings before turning on the feature to require new users to verify their email<br>
+  <a href="email_test.php" class="btn btn-danger">Test Your Settings</a><br><br>
+<form name='update' action='email_settings.php' method='post'>
 
-    <!-- /.row -->
+<label>Website Name:</label>
+  <input required size='50' class='form-control' type='text' name='website_name' value='<?=$results->website_name?>' />
 
+<label>SMTP Server:</label>
+  <input required size='50' class='form-control' type='text' name='smtp_server' value='<?=$results->smtp_server?>' />
+
+<label>SMTP Port:</label>
+  <input required size='50' class='form-control' type='text' name='smtp_port' value='<?=$results->smtp_port?>' />
+
+<label>Email Login/Username:</label>
+  <input required size='50' class='form-control' type='text' name='email_login' value='<?=$results->email_login?>' />
+
+<label>Email Password:</label>
+  <input required size='50' class='form-control' type='password' name='email_pass' value='<?=$results->email_pass?>' />
+
+<label>From Name (For Sent Emails):</label>
+  <input required size='50' class='form-control' type='text' name='from_name' value='<?=$results->from_name?>' />
+
+<label>From Email (For Sent Emails):</label>
+  <input required size='50' class='form-control' type='text' name='from_email' value='<?=$results->from_email?>' />
+
+<label>Transport (Experimental):</label>
+  <input required size='50' class='form-control' type='text' name='transport' value='<?=$results->transport?>' />
+
+<label>URL of YOUR verify.php file: (VERY Important). <?="Default location would be: ".$_SERVER['HTTP_HOST'].$us_url_root.'users/verify.php'?></label>
+  <input required  size='50' class='form-control' type='text' name='verify_url' value='<?=$results->verify_url?>' />
+
+
+<label>Require User to Verify Their Email?:</label>
+<input type="radio" name="email_act" value="1" <?php echo ($results->email_act==1)?'checked':''; ?> size="25">Yes</input>
+<input type="radio" name="email_act" value="0" <?php echo ($results->email_act==0)?'checked':''; ?> size="25">No</input>
+
+<input type="hidden" name="csrf" value="<?=Token::generate();?>" />
+<input class='btn btn-primary' type='submit' value='Update Email Settings' class='submit' />
+</form>
+
+</div>    <!-- /.row -->
+</div>
+</div>
+</div>
     <!-- footers -->
 <?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; // the final html footer copyright row + the external js calls ?>
 

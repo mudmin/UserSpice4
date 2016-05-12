@@ -2,7 +2,7 @@
 /*
 UserSpice 4
 An Open Source PHP User Management System
-by Curtis Parham and Dan Hoover at http://UserSpice.com
+by the UserSpice Team at http://UserSpice.com
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,7 +23,12 @@ class DB {
 
 	private function __construct(){
 		try{
-			$this->_pdo = new PDO('mysql:host=' . Config::get('mysql/host') .';dbname='. Config::get('mysql/db'), Config::get('mysql/username'), Config::get('mysql/password'));
+			$this->_pdo = new PDO('mysql:host=' .
+				Config::get('mysql/host') .';dbname='. 
+				Config::get('mysql/db'), 
+				Config::get('mysql/username'), 
+				Config::get('mysql/password'),
+				array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET SESSION sql_mode = ''"));
 		} catch(PDOException $e){
 			die($e->getMessage());
 		}
@@ -113,11 +118,10 @@ class DB {
 		}
 
 		$sql = "INSERT INTO {$table} (`". implode('`,`', $keys)."`) VALUES ({$values})";
-
+		
 		if (!$this->query($sql, $fields)->error()) {
 			return true;
 		}
-
 		return false;
 	}
 

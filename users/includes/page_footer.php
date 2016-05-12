@@ -2,7 +2,7 @@
 /*
 UserSpice 4
 An Open Source PHP User Management System
-by Curtis Parham and Dan Hoover at http://UserSpice.com
+by the UserSpice Team at http://UserSpice.com
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <div class="container-fluid">
 	<div class="row">
-		<div class="col-md-12 text-center">
+		<div class="col-sm-12 text-center">
 			<footer><hr />&copy; <?php echo $copyright_message; ?>  | <?=$user_spice_ver?></footer>
 			<?php if($your_public_key  == "6LenGxITAAAAAImPQkqg_xBC0ZnGvopGa3jeP7S7") { echo "<h3 align='center'style='color:white'>For security reasons, you need to change your reCAPTCHA key.</h3>"; } ?>
 		</div>
