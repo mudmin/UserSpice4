@@ -43,15 +43,20 @@ $settings = $settingsQ->first();
 ?>
 <div id="page-wrapper">
 
-  <div class="container-fluid">
+  <div class="container">
 
     <!-- Page Heading -->
 <div class="row">
-  <div class="col-sm-12">
-    <div class="col-sm-6 col-sm-offset-3">
+  <div class="col-md-12">
+
 <?php include 'views/join/_join_form.php'; ?>
 
+</div>
+</div>
 
+
+</div>
+</div>
 
 <!-- footers -->
 <?php require_once("includes/userspice/us_page_footer.php"); // the final html footer copyright row + the external js calls ?>
@@ -86,8 +91,6 @@ $settings = $settingsQ->first();
     $form.find('button').prop('disabled', true);
   });
 });
-
-
 
 </script>
 <?php 	if($settings->recaptcha == 1){ ?>

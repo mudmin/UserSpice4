@@ -33,37 +33,54 @@ $signupdate = $raw['month']."/".$raw['day']."/".$raw['year'];
 $userdetails = fetchUserDetails(NULL, NULL, $get_info_id); //Fetch user details
  ?>
 
-   <div id="page-wrapper">
+        <div id="page-wrapper">
 
-		 <div class="container">
+            <div class="container-fluid">
 
-				<!-- Main jumbotron for a primary marketing message or call to action -->
-				<div class="well">
-					<div class="row">
-						<div class="col-xs-12 col-md-2">
-							<p><img src="<?=$grav; ?>" class="img-thumbnail" alt="Generic placeholder thumbnail"></p>
-							<p><a href="user_settings.php" class="btn btn-primary">Edit Account Info</a></p>
-						</div>
-						<div class="col-xs-12 col-md-10">
-						<h1><?php $liu = ucfirst($user->data()->username); echo $liu; ?></h1>
-							<p><?=ucfirst($user->data()->fname)." ".ucfirst($user->data()->lname)?></p>
-							<p>Member Since:<?=$signupdate?></p>
-							<p>Number of Logins: <?=$user->data()->logins?></p>
-							<p>This is the private account page for your users. It can be whatever you want it to be; This code serves as a guide on how to use some of the built-in UserSpice functionality. </p>
-					
-							<p>
-							<a class="btn btn-warning " href="profile.php?id=<?php echo $get_info_id;?>" role="button">Public Profile &raquo;</a>
-						</p>
-						
-	
-					</div>
-				</div>
-			</div>
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">
+                            Welcome to UserSpice
+                            <small>An Open Source PHP User Management Framework</small>
+                        </h1>
+                    </div>
+                </div>
+                <!-- /.row -->
+<!-- Content goes here -->
+<div align="center">
+  This is your main profile page for your users. It can be whatever you want it to be,<br> but this code serves as a guide on how to use some of the built-in UserSpice functionality.<br>
+</div>
+<div class="col-md-4"></div>
+<div class="col-md-4">
+<div class="panel panel-primary">
+<header class="panel-heading"><h4 class="panel-title">Profile</h4></header>
+  <div class="panel-body">
+    <!-- <div class="row"> -->
 
-    </div> <!-- /container -->
+        <img src="<?=$grav; ?>" alt=""class="left-block img-thumbnail" alt="Generic placeholder thumbnail">
+      <div class="col-md-8">
+        <h1><?php $liu = ucfirst($user->data()->username); echo $liu; ?></h1>
+        <p><?=ucfirst($user->data()->fname)." ".ucfirst($user->data()->lname)?></p>
+        <p>Member Since:<?=$signupdate?></p>
+        <p>Number of Logins: <?=$user->data()->logins?></p>
+        <a href="edit_profile.php">Edit Your Public Profile</a><br>
+        <a href="view_all_users.php">View All Users</a><br><br>
+      <a href="user_settings.php" class="btn btn-primary left-block img-thumbnail">Edit Account Info</a>
+      </div>
+    </div>
+  </div>
+</div>
+<?php
 
-</div> <!-- /#page-wrapper -->
+?>
 
+
+
+
+
+
+<!-- Content Ends Here -->
 <!-- footers -->
 <?php require_once("includes/userspice/us_page_footer.php"); // the final html footer copyright row + the external js calls ?>
 

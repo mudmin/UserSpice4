@@ -17,61 +17,71 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-?><?php require_once("includes/userspice/us_header.php"); ?>
-
+?>
+<?php require_once("includes/userspice/us_header.php"); ?>
 <?php require_once("includes/userspice/us_navigation.php"); ?>
-
 <?php if (!securePage($_SERVER['PHP_SELF'])){die();} ?>
 <?php
 //PHP Goes Here!
-$userID = Input::get('id');
 
-$userQ = $db->query("SELECT * FROM users WHERE id = ?",array($userID));
-$thisUser = $userQ->first();
+if($user->isLoggedIn()) { $thisUserID = $user->data()->id;} else { $thisUserID = 0; }
 
-$grav = get_gravatar(strtolower(trim($thisUser->email)));
+if(isset($_GET['id']))
+	{
+	$userID = Input::get('id');
+	
+	$userQ = $db->query("SELECT * FROM profiles LEFT JOIN users ON user_id = users.id WHERE user_id = ?",array($userID));
+	$thatUser = $userQ->first();
 
-$profileQ = $db->query("SELECT * FROM profiles WHERE user_id = ?",array($userID));
-
-$thisProfile = $profileQ->first();
-//Uncomment out the 2 lines below to see what's available to you.
-// dump($thisUser);
-// dump($thisProfile);
+	if($thisUserID == $userID)
+		{
+		$editbio = ' <small><a href="edit_profile.php">Edit Bio</a></small>';
+		}
+	else
+		{
+		$editbio = '';
+		}
+	
+	$ususername = ucfirst($thatUser->username)."'s Profile";
+	$grav = get_gravatar(strtolower(trim($thatUser->email)));
+	$useravatar = '<img src="'.$grav.'" class="img-thumbnail" alt="'.$ususername.'">';
+	$usbio = html_entity_decode($thatUser->bio);
+	//Uncomment out the line below to see what's available to you.
+	//dump($thisUser);
+	}
+else
+	{
+	$ususername = '404';
+	$usbio = 'User not found';
+	$useravatar = '';
+	$editbio = ' <small><a href="/">Go to the homepage</a></small>';
+	}
 ?>
-<div id="page-wrapper">
+   <div id="page-wrapper">
 
-  <div class="container-fluid">
+		 <div class="container">
+				<!-- Main jumbotron for a primary marketing message or call to action -->
+				<div class="well">
+					<div class="row">
+						<div class="col-xs-12 col-md-2">
+							<p><?php echo $useravatar;?></p>
+						</div>
+						<div class="col-xs-12 col-md-10">
+						<h1><?php echo $ususername;?></h1>
+							<h2><?php echo $usbio.$editbio;?></h2>
+	
+					</div>
+					</div>
+				</div>
+				
+										<a class="btn btn-success" href="view_all_users.php" role="button">All Users</a>
 
-    <!-- Page Heading -->
-    <div class="row">
-      <div class="col-sm-12">
 
-        <!-- Left Column -->
-        <div class="class col-sm-1"></div>
+    </div> <!-- /container -->
 
-        <!-- Main Center Column -->
-        <div class="class col-sm-10">
-          <!-- Content Goes Here. Class width can be adjusted -->
-          <h1>
-            <?=ucfirst($thisUser->username)?>'s Profile
-          </h1>
-          <img src="<?=$grav; ?>" alt=""class="left-block img-thumbnail" alt="Generic placeholder thumbnail">
-          <h2>Bio</h2>
-          <?=html_entity_decode($thisProfile->bio);?>
-          <br><br>
-          <!-- End of main content section -->
-        </div>
-
-        <!-- Right Column -->
-        <div class="class col-sm-1"></div>
-      </div>
-    </div>
-
-    <!-- /.row -->
-
-    <!-- footers -->
-    <?php require_once("includes/userspice/us_page_footer.php"); // the final html footer copyright row + the external js calls ?>
-
-    <!-- Place any per-page javascript here -->
-
-    <?php require_once("includes/userspice/us_html_footer.php"); // currently just the closing /body and /html ?>
+</div> <!-- /#page-wrapper -->
+ 
+<!-- footers -->
+<?php require_once("includes/userspice/us_page_footer.php"); // the final html footer copyright row + the external js calls ?>
+<!-- Place any per-page javascript here -->
+<?php require_once("includes/userspice/us_html_footer.php"); // currently just the closing /body and /html ?>

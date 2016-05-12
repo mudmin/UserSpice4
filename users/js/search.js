@@ -16,9 +16,7 @@ $('#system-search').keyup( function() {
         if(inputText != '')
         {
             $('.search-query-sf').remove();
-            tableBody.prepend('<tr class="search-query-sf"><td colspan="6"><strong>Searching for: "'
-                + $(that).val()
-                + '"</strong></td></tr>');
+            $('.alluinfo').html('<strong class="text-success">Searching for: "'+ $(that).val() + '"</strong>');
         }
         else
         {
@@ -40,7 +38,7 @@ $('#system-search').keyup( function() {
     //all tr elements are hidden
     if(tableRowsClass.children(':visible').length == 0)
     {
-        tableBody.append('<tr class="search-sf"><td class="text-muted" colspan="6">No entries found.</td></tr>');
+        $('.alluinfo').append(' :: <span class="text-danger">No entries found.</span>');
     }
 });
 });

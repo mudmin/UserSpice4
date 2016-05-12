@@ -60,7 +60,7 @@ if(!empty($_POST)) {
       ));
     if($validation->passed()){
       $db->update('users',$userId,$fields);
-      echo "Username Updated";
+     $successes[] = "Username Updated";
     }else{
 
       }
@@ -82,7 +82,7 @@ if(!empty($_POST)) {
       ));
     if($validation->passed()){
       $db->update('users',$userId,$fields);
-      echo "First Name Updated";
+      $successes[] = "First Name Updated";
     }else{
           ?><div id="form-errors">
             <?=$validation->display_errors();?></div>
@@ -106,7 +106,7 @@ if(!empty($_POST)) {
       ));
     if($validation->passed()){
       $db->update('users',$userId,$fields);
-      echo "Last Name Updated";
+      $successes[] = "Last Name Updated";
     }else{
           ?><div id="form-errors">
             <?=$validation->display_errors();?></div>
@@ -137,7 +137,7 @@ if(!empty($_POST)) {
       ));
     if($validation->passed()){
       $db->update('users',$userId,$fields);
-      echo "Email Updated";
+      $successes[] = "Email Updated";
     }else{
           ?><div id="form-errors">
             <?=$validation->display_errors();?></div>
@@ -174,45 +174,81 @@ if(!empty($_POST)) {
 $userPermission = fetchUserPermissions($userId);
 $permissionData = fetchAllPermissions();
 
-
-
-
+$grav = get_gravatar(strtolower(trim($userdetails->email)));
+$useravatar = '<img src="'.$grav.'" class="img-responsive img-thumbnail" alt="">';
+//
 ?>
 <div id="page-wrapper">
 
-  <div class="container-fluid">
+  <div class="container">
 
-    <!-- Page Heading -->
+       <?php    echo resultBlock($errors,$successes); ?>
+      <?=$validation->display_errors();?>
+  	<h1><?=$userdetails->username?></h1>
     <div class="row">
-      <div class="col-sm-12">
-        <div id="form-errors">
-          <?=$validation->display_errors();?></div>
-        <!-- Left Column -->
-        <div class="class col-sm-3"></div>
+  		<div class="col-sm-3"><!--left col-->
 
-        <!-- Main Center Column -->
-        <div class="class col-sm-6">
-          <!-- Content Goes Here. Class width can be adjusted -->
-          <h1>
-            This is the main content section
-          </h1>
-          <?php
-          echo resultBlock($errors,$successes);
+			  <div class="well text-center hidden-xs"><?php echo $useravatar;?></div>
 
-          include("views/userspice/_admin_user.php");
+          <div class="panel panel-default hidden-xs">
+            <div class="panel-heading">User Info <i class="fa fa-link fa-1x"></i></div>
+				 <ul class="list-group">
+					<li class="list-group-item text-right"><span class="pull-left"><strong>Joined</strong></span> <?=$userdetails->join_date?></li>
+					<li class="list-group-item text-right"><span class="pull-left"><strong>Last seen</strong></span> <?=$userdetails->last_login?></li>
+					<li class="list-group-item text-right"><span class="pull-left"><strong>Full name</strong></span> <?=$userdetails->fname?> <?=$userdetails->lname?></li>
+				  </ul>
+          </div>
+
+          <div class="panel panel-default hidden-xs">
+            <div class="panel-heading">Email <i class="fa fa-link fa-1x"></i></div>
+			 <ul class="list-group">
+            <li class="list-group-item text-right"><span class="pull-left"><strong>Email</strong></span> <?=$userdetails->email?></li>
+			</ul>
+          </div>
+
+
+          <div class="panel panel-default hidden-xs">
+            <div class="panel-heading">Activity <i class="fa fa-link fa-1x"></i></div>
+				 <ul class="list-group">
+            <li class="list-group-item text-right"><span class="pull-left"><strong>Logins</strong></span> <?=$userdetails->logins?></li>
+          </ul>
+           </div>
+
+        </div><!--/col-3-->
+
+    	<div class="col-sm-9">
+
+          <ul class="nav nav-tabs" id="myTab">
+            <li class="active"><a href="#perms" data-toggle="tab">Permissions</a></li>
+            <li><a href="#info" data-toggle="tab">User Info</a></li>
+          </ul>
+     		<form class="form-inline" name='adminUser' action='<?=$_SERVER['PHP_SELF']?>?id=<?=$userId?>' method='post'>
+          <div class="tab-content">
+
+
+		 <div class="tab-pane active" id="perms">
+		   <?php include("views/userspice/_admin_user2.php");
           ?>
+			</div>
 
-          <!-- End of main content section -->
+		 <div class="tab-pane" id="info">
+		   <?php include("views/userspice/_admin_user.php");
+          ?>
+			</div>
+		    <input type="hidden" name="csrf" value="<?=Token::generate();?>" >
+			<label>&nbsp;</label>
+			<input class='btn btn-primary' type='submit' value='Update' class='submit' />
+			<a class='btn btn-warning' href="admin_users.php">Cancel</a>
+		</form>
+          </div><!--/tab-content-->
 
-        </div>
+        </div><!--/col-9-->
+    </div><!--/row-->
 
-        <!-- Right Column -->
-        <div class="class col-sm-1"></div>
-      </div>
-    </div>
+  </div>
+  </div>
 
-    <!-- /.row -->
-    <!-- footers -->
+
     <?php require_once("includes/userspice/us_page_footer.php"); // the final html footer copyright row + the external js calls ?>
 
     <!-- Place any per-page javascript here -->

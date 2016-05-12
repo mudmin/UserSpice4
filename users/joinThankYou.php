@@ -21,6 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <?php require_once("includes/userspice/us_header.php"); ?>
 
 <?php require_once("includes/userspice/us_navigation.php"); ?>
+<div id="page-wrapper">
+
+  <div class="container">
 <?php
 $settingsQ = $db->query("SELECT * FROM settings");
 $settings = $settingsQ->first();
@@ -152,7 +155,8 @@ if($act == 0) {
 
 
 ?>
-
+</div>
+</div>
 <!-- Content Ends Here -->
 <!-- footers -->
 <?php require_once("includes/userspice/us_page_footer.php"); // the final html footer copyright row + the external js calls ?>

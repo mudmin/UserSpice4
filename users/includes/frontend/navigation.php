@@ -17,9 +17,140 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+// Signup
+$lang = array_merge($lang,array(
+	"SIGNUP_TEXT"				=> "Create Account",
+	"SIGNUP_BUTTONTEXT"				=> "Register Me",
+	"SIGNUP_AUDITTEXT"				=> "Registered",
+	));
+
+// Signin
+$lang = array_merge($lang,array(
+	"SIGNIN_FAIL"				=> "** FAILED LOGIN **",
+	"SIGNIN_TITLE"				=> "Please Log In",
+	"SIGNIN_TEXT"				=> "Not Logged In",
+	"SIGNOUT_TEXT"				=> "Log Out",
+	"SIGNIN_BUTTONTEXT"				=> "Log In",
+	"SIGNIN_AUDITTEXT"				=> "Logged In",
+	"SIGNOUT_AUDITTEXT"				=> "Logged Out",
+	));	
+
+	
+//Navigation
+$lang = array_merge($lang,array(
+	"NAVTOP_HELPTEXT"				=> "Help",
+	));
+
+
+	
 ?>
 <!-- Navigation -->
-<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+<div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
+<div class="container">
+
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header ">
+        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-top-menu-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+		  
+		  <a class="navbar-brand" href="/"><img class="img-responsive" src="users/images/logo.png" alt="" /></a>
+		
+	</div>
+
+    <div class="collapse navbar-collapse navbar-top-menu-collapse navbar-right">
+    <ul class="nav navbar-nav ">
+
+	   	<?php if($user->isLoggedIn()) 
+			{ ?> 
+        <li><a href="users/account.php"><i class="fa fa-fw fa-user text-success"></i> <?php echo $user->data()->username;?></a></li>
+      <!--  <li class="hidden-sm hidden-md hidden-lg"><a href="index.php"><i class="fa fa-fw fa-home"></i> Home</a></li> -->
+               <li class="hidden-sm hidden-md hidden-lg"><a href="users/profile.php?id=<?php echo $user->data()->id;?>"><i class="fa fa-fw fa-users"></i> Public Profile</a></li>      
+	  <li class="hidden-sm hidden-md hidden-lg"><a href="users/account.php"><i class="fa fa-fw fa-user"></i> User Account</a></li>
+        <li class="hidden-sm hidden-md hidden-lg"><a href="users/user_settings.php"><i class="fa fa-fw fa-pencil-square-o"></i> User Settings</a></li>
+	
+		<?php //Links for permission level 2 (default admin)
+			if (checkMenu(2,$user->data()->id)){   ?>
+				<li class="hidden-sm hidden-md hidden-lg"><a href="users/admin_users.php"><i class="fa fa-fw fa-users"></i> Manage Users</a></li>
+				<li class="hidden-sm hidden-md hidden-lg"><a href="users/admin.php"><i class="fa fa-fw fa-cogs"></i> Admin Dashboard</a></li>
+				<li class="hidden-sm hidden-md hidden-lg divider"></li>
+			<?php } // is user an admin ?>
+
+		<li class="dropdown hidden-xs">
+            <a class="dropdown-toggle" href="#" data-toggle="dropdown"> <i class="fa fa-fw fa-cog"></i> </a>
+            <ul class="dropdown-menu">
+			
+			 <?php //Links for permission level 2 (default admin)
+			if (checkMenu(2,$user->data()->id)){   ?>
+				<li class=""><a href="users/admin_users.php"><i class="fa fa-fw fa-users"></i> Manage Users</a></li>
+				<li class=""><a href="users/admin.php"><i class="fa fa-fw fa-cogs"></i> Admin Dashboard</a></li>
+				<li class="divider"></li>
+			<?php } // is user an admin ?>
+			 <!--  <li><a href="index.php"><i class="fa fa-fw fa-home"></i> Home</a></li>
+			   <li class="divider"></li> -->
+               <li><a href="users/profile.php?id=<?php echo $user->data()->id;?>"><i class="fa fa-fw fa-users"></i> Public Profile</a></li>
+               <li><a href="users/account.php"><i class="fa fa-fw fa-user"></i> User Account</a></li>
+               <li><a href="users/user_settings.php"><i class="fa fa-fw fa-pencil-square-o"></i> User Settings</a></li>
+			<li><a href="users/logout.php"><i class="fa fa-fw fa-sign-out"></i> <?php echo lang("SIGNOUT_TEXT","");?></a></li>
+            </ul>
+        </li> 
+		  <?php //Links for permission level 2 (default admin)
+			if (checkMenu(2,$user->data()->id)){   ?> <!--
+
+			<li class="hidden-sm hidden-md hidden-lg"><a href="admin_users.php"><i class="fa fa-fw fa-users"></i> Manage Users</a></li>
+			<li class="hidden-sm hidden-md hidden-lg"><a href="admin.php"><i class="fa fa-fw fa-cogs"></i> Admin Dashboard</a></li>
+
+			<li class="hidden-xs"><a href="admin.php"><i class="fa fa-fw fa-cogs"></i> Admin Dashboard</a></li>
+			
+			<li class="dropdown hidden-xs">
+				<a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="fa fa-flask"></i> Admin Menu <b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="admin_users.php"><i class="fa fa-fw fa-users"></i> Manage Users</a></li>
+					<li class="divider"></li>
+					<li><a href="admin.php"><i class="fa fa-fw fa-cogs"></i> Admin Dashboard</a></li>
+					<li><a href="admin.php"><i class="fa fa-fw fa-wrench"></i> Admin Configuration</a></li>
+					<li><a href="admin_permissions.php"><i class="fa fa-fw fa-code"></i> Admin Permissions</a></li>
+					<li><a href="admin_pages.php"><i class="fa fa-fw fa-newspaper-o"></i> Admin Pages</a></li>
+					<li><a href="logout.php"><i class="fa fa-fw fa-sign-out"></i> <?php //echo lang("SIGNOUT_TEXT","");?></a></li>
+				</ul>
+			</li> -->
+			<?php } // is user an admin ?>
+
+		<li class="hidden-sm hidden-md hidden-lg"><a href="users/logout.php"><i class="fa fa-fw fa-sign-out"></i> <?php echo lang("SIGNOUT_TEXT","");?></a></li>
+
+		<?php }
+		else	{ // user is not and admin OR logged in
+		?>
+		<li class="disabled" ><a href="#" class=" text-muted"><i class="fa fa-user text-danger"></i> <?php echo lang("SIGNIN_TEXT","");?></a></li>
+		<li><a href="users/join.php" class=""> <?php echo lang("SIGNUP_TEXT","");?></a></li>
+		<li><a href="users/login.php" class=""><i class="fa fa-sign-in"></i> <?php echo lang("SIGNIN_BUTTONTEXT","");?></a></li>
+		<!--<li class="dropdown">
+            <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="fa fa-life-ring"></i> <?php //echo lang("NAVTOP_HELPTEXT","");?></a>
+            <ul class="dropdown-menu">
+				<li><a href="users/forgot-password.php"><i class="fa fa-wrench"></i> Forgot Password</a></li>
+				<li><a href="users/resend-activation.php"><i class="fa fa-exclamation-triangle"></i> Resend Activation Email</a></li>
+            </ul>
+        </li> -->
+		<?php } ?>
+
+    </ul>
+    </div>
+
+
+
+</div>
+</div>
+<?php
+	
+	
+
+/*
+<!-- Navigation -->
+<div class="navbar navbar-fixed-top navbar-default" role="navigation">
   <!-- Brand and toggle get grouped for better mobile display -->
   <div class="navbar-header">
 
@@ -98,3 +229,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </div>
 
   </nav>
+  
+  */
+  ?>

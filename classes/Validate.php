@@ -27,6 +27,7 @@ class Validate{
 	}
 
 	public function check($source, $items = array()){
+		$this->_errors = [];
 		foreach ($items as $item => $rules) {
 			$item = sanitize($item);
 			$display = $rules['display'];
@@ -34,7 +35,7 @@ class Validate{
 				$value = trim($source[$item]);
 				$value = sanitize($value);
 
-				if ($rule === 'required' && empty($value) && $rule_value === true) {
+				if ($rule === 'required' && empty($value)) {
 					$this->addError(["{$display} is required",$item]);
 				} else if(!empty($value)){
 					switch ($rule) {
@@ -99,20 +100,12 @@ class Validate{
 	}
 
 	public function addError($error){
-			$this->_errors[] = $error;
-			if(empty($this->_errors)){
-				$this->_passed = true;
-			}else{
-				$this->_passed = false;
-			}
+		$this->_errors[] = $error;
+		if(empty($this->_errors)){
+			$this->_passed = true;
+		}else{
+			$this->_passed = false;
 		}
-
-	public function errors(){
-		return $this->_errors;
-	}
-
-	public function passed(){
-		return $this->_passed;
 	}
 
 	public function display_errors(){
@@ -120,12 +113,20 @@ class Validate{
 		foreach($this->_errors as $error){
 			if(is_array($error)){
 				$html .= '<li class="text-danger">'.$error[0].'</li>';
-				$html .= '<script>jQuery("#'.$error[1].'").parent().closest("div").addClass("has-error");</script>';
+				$html .= '<script>jQuery("document").ready(function(){jQuery("#'.$error[1].'").parent().closest("div").addClass("has-error");});</script>';
 			}else{
 				$html .= '<li class="text-danger">'.$error.'</li>';
 			}
 		}
 		$html .= '</ul>';
 		return $html;
+	}
+
+	public function errors(){
+		return $this->_errors;
+	}
+
+	public function passed(){
+		return $this->_passed;
 	}
 }

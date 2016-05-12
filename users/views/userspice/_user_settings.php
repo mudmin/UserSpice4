@@ -1,10 +1,7 @@
 <span class="bg-danger"><?=display_errors($errors);?></span>
           <div id='regbox'>
           <form name='updateAccount' action='user_settings.php' method='post'>
-            <p>
-          <img src="<?=$grav; ?>" alt=""class="left-block img-thumbnail" alt="Generic placeholder thumbnail">
-            </p>
-          <p><a href="https://en.gravatar.com/">Don't have a profile pic? Get one!</a>
+
           <p>
             <label>Username:
               <input  class='form-control' type='text' name='username' value='<?=$userdetails->username?>' /></label>
@@ -38,5 +35,15 @@
           <p>
           <label></label>
           <input class='btn btn-primary' type='submit' value='Update' class='submit' />
+          <a class="btn btn-info" href="account.php">Cancel</a>
           </p>
           </form>
+
+		  <?php
+		  /*
+		              <p>
+          <img src="<?=$grav; ?>" alt=""class="left-block img-thumbnail" alt="Generic placeholder thumbnail">
+            </p>
+          <p><a href="https://en.gravatar.com/">Don't have a profile pic? Get one!</a>
+		  */
+		  ?>

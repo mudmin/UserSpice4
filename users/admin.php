@@ -138,29 +138,73 @@ Redirect::to('admin.php');
 }
 
 ?>
-<div id="page-wrapper">
+<div id="page-wrapper"> <!-- leave in place for full-screen backgrounds etc -->
 
-  <div class="container-fluid">
+  <div class="container"> <!-- -fluid -->
 
     <!-- Page Heading -->
-    <div class="row">
-      <div class="col-lg-12">
-        <h1 class="page-header">
-          Administrator Control Panel
-        </h1>
-    </div>
+	<div class="row">
+		<div class="col-md-4">
+			<h1 class="hidden-xs ">Dashboard</h1>
+			<h1 class="visible-xs ">Dash</h1>
+		</div>
+		
+		<div class="col-md-8">
+		<h1 class="pull-right">Kinda wasted space</h1>
+		</div>
+	</div>
 
-    <!-- /.row -->
+		
+	<!-- Top Admin Panels -->
 
-<!-- Top Admin Panels -->
-<?php require_once("views/admin_panel/_top_panels.php");?>
-<?php if($settings->css_sample == 1){     require_once("views/admin_panel/_css_test.php");}?>
-<?php require_once("views/admin_panel/_css_settings.php");?>
-<?php require_once("views/admin_panel/_main_settings.php");?>
+	
+	<div>
 
-    <!-- footers -->
-    <?php require_once("includes/userspice/us_page_footer.php"); // the final html footer copyright row + the external js calls ?>
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs " role="tablist">
+    <li class="active"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab" >Activity</a></li>
+    <li ><a href="#settings2" aria-controls="settings2" role="tab" data-toggle="tab">Main Settings</a></li>
+    <li ><a href="#css" aria-controls="css" role="tab" data-toggle="tab">Choose CSS</a></li>
+  </ul>
+  <!-- Tab panes -->
+	<div class="tab-content us-dash-panels">
+		<div role="tabpanel" class="tab-pane active" id="settings">	<?php require_once("views/admin_panel/_top_panels.php");?><?php require_once("views/admin_panel/_main_settings.php");?>		<div id="times"></div></div>
+		<div role="tabpanel" class="tab-pane" id="settings2"><?php require_once("views/admin_panel/_main_settings2.php");?></div>
+		<div role="tabpanel" class="tab-pane" id="css">
+			<?php require_once("views/admin_panel/_css_settings.php");?>
+			<?php if($settings->css_sample == 1){     require_once("views/admin_panel/_css_test.php");}?>		</div>
+	   </div>
 
-    <!-- Place any per-page javascript here -->
+	</div>
 
-    <?php require_once("includes/userspice/us_html_footer.php"); // currently just the closing /body and /html ?>
+
+
+	
+	
+    </div> <!-- /container -->
+
+</div> <!-- /#page-wrapper -->
+
+
+<!-- footers -->
+<?php require_once("includes/userspice/us_page_footer.php"); // the final html footer copyright row + the external js calls ?>
+
+<!-- Place any per-page javascript here -->
+	<script type="text/javascript">
+	$(document).ready(function(){	
+
+	$("#times").load("times.php" );	
+	
+	var timesRefresh = setInterval(function(){
+	$("#times").load("times.php" );	
+	}, 30000); 
+	
+	
+  $('[data-toggle="tooltip"]').tooltip();
+	$('[data-toggle="popover"]').popover();
+// -------------------------------------------------------------------------		
+		});
+	</script>
+
+
+<?php require_once("includes/userspice/us_html_footer.php"); // currently just the closing /body and /html ?>

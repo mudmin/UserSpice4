@@ -29,7 +29,6 @@ $userID = $user->data()->id;
 $grav = get_gravatar(strtolower(trim($user->data()->email)));
 $profileQ = $db->query("SELECT * FROM profiles WHERE user_id = ?",array($userID));
 $thisProfile = $profileQ->first();
-$id = $thisProfile->id;
 //Uncomment out the 2 lines below to see what's available to you.
 // dump($user);
 // dump($thisProfile);
@@ -50,57 +49,49 @@ if(!empty($_POST)) {
           )
         ));
       if($validation->passed()){
-        $db->update('profiles',$id,$fields);
-        Redirect::to('edit_profile.php');
+        $db->update('profiles',$userID,$fields);
+        Redirect::to('profile.php?id='.$userID);
       }
     }
   }
 }
 ?>
-<script src='//cdn.tinymce.com/4/tinymce.min.js'></script>
-<script>
-tinymce.init({
-  selector: '#mytextarea'
-});
-</script>
-<div id="page-wrapper">
 
-  <div class="container-fluid">
+	  <div id="page-wrapper">
 
-    <!-- Page Heading -->
-    <div class="row">
-      <div class="col-sm-12">
+		 <div class="container">
 
-        <!-- Left Column -->
-        <div class="class col-sm-1"></div>
+				<!-- Main jumbotron for a primary marketing message or call to action -->
+				<div class="well">
+					<div class="row">
+						<div class="col-xs-12 col-md-2">
+							<p><img src="<?=$grav; ?>" alt=""class="left-block img-thumbnail" alt="Generic placeholder thumbnail"></p>
+						</div>
+						<div class="col-xs-12 col-md-10">
+						<h1><?=ucfirst($user->data()->username)?>'s Profile</h1>
 
-        <!-- Main Center Column -->
-        <div class="class col-sm-10">
-          <!-- Content Goes Here. Class width can be adjusted -->
-          <h1>
-            <?=ucfirst($user->data()->username)?>'s Profile
-          </h1>
-          <img src="<?=$grav; ?>" alt=""class="left-block img-thumbnail" alt="Generic placeholder thumbnail">
-
-          <p><a href="https://en.gravatar.com/">Don't have a profile pic? Get one!</a>
-
-          <h2>Bio</h2>
+        <h2>Bio</h2>
           <form name="update_bio" action="edit_profile.php" method="post">
-            <button type="submit" class="btn btn-primary" name="update_bio">Update Bio</button>
-          <textarea id="mytextarea" name="bio"><?=$thisProfile->bio;?></textarea>
+    <p>      <input type="text"  id="mytextarea" name="bio" value="<?=$thisProfile->bio;?>">
           <input type="hidden" name="csrf" value="<?=Token::generate();?>" >
-          </form>
+		</p>  
+		  <p>
+			<button type="submit" class="btn btn-primary" name="update_bio">Update Bio</button>
+			<a class="btn btn-info" href="profile.php?id=<?php echo $userID;?>">Cancel</a>
 
-          <br><br>
-          <!-- End of main content section -->
-        </div>
+</p>
 
-        <!-- Right Column -->
-        <div class="class col-sm-1"></div>
-      </div>
-    </div>
+			 </form>			
+	
+					</div>
+					</div>
+				</div>
 
-    <!-- /.row -->
+
+    </div> <!-- /container -->
+
+</div> <!-- /#page-wrapper -->
+	
 
     <!-- footers -->
     <?php require_once("includes/userspice/us_page_footer.php"); // the final html footer copyright row + the external js calls ?>

@@ -181,34 +181,31 @@ if(!empty($_POST)) {
 }
 
 ?>
-<div id="page-wrapper">
+ <div id="page-wrapper">
+		 <div class="container">
 
-  <div class="container-fluid">
 
-    <!-- Page Heading -->
-    <div class="row">
-      <div class="col-sm-12">
-<div id="form-errors"><?=$validation->display_errors();?></div>
-        <!-- Left Column -->
-        <div class="class col-sm-3"></div>
+		 
+		 <div class="well">
+					<div class="row">
+						<div class="col-xs-12 col-md-2">
+							<p><img src="<?=$grav; ?>" class="img-thumbnail" alt="Generic placeholder thumbnail"></p>
+							</div>
+						<div class="col-xs-12 col-md-10">
+							<div id="form-errors"><?=$validation->display_errors();?></div>
+						          <h1>Update your user settings</h1>
+					<?php include("views/userspice/_user_settings.php"); ?>
+						
+	
+					</div>
+					</div>
+				</div>
 
-        <!-- Main Center Column -->
-        <div class="class col-sm-6">
-          <!-- Content Goes Here. Class width can be adjusted -->
-          <h1>
-            Update your user settings
-          </h1>
-<?php include("views/userspice/_user_settings.php"); ?>
 
-          <!-- End of main content section -->
-        </div>
+    </div> <!-- /container -->
 
-        <!-- Right Column -->
-        <div class="class col-sm-1"></div>
-      </div>
-    </div>
+</div> <!-- /#page-wrapper -->
 
-    <!-- /.row -->
 
     <!-- footers -->
     <?php require_once("includes/userspice/us_page_footer.php"); // the final html footer copyright row + the external js calls ?>
