@@ -114,12 +114,12 @@ if(!empty($_POST)) {
       }
     }
 
-    //Activate account
-    // if ($userdetails->active != $_POST['active']){
-    //   $active = Input::get("active");
-    //   $fields=array('active'=>$active);
-    //   $db->update('users',$userId,$fields);
-    // }
+    //Block User
+    if ($userdetails->permissions != $_POST['active']){
+      $active = Input::get("active");
+      $fields=array('permissions'=>$active);
+      $db->update('users',$userId,$fields);
+    }
 
     //Update email
     if ($userdetails->email != $_POST['email']){

@@ -60,6 +60,12 @@
                   <br><input type='checkbox' name='addPermission[]' id='addPermission[]' value='<?=$v1->id;?>'> <?=$v1->name;?>
                 <?php endif; ?>
               <?php endforeach; ?>
+              <br><br>
+              <label> Block this user?:
+                          <select name="active">
+                            <option <?php if ($userdetails->permissions==1){echo "selected='selected'";} ?> value="1">No</option>
+                            <option <?php if ($userdetails->permissions==0){echo "selected='selected'";} ?>value="0">Yes</option>
+                          </select>
 
 
 

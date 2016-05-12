@@ -330,18 +330,20 @@ foreach($permission as $id){
 
 
   //Check if a user has access to a page
-  function securePage($uri){
+    function securePage($uri){
 
-    //Separate document name from uri
-    $tokens = explode('/', $uri);
-    $page = end($tokens);
-    $db = DB::getInstance();
-    $id = null;
-    $private = null;
-    // dnd($page);
-    global $user;
-
-    //retrieve page details
+      //Separate document name from uri
+      $tokens = explode('/', $uri);
+      $page = end($tokens);
+      $db = DB::getInstance();
+      $id = null;
+      $private = null;
+      // dnd($page);
+      global $user;
+      // dnd($user);
+      if(isset($user) && $user->data() != null){
+        if($user->data()->permissions==0){ {bold('<br><br><br>Sorry. You have been banned. If you feel this is an error, please contact the administrator.'); die();}}}
+      //retrieve page details
     $query = $db->query("SELECT id, page, private FROM pages WHERE page = ?",[$page]);
     $count = $query->count();
     if ($count==0){bold('<br><br>You must go into the Admin Panel and click the Manage Pages button to add this page to the database. Doing so will make this error go away.'); die();}
