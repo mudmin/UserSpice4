@@ -1,5 +1,5 @@
 <?php
-require_once("../core/init.php");
+require_once 'init.php';
 if (!securePage($_SERVER['PHP_SELF'])){die();}
 
 if(!empty($_GET))

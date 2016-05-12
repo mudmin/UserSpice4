@@ -18,21 +18,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 ?>
-<?php require_once("includes/userspice/us_header.php"); ?>
-<!-- stuff can go here -->
-
-<?php require_once("includes/userspice/us_navigation.php"); ?>
+<?php require_once 'init.php'; ?>
+<?php require_once $abs_us_root.$us_url_root.'users/includes/header.php'; ?>
+<?php require_once $abs_us_root.$us_url_root.'users/includes/navigation.php'; ?>
 
 <?php
 if (!securePage($_SERVER['PHP_SELF'])){die();}
 
 if ($settings->site_offline==1){die("The site is currently offline.");}?>
 <?php
-//Temporary Success Message
-$holdover = Input::get('success');
-if($holdover == 'true'){
-  bold("Account Updated");
-}
 //PHP Goes Here!
 $errors=[];
 $successes=[];
@@ -41,6 +35,13 @@ $grav = get_gravatar(strtolower(trim($user->data()->email)));
 // dnd($user->data());
 $validation = new Validate();
 $userdetails=$user->data();
+
+//Temporary Success Message
+$holdover = Input::get('success');
+if($holdover == 'true'){
+	bold("Account Updated");
+}
+
 //Forms posted
 if(!empty($_POST)) {
     $token = $_POST['csrf'];
@@ -51,49 +52,62 @@ if(!empty($_POST)) {
     //Update display name
 
     if ($userdetails->username != $_POST['username']){
-      $displayname = Input::get("username");
+		$displayname = Input::get("username");
 
-      $fields=array('username'=>$displayname);
-      $validation->check($_POST,array(
-        'username' => array(
-          'display' => 'Username',
-          'required' => true,
-          'unique_update' => 'users,'.$userId,
-          'min' => 1,
-          'max' => 25
-        )
-      ));
-    if($validation->passed()){
-      $db->update('users',$userId,$fields);
-      echo "Username Updated";
+		$fields=array('username'=>$displayname);
+		$validation->check($_POST,array(
+		'username' => array(
+		  'display' => 'Username',
+		  'required' => true,
+		  'unique_update' => 'users,'.$userId,
+		  'min' => 1,
+		  'max' => 25
+		)
+		));
+		if($validation->passed()){
+			//echo 'Username changes are disabled by commenting out this field and disabling input in the form/view';
+			$db->update('users',$userId,$fields);
+			
+			$successes[]="Username updated.";
+		}else{
+			//validation did not pass
+			foreach ($validation->errors() as $error) {
+				$errors[] = $error;
+			}			
+
+		}
     }else{
-
-      }
-    }
+		$displayname=$userdetails->username;
+	}
 
     //Update first name
 
     if ($userdetails->fname != $_POST['fname']){
-       $fname = Input::get("fname");
+		$fname = Input::get("fname");
 
-      $fields=array('fname'=>$fname);
-      $validation->check($_POST,array(
-        'fname' => array(
-          'display' => 'First Name',
-          'required' => true,
-          'min' => 1,
-          'max' => 25
-        )
-      ));
-    if($validation->passed()){
-      $db->update('users',$userId,$fields);
-      echo "First Name Updated";
+		$fields=array('fname'=>$fname);
+		$validation->check($_POST,array(
+		'fname' => array(
+		  'display' => 'First Name',
+		  'required' => true,
+		  'min' => 1,
+		  'max' => 25
+		)
+		));
+		if($validation->passed()){
+			$db->update('users',$userId,$fields);
+			
+			$successes[]='First name updated.';
+		}else{
+			//validation did not pass
+			foreach ($validation->errors() as $error) {
+				$errors[] = $error;
+			}			
+
+		}
     }else{
-          ?><div id="form-errors">
-            <?=$validation->display_errors();?></div>
-            <?php
-      }
-    }
+		$fname=$userdetails->fname;
+	}
 
     //Update last name
 
@@ -111,13 +125,18 @@ if(!empty($_POST)) {
       ));
     if($validation->passed()){
       $db->update('users',$userId,$fields);
-      echo "Last Name Updated";
+      
+	  $successes[]='Last name updated.';
     }else{
-          ?><div id="form-errors">
-            <?=$validation->display_errors();?></div>
-            <?php
+			//validation did not pass
+			foreach ($validation->errors() as $error) {
+				$errors[] = $error;
+			}			
+
       }
-    }
+    }else{
+		$lname=$userdetails->lname;
+	}
 
     //Update email
     if ($userdetails->email != $_POST['email']){
@@ -135,14 +154,18 @@ if(!empty($_POST)) {
       ));
     if($validation->passed()){
       $db->update('users',$userId,$fields);
-      echo "Email Updated";
+      
+	  $successes[]='Email updated.';
     }else{
-          ?><div id="form-errors">
-            <?=$validation->display_errors();?></div>
-            <?php
+			//validation did not pass
+			foreach ($validation->errors() as $error) {
+				$errors[] = $error;
+			}					
       }
 
-    }
+    }else{
+		$email=$userdetails->email;
+	}
 
     if(!empty($_POST['password'])) {
       $validation->check($_POST,array(
@@ -161,55 +184,54 @@ if(!empty($_POST)) {
           'matches' => 'password',
         ),
       ));
-      $errors = $validation->errors();
+		foreach ($validation->errors() as $error) {
+			$errors[] = $error;
+		}			
+
       if (!password_verify(Input::get('old'),$user->data()->password)) {
-        $errors[] = 'Your password does not match our records.';
+			foreach ($validation->errors() as $error) {
+				$errors[] = $error;
+			}			
+			$errors[]='Your password does not match our records.';
       }
-      if (empty($errors)) {
-        //process
-        $new_password_hash = password_hash(Input::get('password'),PASSWORD_BCRYPT,array('cost' => 12));
-        $user->update(array(
-          'password' => $new_password_hash,
-        ),$user->data()->id);
-
-
-        // die();
-      }
+		if (empty($errors)) {
+			//process
+			$new_password_hash = password_hash(Input::get('password'),PASSWORD_BCRYPT,array('cost' => 12));
+			$user->update(array('password' => $new_password_hash,),$user->data()->id);
+			$successes[]='Password updated.';
+		}
     }
     }
-    Redirect::to('user_settings.php?success=true');
+}else{
+	$displayname=$userdetails->username;
+	$fname=$userdetails->fname;
+	$lname=$userdetails->lname;
+	$email=$userdetails->email;
 }
-
 ?>
  <div id="page-wrapper">
-		 <div class="container">
-
-
-		 
-		 <div class="well">
-					<div class="row">
-						<div class="col-xs-12 col-md-2">
-							<p><img src="<?=$grav; ?>" class="img-thumbnail" alt="Generic placeholder thumbnail"></p>
-							</div>
-						<div class="col-xs-12 col-md-10">
-							<div id="form-errors"><?=$validation->display_errors();?></div>
-						          <h1>Update your user settings</h1>
-					<?php include("views/userspice/_user_settings.php"); ?>
-						
-	
-					</div>
-					</div>
+	<div class="container">
+		<div class="well">
+			<div class="row">
+				<div class="col-xs-12 col-md-2">
+					<p><img src="<?=$grav; ?>" class="img-thumbnail" alt="Generic placeholder thumbnail"></p>
 				</div>
+				<div class="col-xs-12 col-md-10">
+					<h1>Update your user settings</h1>
+					<?php include("views/userspice/_user_settings.php"); ?>
+				</div>
+			</div>
+		</div>
 
 
-    </div> <!-- /container -->
+	</div> <!-- /container -->
 
 </div> <!-- /#page-wrapper -->
 
 
     <!-- footers -->
-    <?php require_once("includes/userspice/us_page_footer.php"); // the final html footer copyright row + the external js calls ?>
+<?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; // the final html footer copyright row + the external js calls ?>
 
     <!-- Place any per-page javascript here -->
 
-    <?php require_once("includes/userspice/us_html_footer.php"); // currently just the closing /body and /html ?>
+<?php require_once $abs_us_root.$us_url_root.'users/includes/html_footer.php'; // currently just the closing /body and /html ?>

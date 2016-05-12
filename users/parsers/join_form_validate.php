@@ -1,5 +1,5 @@
 <?php
-require_once '../../core/init.php';
+require_once '../init.php';
 $db = DB::getInstance();
 $settingsQ = $db->query("SELECT * FROM settings");
 $settings = $settingsQ->first();
@@ -48,26 +48,8 @@ $validation->check($_POST,array(
   ),
 ));
 
-// if($settings->recaptcha == 1){
-//
-//   require_once(env()."users/includes/recaptcha.config.php");
-//   //reCAPTCHA 2.0 check
-//   $response = null;
-//
-//   // check secret key
-//   $reCaptcha = new ReCaptcha($privatekey);
-//
-//
-//   // if submitted check response
-//   if (!isset($_POST["g-recaptcha-response"]) || Input::get('g-recaptcha-response') == '') {
-//     $validation->addError("Recaptcha must be checked.");
-//
-//   }
-//
-// }
-
 if($validation->passed()){
-  echo 'success';
+	echo 'success';
 }else{
-  echo display_errors($validation->errors());
+	echo display_errors($validation->errors());
 }

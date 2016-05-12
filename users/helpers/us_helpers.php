@@ -19,231 +19,217 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
  // UserSpice Specific Functions
 function testUS(){
-echo "<br>";
-echo "UserSpice Functions have been properly included";
-echo "<br>";
+	echo "<br>";
+	echo "UserSpice Functions have been properly included";
+	echo "<br>";
 }
 
 
 function get_gravatar($email, $s = 120, $d = 'mm', $r = 'pg', $img = false, $atts = array() ) {
-$url = 'http://www.gravatar.com/avatar/';
-$url .= md5( strtolower( trim( $email ) ) );
-$url .= "?s=$s&d=$d&r=$r";
-if ( $img ) {
-$url = '<img src="' . $url . '"';
-foreach ( $atts as $key => $val )
-$url .= ' ' . $key . '="' . $val . '"';
-$url .= ' />';
-}
-return $url;
+	$url = 'https://www.gravatar.com/avatar/';
+	$url .= md5( strtolower( trim( $email ) ) );
+	$url .= "?s=$s&d=$d&r=$r";
+	if ( $img ) {
+		$url = '<img src="' . $url . '"';
+		foreach ( $atts as $key => $val )
+		$url .= ' ' . $key . '="' . $val . '"';
+		$url .= ' />';
+	}
+	return $url;
 }
 
 //Check if a permission level ID exists in the DB
 function permissionIdExists($id) {
-$db = DB::getInstance();
-$query = $db->query("SELECT id FROM permissions WHERE id = ? LIMIT 1",array($id));
-$num_returns = $query->count();
+	$db = DB::getInstance();
+	$query = $db->query("SELECT id FROM permissions WHERE id = ? LIMIT 1",array($id));
+	$num_returns = $query->count();
 
-if ($num_returns > 0) {
-return true;
-} else {
-return false;
-}
+	if ($num_returns > 0) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 //Check if a user ID exists in the DB
 function userIdExists($id) {
-$db = DB::getInstance();
-$query = $db->query("SELECT * FROM users WHERE id = ?",array($id));
-$num_returns = $query->count();
-if ($num_returns > 0)
-{
-return true;
-}
-else
-{
-return false;
-}
+	$db = DB::getInstance();
+	$query = $db->query("SELECT * FROM users WHERE id = ?",array($id));
+	$num_returns = $query->count();
+	if ($num_returns > 0){
+		return true;
+	}else{
+		return false;
+	}
 }
 
 //Retrieve information for a single permission level
 function fetchPermissionDetails($id) {
-$db = DB::getInstance();
-$query = $db->query("SELECT id, name FROM permissions WHERE id = ? LIMIT 1",array($id));
-$results = $query->first();
-$row = array('id' => $results->id, 'name' => $results->name);
-return ($row);
+	$db = DB::getInstance();
+	$query = $db->query("SELECT id, name FROM permissions WHERE id = ? LIMIT 1",array($id));
+	$results = $query->first();
+	$row = array('id' => $results->id, 'name' => $results->name);
+	return ($row);
 }
 
 //Change a permission level's name
 function updatePermissionName($id, $name) {
-
-$db = DB::getInstance();
-$fields=array('name'=>$name);
-$db->update('permissions',$id,$fields);
-
+	$db = DB::getInstance();
+	$fields=array('name'=>$name);
+	$db->update('permissions',$id,$fields);
 }
 
 //Checks if a username exists in the DB
 function usernameExists($username)   {
-$db = DB::getInstance();
-$query = $db->query("SELECT * FROM users WHERE username = ?",array($username));
-$results = $query->results();
-return ($results);
+	$db = DB::getInstance();
+	$query = $db->query("SELECT * FROM users WHERE username = ?",array($username));
+	$results = $query->results();
+	return ($results);
 }
 
 //Retrieve information for all users
 function fetchAllUsers() {
-$db = DB::getInstance();
-$query = $db->query("SELECT * FROM users");
-$results = $query->results();
-return ($results);
+	$db = DB::getInstance();
+	$query = $db->query("SELECT * FROM users");
+	$results = $query->results();
+	return ($results);
 }
 
 //Retrieve complete user information by username, token or ID
-function fetchUserDetails($username=NULL,$token=NULL, $id=NULL)
-{
-if($username!=NULL) {
-$column = "username";
-$data = $username;
-}
-// elseif($token!=NULL) {
-//   $column = "activation_token";
-//   $data = $token;
-// }
-elseif($id!=NULL) {
-$column = "id";
-$data = $id;
-}
-$db = DB::getInstance();
-$query = $db->query("SELECT * FROM users WHERE $column = $data
-LIMIT 1");
-$results = $query->first();
-return ($results);
+function fetchUserDetails($username=NULL,$token=NULL, $id=NULL){
+	if($username!=NULL) {
+		$column = "username";
+		$data = $username;
+	}elseif($id!=NULL) {
+		$column = "id";
+		$data = $id;
+	}
+	$db = DB::getInstance();
+	$query = $db->query("SELECT * FROM users WHERE $column = $data LIMIT 1");
+	$results = $query->first();
+	return ($results);
 }
 
 //Retrieve list of permission levels a user has
 function fetchUserPermissions($user_id) {
-$db = DB::getInstance();
-$query = $db->query("SELECT * FROM user_permission_matches WHERE user_id = ?",array($user_id));
-$results = $query->results();
-return ($results);
+	$db = DB::getInstance();
+	$query = $db->query("SELECT * FROM user_permission_matches WHERE user_id = ?",array($user_id));
+	$results = $query->results();
+	return ($results);
 }
 
 
 //Retrieve list of users who have a permission level
 function fetchPermissionUsers($permission_id) {
-$db = DB::getInstance();
-$query = $db->query("SELECT id, user_id FROM user_permission_matches WHERE permission_id = ?",array($permission_id));
-$results = $query->results();
-return ($results);
-$row[$user] = array('id' => $id, 'user_id' => $user);
-if (isset($row)){
-return ($row);
-}
+	$db = DB::getInstance();
+	$query = $db->query("SELECT id, user_id FROM user_permission_matches WHERE permission_id = ?",array($permission_id));
+	$results = $query->results();
+	return ($results);
+	$row[$user] = array('id' => $id, 'user_id' => $user);
+	if (isset($row)){
+		return ($row);
+	}
 }
 
 //Unmatch permission level(s) from user(s)
 function removePermission($permissions, $members) {
-$db = DB::getInstance();
-if(is_array($members)){
-$memberString = '';
-foreach($members as $member){
-  $memberString .= $member.',';
-}
-$memberString = rtrim($memberString,',');
+	$db = DB::getInstance();
+	if(is_array($members)){
+		$memberString = '';
+		foreach($members as $member){
+		  $memberString .= $member.',';
+		}
+		$memberString = rtrim($memberString,',');
 
-$q = $db->query("DELETE FROM user_permission_matches WHERE permission_id = ? AND user_id IN ({$memberString})",[$permissions]);
-}elseif(is_array($permissions)){
-$permissionString = '';
-foreach($permissions as $permission){
-  $permissionString .= $permission.',';
-}
-$permissionString = rtrim($permissionString,',');
-$q = $db->query("DELETE FROM user_permission_matches WHERE user_id = ? AND permission_id IN ({$permissionString})",[$members]);
-}
-
-return $q->count();
+		$q = $db->query("DELETE FROM user_permission_matches WHERE permission_id = ? AND user_id IN ({$memberString})",[$permissions]);
+	}elseif(is_array($permissions)){
+		$permissionString = '';
+		foreach($permissions as $permission){
+			$permissionString .= $permission.',';
+		}
+		$permissionString = rtrim($permissionString,',');
+		$q = $db->query("DELETE FROM user_permission_matches WHERE user_id = ? AND permission_id IN ({$permissionString})",[$members]);
+	}
+	return $q->count();
 }
 
 //Retrieve a list of all .php files in root files folder
 function getPageFiles() {
-$directory = "../";
-$pages = glob($directory . "*.php");
-foreach ($pages as $page){
-$fixed = str_replace('../','',$page);
-$row[$fixed] = $fixed;
-}
-return $row;
+	$directory = "../";
+	$pages = glob($directory . "*.php");
+	foreach ($pages as $page){
+		$fixed = str_replace('../','',$page);
+		$row[$fixed] = $fixed;
+	}
+	return $row;
 }
 
 function getUSPageFiles() {
-$directory = "../users/";
-$pages = glob($directory . "*.php");
-foreach ($pages as $page){
-$fixed = str_replace('../users/','',$page);
-$row[$fixed] = $fixed;
-}
-return $row;
+	$directory = "../users/";
+	$pages = glob($directory . "*.php");
+	foreach ($pages as $page){
+		$fixed = str_replace('../users/','',$page);
+		$row[$fixed] = $fixed;
+	}
+	return $row;
 }
 
 //Delete a page from the DB
 function deletePages($pages) {
-$db = DB::getInstance();
-if(!$query = $db->query("DELETE FROM pages WHERE id IN ({$pages})")){
-throw new Exception('There was a problem deleting pages.');
-}else{
-return true;
-}
+	$db = DB::getInstance();
+	if(!$query = $db->query("DELETE FROM pages WHERE id IN ({$pages})")){
+		throw new Exception('There was a problem deleting pages.');
+	}else{
+		return true;
+	}
 }
 
 //Fetch information on all pages
 function fetchAllPages() {
-$db = DB::getInstance();
-$query = $db->query("SELECT id, page, private FROM pages ORDER BY id DESC");
-$pages = $query->results();
-return $pages;
-}
-if (isset($row)){
-return ($row);
+	$db = DB::getInstance();
+	$query = $db->query("SELECT id, page, private FROM pages ORDER BY id DESC");
+	$pages = $query->results();
+	return $pages;
+	}
+	if (isset($row)){
+	return ($row);
 }
 
 //Fetch information for a specific page
 function fetchPageDetails($id) {
-$db = DB::getInstance();
-$query = $db->query("SELECT id, page, private FROM pages WHERE id = ?",array($id));
-$row = $query->first();
-return $row;
+	$db = DB::getInstance();
+	$query = $db->query("SELECT id, page, private FROM pages WHERE id = ?",array($id));
+	$row = $query->first();
+	return $row;
 }
 
 
 //Check if a page ID exists
 function pageIdExists($id) {
-$db = DB::getInstance();
-$query = $db->query("SELECT private FROM pages WHERE id = ? LIMIT 1",array($id));
-$num_returns = $query->count();
-if ($num_returns > 0){
-return true;
-}else{
-return false;
-}
+	$db = DB::getInstance();
+	$query = $db->query("SELECT private FROM pages WHERE id = ? LIMIT 1",array($id));
+	$num_returns = $query->count();
+	if ($num_returns > 0){
+		return true;
+	}else{
+		return false;
+	}
 }
 
 //Toggle private/public setting of a page
 function updatePrivate($id, $private) {
-$db = DB::getInstance();
-$result = $db->query("UPDATE pages SET private = ? WHERE id = ?",array($private,$id));
-return $result;
+	$db = DB::getInstance();
+	$result = $db->query("UPDATE pages SET private = ? WHERE id = ?",array($private,$id));
+	return $result;
 }
 
 //Add a page to the DB
 function createPages($pages) {
-$db = DB::getInstance();
-foreach($pages as $page){
-$fields=array('page'=>$page, 'private'=>'0');
-$db->insert('pages',$fields);
-}
-
+	$db = DB::getInstance();
+	foreach($pages as $page){
+		$fields=array('page'=>$page, 'private'=>'0');
+		$db->insert('pages',$fields);
+	}
 }
 
 //Match permission level(s) with page(s)
@@ -268,7 +254,7 @@ foreach($permission as $id){
       $i++;
     }
     return $i;
-  }
+}
 
   //Retrieve list of permission levels that can access a page
   function fetchPagePermissions($page_id) {

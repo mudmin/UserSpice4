@@ -1,22 +1,23 @@
 <span class="bg-danger"><?=display_errors($errors);?></span>
+<span><?=display_successes($successes);?></span>
           <div id='regbox'>
           <form name='updateAccount' action='user_settings.php' method='post'>
 
           <p>
             <label>Username:
-              <input  class='form-control' type='text' name='username' value='<?=$userdetails->username?>' /></label>
+              <input  class='form-control' type='text' name='username' value='<?=$displayname?>' /></label>
             </p>
           <p>
             <label>First Name:
-              <input  class='form-control' type='text' name='fname' value='<?=$userdetails->fname?>' /></label>
+              <input  class='form-control' type='text' name='fname' value='<?=$fname?>' /></label>
             </p>
           <p>
             <label>Last Name:
-              <input  class='form-control' type='text' name='lname' value='<?=$userdetails->lname?>' /></label>
+              <input  class='form-control' type='text' name='lname' value='<?=$lname?>' /></label>
             </p>
           <p>
             <label>Email:
-              <input class='form-control' type='text' name='email' value='<?=$userdetails->email?>' /></label>
+              <input class='form-control' type='text' name='email' value='<?=$email?>' /></label>
             </p>
           <p>
           <label>Old Password:</label>

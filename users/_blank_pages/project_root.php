@@ -1,4 +1,4 @@
-<?php ob_start();
+<?php
 /*
 UserSpice 4
 An Open Source PHP User Management System
@@ -17,16 +17,17 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-?><?php require_once("users/includes/frontend/header.php"); ?>
-
-<?php require_once("users/includes/frontend/navigation.php"); ?>
+?>
+<?php
+require_once 'users/init.php';
+require_once $abs_us_root.$us_url_root.'users/includes/header.php';
+require_once $abs_us_root.$us_url_root.'users/includes/navigation.php';
+?>
 
 <?php if (!securePage($_SERVER['PHP_SELF'])){die();} ?>
 
         <div id="page-wrapper">
-
             <div class="container-fluid">
-
                 <!-- Page Heading -->
                 <div class="row">
                     <div class="col-lg-12">
@@ -40,14 +41,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <!-- Content goes here -->
 
 
-
-
-
-
-
 <!-- Content Ends Here -->
-<?php require_once("users/includes/frontend/page_footer.php"); // the final html footer copyright row + the external js calls ?>
+<?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; // the final html footer copyright row + the external js calls ?>
 
 <!-- Place any per-page javascript here -->
 
-<?php require_once("users/includes/frontend/html_footer.php"); // currently just the closing /body and /html ?>
+<?php require_once $abs_us_root.$us_url_root.'users/includes/html_footer.php'; // currently just the closing /body and /html ?>

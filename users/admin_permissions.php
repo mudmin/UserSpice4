@@ -18,10 +18,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 ?>
-<?php require_once("includes/userspice/us_header.php"); ?>
-<!-- stuff can go here -->
-
-<?php require_once("includes/userspice/us_navigation.php"); ?>
+<?php require_once 'init.php'; ?>
+<?php require_once $abs_us_root.$us_url_root.'users/includes/header.php'; ?>
+<?php require_once $abs_us_root.$us_url_root.'users/includes/navigation.php'; ?>
 
 <?php if (!securePage($_SERVER['PHP_SELF'])){die();} ?>
 <?php
@@ -103,13 +102,15 @@ $count = 0;
         <div class="class col-sm-1"></div>
       </div>
     </div>
+	</div>
+	</div>
 
     <!-- /.row -->
 
     <!-- footers -->
-    <?php require_once("includes/userspice/us_page_footer.php"); // the final html footer copyright row + the external js calls ?>
+<?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; // the final html footer copyright row + the external js calls ?>
 
-    <!-- Place any per-page javascript here -->
-    <script src="js/search.js" charset="utf-8"></script>
+<!-- Place any per-page javascript here -->
+<script src="js/search.js" charset="utf-8"></script>
 
-    <?php require_once("includes/userspice/us_html_footer.php"); // currently just the closing /body and /html ?>
+<?php require_once $abs_us_root.$us_url_root.'users/includes/html_footer.php'; // currently just the closing /body and /html ?>

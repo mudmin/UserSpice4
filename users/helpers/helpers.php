@@ -36,6 +36,13 @@ function currentPage() {
 	return $currentPage;
 }
 
+function currentFolder() {
+	$uri = $_SERVER['PHP_SELF'];
+	$path = explode('/', $uri);
+	$currentFolder=$path[count($path)-2];
+	return $currentFolder;
+}
+
 function format_date($date,$tz){
 	//return date("m/d/Y ~ h:iA", strtotime($date));
 	$format = 'Y-m-d H:i:s';
@@ -68,6 +75,20 @@ function display_errors($errors = array()){
 			$html .= '<script>jQuery("#'.$error[1].'").parent().closest("div").addClass("has-error");</script>';
 		}else{
 			$html .= '<li class="text-danger">'.$error.'</li>';
+		}
+	}
+	$html .= '</ul>';
+	return $html;
+}
+
+function display_successes($successes = array()){
+	$html = '<ul>';
+	foreach($successes as $success){
+		if(is_array($success)){
+			$html .= '<li>'.$success[0].'</li>';
+			$html .= '<script>jQuery("#'.$success[1].'").parent().closest("div").addClass("has-error");</script>';
+		}else{
+			$html .= '<li>'.$success.'</li>';
 		}
 	}
 	$html .= '</ul>';

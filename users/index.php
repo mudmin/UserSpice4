@@ -19,11 +19,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 ?>
 <?php
-require_once("../core/init.php");
+require_once 'init.php';
 if(isset($user) && $user->isLoggedIn()){
-  Redirect::to('account.php');
+  Redirect::to($us_url_root.'users/account.php');
 }else{
-  Redirect::to('login.php');
+  Redirect::to($us_url_root.'users/login.php');
 }
 die();
 ?>

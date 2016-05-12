@@ -18,10 +18,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 ?>
-<?php require_once("includes/userspice/us_header.php"); ?>
-<!-- stuff can go here -->
-
-<?php require_once("includes/userspice/us_navigation.php"); ?>
+<?php require_once 'init.php'; ?>
+<?php require_once $abs_us_root.$us_url_root.'users/includes/header.php'; ?>
+<?php require_once $abs_us_root.$us_url_root.'users/includes/navigation.php'; ?>
 <?php if (!securePage($_SERVER['PHP_SELF'])){die();} ?>
 <?php
 
@@ -88,9 +87,7 @@ $dbpages = fetchAllPages();
       <div class="col-lg-12">
         <div class="col-lg-2"></div>
         <div class="col-lg-8">
-          <h1>
-            Administer Page Access
-          </h1>
+          <h1>Administer Page Access</h1>
 
           <!-- Content goes here -->
           <?php include("views/userspice/_admin_pages.php"); ?>
@@ -102,11 +99,12 @@ $dbpages = fetchAllPages();
   </div>
 </div>
 
+
 <!-- Content Ends Here -->
 <!-- footers -->
-<?php require_once("includes/userspice/us_page_footer.php"); // the final html footer copyright row + the external js calls ?>
+<?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; // the final html footer copyright row + the external js calls ?>
 
 <!-- Place any per-page javascript here -->
 <script src="js/search.js" charset="utf-8"></script>
 
-<?php require_once("includes/userspice/us_html_footer.php"); // currently just the closing /body and /html ?>
+<?php require_once $abs_us_root.$us_url_root.'users/includes/html_footer.php'; // currently just the closing /body and /html ?>
