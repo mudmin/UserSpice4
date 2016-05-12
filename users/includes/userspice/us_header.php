@@ -22,6 +22,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <?php require_once("../core/init.php"); ?>
 <?php require_once("helpers/helpers.php"); ?>
 <?php require_once("user_spice_ver.php"); ?>
+<?php
+//check for a custom page
+$currentPage = currentPage();
+if(file_exists('custom/'.$currentPage)){
+  Redirect::to('custom/'.$currentPage);
+  }
+?>
 <?php $db = DB::getInstance(); ?>
 <?php
 $settingsQ = $db->query("Select * FROM settings");

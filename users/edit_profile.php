@@ -72,17 +72,17 @@ if(!empty($_POST)) {
 
         <h2>Bio</h2>
           <form name="update_bio" action="edit_profile.php" method="post">
-    <p>      <input type="text"  id="mytextarea" name="bio" value="<?=$thisProfile->bio;?>">
+    <div align="center"><textarea rows="20" cols="80"  id="mytextarea" name="bio" ><?=$thisProfile->bio;?></textarea></div>
           <input type="hidden" name="csrf" value="<?=Token::generate();?>" >
-		</p>  
+		</p>
 		  <p>
 			<button type="submit" class="btn btn-primary" name="update_bio">Update Bio</button>
 			<a class="btn btn-info" href="profile.php?id=<?php echo $userID;?>">Cancel</a>
 
 </p>
 
-			 </form>			
-	
+			 </form>
+
 					</div>
 					</div>
 				</div>
@@ -91,7 +91,7 @@ if(!empty($_POST)) {
     </div> <!-- /container -->
 
 </div> <!-- /#page-wrapper -->
-	
+
 
     <!-- footers -->
     <?php require_once("includes/userspice/us_page_footer.php"); // the final html footer copyright row + the external js calls ?>

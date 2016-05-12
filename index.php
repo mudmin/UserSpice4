@@ -15,14 +15,13 @@ require_once("users/includes/frontend/navigation.php"); ?>
         <h1>Welcome to <?php echo $settings->site_name;?></h1>
         <p class="text-muted">An Open Source PHP User Management Framework. <?php //print_r($_SESSION);?></p>
         <p>
-			
-		
-		<?php if($user->isLoggedIn()) 
-			{ 
+
+		<?php if($user->isLoggedIn())
+			{
 			$uid = $user->data()->id;
-			?> 
+			?>
 			<a class="btn btn-default btn-lg" href="users/account.php" role="button">User Account &raquo;</a>
-		<?php } 
+		<?php }
 			else
 			{
 		?>
@@ -34,9 +33,9 @@ require_once("users/includes/frontend/navigation.php"); ?>
 
     </div>
 
-	
+
 	<div class="large" id="times" ></div>
-	
+
       <!-- Example row of columns -->
       <div class="row">
         <div class="col-md-4">
@@ -47,7 +46,7 @@ require_once("users/includes/frontend/navigation.php"); ?>
 			<li>Signup Wizard</li>
 		</ul>
 		</div>
-		
+
          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
         </div>
         <div class="col-md-4">
@@ -56,7 +55,7 @@ require_once("users/includes/frontend/navigation.php"); ?>
           <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
        </div>
         <div class="col-md-4">
- 
+
           <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
           <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
         </div>
@@ -71,15 +70,15 @@ require_once("users/includes/frontend/navigation.php"); ?>
 
 <!-- Place any per-page javascript here -->
 	<script type="text/javascript">
-	$(document).ready(function(){	
+	$(document).ready(function(){
 
-	$("#times").load("users/times.php" );	
-	
+	$("#times").load("users/times.php" );
+
 	var timesRefresh = setInterval(function(){
-	$("#times").load("users/times.php" );	
-	}, 30000); 
-	
-// -------------------------------------------------------------------------		
+	$("#times").load("users/times.php" );
+	}, 30000);
+
+// -------------------------------------------------------------------------
 		});
 	</script>
 
