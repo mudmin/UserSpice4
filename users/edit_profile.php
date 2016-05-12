@@ -29,6 +29,7 @@ $userID = $user->data()->id;
 $grav = get_gravatar(strtolower(trim($user->data()->email)));
 $profileQ = $db->query("SELECT * FROM profiles WHERE user_id = ?",array($userID));
 $thisProfile = $profileQ->first();
+$id = $thisProfile->id;
 //Uncomment out the 2 lines below to see what's available to you.
 // dump($user);
 // dump($thisProfile);
@@ -49,7 +50,7 @@ if(!empty($_POST)) {
           )
         ));
       if($validation->passed()){
-        $db->update('profiles',$userID,$fields);
+        $db->update('profiles',$id,$fields);
         Redirect::to('edit_profile.php');
       }
     }

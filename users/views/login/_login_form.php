@@ -17,7 +17,7 @@
     </p>
     <?php } ?>
     <label for="remember">
-    <input type="checkbox" name="remember" id="remember" checked> Remember Me</label>
+    <input type="checkbox" name="remember" id="remember"> Remember Me</label>
   	<p>Forget your password? <a href="forgot_password.php">Click here</a> to retrieve it.</p>
   	<input type="hidden" name="token" value="<?php echo Token::generate(); ?>">
   	<input type="submit" value="Log In"  class="btn btn-primary">

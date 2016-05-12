@@ -95,11 +95,12 @@ if ($response != null && $response->success) {
         $error_message .= 'Log in failed. Please check your username and password and try again.';
       }
     } else{
-      $error_message .= '<ul>';
-      foreach ($validation->errors() as $error) {
-        $error_message .= '<li>' . $error . '</li>';
-      }
-      $error_message .= '</ul>';
+			bold('<br><br>Incorrect login information!');
+      // $error_message .= '<ul>';
+      // foreach ($validation->errors() as $error) {
+      //   $error_message .= '<li>' . $error . '</li>';
+      // }
+      // $error_message .= '</ul>';
     }
   }
 }

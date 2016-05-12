@@ -343,7 +343,8 @@ foreach($permission as $id){
 
     //retrieve page details
     $query = $db->query("SELECT id, page, private FROM pages WHERE page = ?",[$page]);
-
+    $count = $query->count();
+    if ($count==0){bold('<br><br>You must go into the Admin Panel and click the Manage Pages button to add this page to the database. Doing so will make this error go away.'); die();}
     $results = $query->first();
 
     $pageDetails = array( 'id' =>$results->id, 'page' => $results->page, 'private' =>$results->private);

@@ -25,10 +25,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <?php
 //PHP Goes Here!
 $userID = Input::get('id');
-$grav = get_gravatar(strtolower(trim($user->data()->email)));
 
 $userQ = $db->query("SELECT * FROM users WHERE id = ?",array($userID));
 $thisUser = $userQ->first();
+
+$grav = get_gravatar(strtolower(trim($thisUser->email)));
 
 $profileQ = $db->query("SELECT * FROM profiles WHERE user_id = ?",array($userID));
 
