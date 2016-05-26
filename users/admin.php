@@ -71,7 +71,7 @@ if(!empty($_POST['settings'])){
 	if(!Token::check($token)){
 		die('Token doesn\'t match!');
 	}
-	
+
 	if($settings->recaptcha != $_POST['recaptcha']) {
 		$recaptcha = Input::get('recaptcha');
 		$fields=array('recaptcha'=>$recaptcha);
@@ -141,7 +141,7 @@ if(!empty($_POST['css'])){
 <div id="page-wrapper"> <!-- leave in place for full-screen backgrounds etc -->
 <div class="container"> <!-- -fluid -->
 
-<h1 class="text-center">Dashboard</h1>
+<h1 class="text-center">UserSpice Dashboard <?=$user_spice_ver?></h1>
 
 <div class="row"> <!-- row for Users, Permissions, Pages, Email settings panels -->
 	<h2>Admin Panels</h2>
@@ -170,7 +170,7 @@ if(!empty($_POST['css'])){
 	</div> <!-- /panel-footer -->
 	</div><!-- /panel -->
 	</div> <!-- /.col -->
-	 
+
 	<!-- Pages Panel -->
 	<div class="col-xs-6 col-md-3">
 	<div class="panel panel-default">
@@ -204,7 +204,7 @@ if(!empty($_POST['css'])){
 	<div class="col-xs-12 col-md-6">
 	<div class="panel panel-default">
 	<div class="panel-heading"><strong>All Users</strong> <span class="small">(Who have logged in)</span></div>
-	<div class="panel-body text-center">	
+	<div class="panel-body text-center">
 	<div class="row">
 		<div class="col-xs-3 "><h3><?=$hourCount?></h3><p>per hour</p></div>
 		<div class="col-xs-3"><h3><?=$dayCount?></h3><p>per day</p></div>
@@ -217,26 +217,26 @@ if(!empty($_POST['css'])){
 	<?php  if($settings->track_guest == 1){ ?>
 	<div class="panel panel-default">
 	<div class="panel-heading"><strong>All Visitors</strong> <span class="small">(Whether logged in or not)</span></div>
-	<div class="panel-body">	
+	<div class="panel-body">
 	<?="In the last 30 minutes, the unique visitor count was ".count_users()."<br>";?>
 	</div>
 	</div><!--/panel-->
-	<?php } ?>				  
+	<?php } ?>
 
 	<?php  if($settings->track_guest != 1){ ?>
 	<div class="panel panel-default">
-	<div class="panel-heading"><strong>Guest Tracking Is Off</strong> <span class="small">(So we have this space)</span></div>
-	<div class="panel-body">	
-	For Something
+	<div class="panel-heading"><strong>Guest Tracking Is Off</strong> <span class="small"></span></div>
+	<div class="panel-body">
+	Turn "Track Guests" on below for advanced tracking statistics.
 	</div>
 	</div><!--/panel-->
-	<?php } ?>	
+	<?php } ?>
 	</div> <!-- /col -->
 
 	<div class="col-xs-12 col-md-6">
 	<div class="panel panel-default">
 	<div class="panel-heading"><strong>Logged In Users</strong> <span class="small">(past 24 hours)</span></div>
-	<div class="panel-body">	
+	<div class="panel-body">
 	<div class="uvistable table-responsive">
 	<table class="table">
 	<thead><tr><th>Username</th><th>[IP]</th></tr></thead>
@@ -246,7 +246,7 @@ if(!empty($_POST['css'])){
 	<?php } ?>
 	</tbody>
 	</table>
-	</div>					
+	</div>
 	</div>
 	</div><!--/panel-->
 	</div> <!-- /col2/2 -->
@@ -265,7 +265,7 @@ if(!empty($_POST['css'])){
 		<label for="site_name">Site Name</label>
 		<input type="text" class="form-control" name="site_name" id="site_name" value="<?=$settings->site_name?>">
 		</div>
-		
+
 		<!-- Recaptcha Option -->
 		<div class="form-group">
 			<label for="recaptcha">Recaptcha</label>
@@ -274,7 +274,7 @@ if(!empty($_POST['css'])){
 				<option value="0" <?php if($settings->recaptcha==0) echo 'selected="selected"'; ?> >Disabled</option>
 			</select>
 		</div>
-		
+
 		<!-- Force SSL -->
 		<div class="form-group">
 			<label for="force_ssl">Force SSL (experimental)</label>
@@ -292,7 +292,7 @@ if(!empty($_POST['css'])){
 				<option value="0" <?php if($settings->force_pr==0) echo 'selected="selected"'; ?> >No</option>
 			</select>
 		</div>
-		
+
 		<!-- Site Offline -->
 		<div class="form-group">
 			<label for="site_offline">Site Offline</label>
@@ -310,9 +310,9 @@ if(!empty($_POST['css'])){
 				<option value="0" <?php if($settings->track_guest==0) echo 'selected="selected"'; ?> >No</option>
 			</select><small>If your site gets a lot of traffic and starts to stumble, this is the first thing to turn off.</small>
 		</div>
-		
+
 		<input type="hidden" name="csrf" value="<?=Token::generate();?>" />
-		
+
 		<p><input class='btn btn-primary' type='submit' name="settings" value='Save Site Settings' /></p>
 		</form>
 	</div> <!-- /col1/2 -->
@@ -321,7 +321,7 @@ if(!empty($_POST['css'])){
 		<form class="" action="admin.php" name="css" method="post">
 		<!-- Test CSS Settings -->
 		<h2>Sitewide CSS</h2>
-		
+
 		<div class="form-group">
 			<label for="css_sample">Show CSS Samples</label>
 			<select id="css_sample" class="form-control" name="css_sample">
@@ -329,7 +329,7 @@ if(!empty($_POST['css'])){
 				<option value="0" <?php if($settings->css_sample==0) echo 'selected="selected"'; ?> >Disabled</option>
 			</select>
 		</div>
-		
+
 		<div class="form-group">
 			<label for="us_css1">Primary Color Scheme (Loaded 1st)</label>
 			<select class="form-control" name="us_css1" id="us_css1" >
@@ -379,7 +379,7 @@ if(!empty($_POST['css'])){
 
 
 
-
+<?php if ($settings->css_sample){?>
 <div class="row">
 
 	<div class="col-md-12 text-center">
@@ -401,11 +401,11 @@ if(!empty($_POST['css'])){
 	<h5>This is H5</h5>
 	<h6>This is H6</h6>
 	<p>This is paragraph</p>
-	<a href="#">This is a link</a>
+	<a href="#">This is a link</a><br><br>
 
 	</div>
 </div>
-
+<?php } ?>
 
 
 

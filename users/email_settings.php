@@ -163,7 +163,7 @@ if(!empty($_POST)){
 <input type="radio" name="email_act" value="0" <?php echo ($results->email_act==0)?'checked':''; ?> size="25">No</input>
 
 <input type="hidden" name="csrf" value="<?=Token::generate();?>" />
-<input class='btn btn-primary' type='submit' value='Update Email Settings' class='submit' />
+<input class='btn btn-primary' type='submit' value='Update Email Settings' class='submit' /><br><br>
 </form>
 
 </div>    <!-- /.row -->

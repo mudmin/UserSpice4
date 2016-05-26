@@ -2,7 +2,7 @@
 -- version 4.6.0
 -- http://www.phpmyadmin.net
 --
--- Host: mysql.canadebate.ca
+-- Host: localhost
 -- Generation Time: May 11, 2016 at 07:55 AM
 -- Server version: 5.6.25-log
 -- PHP Version: 7.0.4
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `usrayseenet`
+-- Database: `us4`
 --
 
 -- --------------------------------------------------------

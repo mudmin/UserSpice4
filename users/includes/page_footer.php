@@ -19,11 +19,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 ?>
 
-<div class="container-fluid">
+<div class="container">
 	<div class="row">
 		<div class="col-sm-12 text-center">
-			<footer><hr />&copy; <?php echo $copyright_message; ?>  | <?=$user_spice_ver?></footer>
-			<?php if($your_public_key  == "6LenGxITAAAAAImPQkqg_xBC0ZnGvopGa3jeP7S7") { echo "<h3 align='center'style='color:white'>For security reasons, you need to change your reCAPTCHA key.</h3>"; } ?>
+			<footer><font color='white'><br>&copy; <?=$copyright_message; ?></footer>
+			<?php if($your_public_key  == "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI") { echo "<h3 align='center'style='color:white'>For security reasons, you need to change your reCAPTCHA key.</h3>"; } ?>
 		</div>
 	</div>
 </div>
@@ -39,10 +39,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     // ga('create','UA-XXXXX-X','auto');ga('send','pageview');
     </script>
 
-	
+
   <!-- jQuery -->
   <script src="<?=$us_url_root?>users/js/jquery.js"></script>
 
   <!-- Bootstrap Core JavaScript -->
   <script src="<?=$us_url_root?>users/js/bootstrap.min.js"></script>
-

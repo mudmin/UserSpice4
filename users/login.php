@@ -35,7 +35,7 @@ if (Input::exists()) {
 	if(!Token::check($token)){
 		die('Token doesn\'t match!');
 	}
-	
+
 	//Check to see if recaptcha is enabled
 	if($settings->recaptcha == 1){
 		require_once 'includes/recaptcha.config.php';
@@ -45,14 +45,14 @@ if (Input::exists()) {
 
 		// check secret key
 		$reCaptcha = new ReCaptcha($privatekey);
-		
+
 		// if submitted check response
 		if ($_POST["g-recaptcha-response"]) {
 			$response = $reCaptcha->verifyResponse($_SERVER["REMOTE_ADDR"],$_POST["g-recaptcha-response"]);
 		}
 		if ($response != null && $response->success) {
 			$reCaptchaValid=TRUE;
-		
+
 		}else{
 			$reCaptchaValid=FALSE;
 			$error_message .= 'Please check the reCaptcha.';
@@ -60,7 +60,7 @@ if (Input::exists()) {
 	}else{
 		$reCaptchaValid=TRUE;
 	}
-	
+
 	if($reCaptchaValid || $settings->recaptcha == 0){ //if recaptcha valid or recaptcha disabled
 
 		$validate = new Validate();
@@ -71,7 +71,7 @@ if (Input::exists()) {
 
 			$remember = (Input::get('remember') === 'on') ? true : false;
 			$user = new User();
-			$login = $user->login(Input::get('username'), trim(Input::get('password')), $remember);
+			$login = $user->loginEmail(Input::get('username'), trim(Input::get('password')), $remember);
 			if ($login) {
 				if(file_exists($abs_us_root.$us_url_root.'usersc/scripts/custom_login_script.php')){
 					require_once $abs_us_root.$us_url_root.'usersc/scripts/custom_login_script.php';
@@ -101,10 +101,10 @@ if (Input::exists()) {
 	<div class="bg-danger"><?=$error_message;?></div>
 	<form name="login" class="form-signin" action="login.php" method="post">
 	<h2 class="form-signin-heading"></i> <?=lang("SIGNIN_TITLE","");?></h2>
-	
+
 	<div class="form-group">
-		<label for="username" >Username</label>
-		<input  class="form-control" type="text" name="username" id="username" placeholder="Username" required autofocus>
+		<label for="username" >Username OR Email</label>
+		<input  class="form-control" type="text" name="username" id="username" placeholder="Username/Email" required autofocus>
 	</div>
 
 	<div class="form-group">
@@ -133,11 +133,11 @@ if (Input::exists()) {
 	</div>
 </div>
 <div class="row">
-	<div class="col-xs-6">
-		<a class="pull-left" href='forgot_password.php'><i class="fa fa-wrench"></i> Forgot Password</a>
+	<div class="col-xs-6"><br>
+		<a class="pull-left" href='forgot_password.php'><i class="fa fa-wrench"></i> Forgot Password</a><br><br>
 	</div>
-	<div class="col-xs-6">
-		<a class="pull-right" href='join.php'><i class="fa fa-plus-square"></i> <?=lang("SIGNUP_TEXT","");?></a>
+	<div class="col-xs-6"><br>
+		<a class="pull-right" href='join.php'><i class="fa fa-plus-square"></i> <?=lang("SIGNUP_TEXT","");?></a><br><br>
 	</div>
 </div>
 </div>

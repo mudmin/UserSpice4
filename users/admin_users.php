@@ -54,13 +54,13 @@ $userData = fetchAllUsers(); //Fetch information for all users
 
     <!-- Page Heading -->
     <div class="row">
-    
+
 	    <div class="col-xs-12 col-md-6">
 		<h1>Manage Users</h1>
 	  </div>
-	  
+
 	  <div class="col-xs-12 col-md-6">
-			<form class="">   
+			<form class="">
 				<label for="system-search">Search:</label>
 				<div class="input-group">
                     <input class="form-control" id="system-search" name="q" placeholder="Search Users..." type="text">
@@ -68,19 +68,19 @@ $userData = fetchAllUsers(); //Fetch information for all users
 						<button type="submit" class="btn btn-default"><i class="fa fa-times"></i></button>
                     </span>
                 </div>
-			</form>  
+			</form>
 		  </div>
-	
+
         </div>
 
-		
+
 				 <div class="row">
 		     <div class="col-md-12">
           <?php echo resultBlock($errors,$successes);
 
-          
+
 				?>
-				
+
 							 <hr />
 				 <div class="alluinfo">&nbsp;</div>
 				<form name="adminUsers" action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
@@ -113,19 +113,19 @@ $userData = fetchAllUsers(); //Fetch information for all users
 				</div>
 
 					<input type="hidden" name="csrf" value="<?=Token::generate();?>" >
-				<input class='btn btn-primary' type='submit' name='Submit' value='Delete' />
-				</form>	
+				<input class='btn btn-primary' type='submit' name='Submit' value='Delete' /><br><br>
+				</form>
 
 		  </div>
-		</div>  
-		
-		
+		</div>
+
+
   </div>
 </div>
 
-  
+
 	<!-- End of main content section -->
-	
+
 <?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; // the final html footer copyright row + the external js calls ?>
 
     <!-- Place any per-page javascript here -->

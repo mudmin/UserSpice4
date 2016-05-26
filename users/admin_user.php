@@ -190,24 +190,24 @@ $useravatar = '<img src="'.$grav.'" class="img-responsive img-thumbnail" alt="">
 	<div class="col-xs-12 col-sm-2"><!--left col-->
 	<?php echo $useravatar;?>
 	</div><!--/col-2-->
-	
+
 	<div class="col-xs-12 col-sm-10">
 	<form class="form" name='adminUser' action='admin_user.php?id=<?=$userId?>' method='post'>
-	
+
 	<h3>User Information</h3>
 	<div class="panel panel-default">
 	<div class="panel-heading">User ID: <?=$userdetails->id?></div>
 	<div class="panel-body">
-	
+
 	<label>Joined: </label> <?=$userdetails->join_date?><br/>
-	
+
 	<label>Last seen: </label> <?=$userdetails->last_login?><br/>
-	
+
 	<label>Logins: </label> <?=$userdetails->logins?><br/>
 
 	<label>Username:</label>
 	<input  class='form-control' type='text' name='username' value='<?=$userdetails->username?>' />
-	
+
 	<label>Email:</label>
 	<input class='form-control' type='text' name='email' value='<?=$userdetails->email?>' />
 
@@ -219,7 +219,7 @@ $useravatar = '<img src="'.$grav.'" class="img-responsive img-thumbnail" alt="">
 
 	</div>
 	</div>
-		
+
 	<h3>Permissions</h3>
 	<div class="panel panel-default">
 		<div class="panel-heading">Remove These Permission(s):</div>
@@ -235,7 +235,7 @@ $useravatar = '<img src="'.$grav.'" class="img-responsive img-thumbnail" alt="">
 		foreach ($permissionData as $v1){
 		if(in_array($v1->id,$perm_ids)){ ?>
 		  <input type='checkbox' name='removePermission[]' id='removePermission[]' value='<?=$v1->id;?>' /> <?=$v1->name;?>
-		<?php 
+		<?php
 		}
 		}
 		?>
@@ -250,7 +250,7 @@ $useravatar = '<img src="'.$grav.'" class="img-responsive img-thumbnail" alt="">
 		foreach ($permissionData as $v1){
 		if(!in_array($v1->id,$perm_ids)){ ?>
 		  <input type='checkbox' name='addPermission[]' id='addPermission[]' value='<?=$v1->id;?>' /> <?=$v1->name;?>
-			<?php 
+			<?php
 		}
 		}
 		?>
@@ -266,12 +266,12 @@ $useravatar = '<img src="'.$grav.'" class="img-responsive img-thumbnail" alt="">
 			<option <?php if ($userdetails->permissions==0){echo "selected='selected'";} ?>value="0">Yes</option>
 		</select>
 		</div>
-	</div>	
+	</div>
 
 	<input type="hidden" name="csrf" value="<?=Token::generate();?>" />
 	<input class='btn btn-primary' type='submit' value='Update' class='submit' />
-	<a class='btn btn-warning' href="admin_users.php">Cancel</a>
-	
+	<a class='btn btn-warning' href="admin_users.php">Cancel</a><br><br>
+
 	</form>
 
 	</div><!--/col-9-->

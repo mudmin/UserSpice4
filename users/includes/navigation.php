@@ -36,12 +36,19 @@ $lang = array_merge($lang,array(
 	"SIGNIN_BUTTONTEXT"		=> "Login",
 	"SIGNIN_AUDITTEXT"		=> "Logged In",
 	"SIGNOUT_AUDITTEXT"		=> "Logged Out",
-	));	
-	
+	));
+
 //Navigation
 $lang = array_merge($lang,array(
 	"NAVTOP_HELPTEXT"		=> "Help",
 	));
+
+$query = $db->query("SELECT * FROM email");
+$results = $query->first();
+
+//Value of email_act used to determine whether to display the Resend Verification link
+$email_act=$results->email_act;
+
 ?>
 <!-- Navigation -->
 <div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
@@ -54,11 +61,11 @@ $lang = array_merge($lang,array(
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="<?=$us_url_root?>"><img class="img-responsive" src="<?=$us_url_root?>users/images/logo.png" alt="" /></a>
+			<a class="" href="<?=$us_url_root?>"><img class="img-responsive" src="<?=$us_url_root?>users/images/logo.png" alt="" /></a>
 		</div>
 		<div class="collapse navbar-collapse navbar-top-menu-collapse navbar-right">
 			<ul class="nav navbar-nav ">
-				<?php if($user->isLoggedIn()){ //anyone is logged in?> 
+				<?php if($user->isLoggedIn()){ //anyone is logged in?>
 					<li><a href="<?=$us_url_root?>users/account.php"><i class="fa fa-fw fa-user"></i> <?=$user->data()->username;?></a></li> <!-- Common for Hamburger and Regular menus link -->
 					<li class="hidden-sm hidden-md hidden-lg"><a href="<?=$us_url_root?>"><i class="fa fa-fw fa-home"></i> Home</a></li> <!-- Hamburger menu link -->
 					<?php if (checkMenu(2,$user->data()->id)){  //Links for permission level 2 (default admin) ?>
@@ -68,7 +75,7 @@ $lang = array_merge($lang,array(
 						<ul class="dropdown-menu"> <!-- open tag for User dropdown menu -->
 							<li><a href="<?=$us_url_root?>"><i class="fa fa-fw fa-home"></i> Home</a></li> <!-- regular user menu link -->
 							<li><a href="<?=$us_url_root?>users/account.php"><i class="fa fa-fw fa-user"></i> Account</a></li> <!-- regular user menu link -->
-							
+
 							<?php if (checkMenu(2,$user->data()->id)){  //Links for permission level 2 (default admin) ?>
 								<li class="divider"></li>
 								<li><a href="<?=$us_url_root?>users/admin.php"><i class="fa fa-fw fa-cogs"></i> Admin Dashboard</a></li> <!-- regular Admin menu link -->
@@ -86,7 +93,9 @@ $lang = array_merge($lang,array(
 					<li class="dropdown"><a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="fa fa-life-ring"></i><?=lang("NAVTOP_HELPTEXT","");?> <b class="caret"></b></a>
 					<ul class="dropdown-menu">
 					<li><a href="<?=$us_url_root?>users/forgot_password.php"><i class="fa fa-wrench"></i> Forgot Password</a></li>
+					<?php if ($email_act){ //Only display following menu item if activation is enabled ?>
 					<li><a href="<?=$us_url_root?>users/verify_resend.php"><i class="fa fa-exclamation-triangle"></i> Resend Activation Email</a></li>
+					<?php }?>
 					</ul>
 					</li>
 				<?php } //end of conditional for menu display ?>

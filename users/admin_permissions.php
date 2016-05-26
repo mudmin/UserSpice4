@@ -129,7 +129,7 @@ $count = 0;
 
 			  <input type="hidden" name="csrf" value="<?=Token::generate();?>" >
 
-			  <input class='btn btn-primary' type='submit' name='Submit' value='Add/Update/Delete' />
+			  <input class='btn btn-primary' type='submit' name='Submit' value='Add/Update/Delete' /><br><br>
 
 			</form>
 
