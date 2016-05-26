@@ -117,7 +117,7 @@ function email($to,$subject,$body,$attachment=false){
 	$mail->SMTPAuth = true;                               // Enable SMTP authentication
 	$mail->Username = $smtp_username;                 // SMTP username
 	$mail->Password = $smtp_password;                           // SMTP password
-	$mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
+	$mail->SMTPSecure = $smtp_transport;                            // Enable TLS encryption, `ssl` also accepted
 	$mail->Port = $smtp_port;                                    // TCP port to connect to
 
 	$mail->setFrom($from, $from_name);
