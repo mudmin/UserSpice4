@@ -87,6 +87,7 @@ if(Input::exists()){
 		'required' => true,
 		'min' => 5,
 		'max' => 35,
+		'unique' => 'users',
 	  ),
 	  'fname' => array(
 		'display' => 'First Name',

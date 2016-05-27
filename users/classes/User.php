@@ -126,7 +126,7 @@ class User {
 
 						Cookie::put($this->_cookieName, $hash, Config::get('remember/cookie_expiry'));
 					}
-					$this->_db->update('users',$this->data()->id,['last_login'=>date("Y-m-d H:i:s")]);
+					$this->_db->query("UPDATE users SET last_login = ?, logins = logins + 1 WHERE id = ?",[date("Y-m-d H:i:s"),$this->data()->id]);
 					return true;
 				}
 			}
