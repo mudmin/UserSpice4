@@ -46,8 +46,15 @@ if ($settings->force_ssl==1){
 	}
 }
 
-if($settings->track_guest == 1){
-	new_user_online();
+//if track_guest enabled AND there is a user logged in
+if($settings->track_guest == 1 && $user->isLoggedIn()){
+	if ($user->isLoggedIn()){
+		$user_id=$user->data()->id;
+	}else{
+		$user_id=0;
+	}
+	new_user_online($user_id);
+	
 }
 ?>
 <!DOCTYPE html>

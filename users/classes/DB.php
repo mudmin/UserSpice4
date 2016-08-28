@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 class DB {
 	private static $_instance = null;
-	private $_pdo, $_query, $_error = false, $_results, $_resultsArray, $_count = 0, $_lastId;
+	private $_pdo, $_query, $_error = false, $_results, $_resultsArray, $_count = 0, $_lastId, $_queryCount=0;
 
 	private function __construct(){
 		try{
@@ -42,6 +42,7 @@ class DB {
 	}
 
 	public function query($sql, $params = array()){
+		$this->_queryCount++;
 		$this->_error = false;
 		if ($this->_query = $this->_pdo->prepare($sql)) {
 			$x = 1;
@@ -165,4 +166,9 @@ class DB {
 	public function lastId(){
 		return $this->_lastId;
 	}
+	
+	public function getQueryCount(){
+		return $this->_queryCount;
+	}	
+	
 }

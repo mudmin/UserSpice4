@@ -27,21 +27,110 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //PHP Goes Here!
 $errors = [];
 $successes = [];
+$form_valid=FALSE;
+$permOpsQ = $db->query("SELECT * FROM permissions");
+$permOps = $permOpsQ->results();
+// dnd($permOps);
 
 //Forms posted
-if(!empty($_POST))
-{
-  $token = $_POST['csrf'];
-if(!Token::check($token)){
-  die('Token doesn\'t match!');
+if (!empty($_POST)){
+  //Delete User Checkboxes
+  if (!empty($_POST['delete'])){
+    $deletions = $_POST['delete'];
+    if ($deletion_count = deleteUsers($deletions)){
+      $successes[] = lang("ACCOUNT_DELETIONS_SUCCESSFUL", array($deletion_count));
+    }
+    else {
+      $errors[] = lang("SQL_ERROR");
+    }
+  }
+  //Manually Add User
+  if(!empty($_POST['addUser']))
+  {
+    $join_date = date("Y-m-d H:i:s");
+    $username = Input::get('username');
+  	$fname = Input::get('fname');
+  	$lname = Input::get('lname');
+  	$email = Input::get('email');
+    $perm = Input::get('perm');
+    $token = $_POST['csrf'];
+
+  if(!Token::check($token)){
+    die('Token doesn\'t match!');
+  }
+
+  $validation = new Validate();
+  $validation->check($_POST,array(
+    'username' => array(
+    'display' => 'Username',
+    'required' => true,
+    'min' => 5,
+    'max' => 35,
+    'unique' => 'users',
+    ),
+    'fname' => array(
+    'display' => 'First Name',
+    'required' => true,
+    'min' => 2,
+    'max' => 35,
+    ),
+    'lname' => array(
+    'display' => 'Last Name',
+    'required' => true,
+    'min' => 2,
+    'max' => 35,
+    ),
+    'email' => array(
+    'display' => 'Email',
+    'required' => true,
+    'valid_email' => true,
+    'unique' => 'users',
+    ),
+    'password' => array(
+    'display' => 'Password',
+    'required' => true,
+    'min' => 6,
+    'max' => 25,
+    ),
+    'confirm' => array(
+    'display' => 'Confirm Password',
+    'required' => true,
+    'matches' => 'password',
+    ),
+  ));
+  	if($validation->passed()) {
+		$form_valid=TRUE;
+      try {
+        // echo "Trying to create user";
+        $fields=array(
+          'username' => Input::get('username'),
+          'fname' => Input::get('fname'),
+          'lname' => Input::get('lname'),
+          'email' => Input::get('email'),
+          'password' =>
+          password_hash(Input::get('password'), PASSWORD_BCRYPT, array('cost' => 12)),
+          'permissions' => 1,
+          'account_owner' => 1,
+          'stripe_cust_id' => '',
+          'join_date' => $join_date,
+          'company' => Input::get('company'),
+          'email_verified' => 1,
+          'active' => 1,
+          'vericode' => 111111,
+        );
+        $db->insert('users',$fields);
+        $theNewId=$db->lastId();
+        // bold($theNewId);
+        $addNewPermission = array('user_id' => $theNewId, 'permission_id' => $perm);
+        $db->insert('user_permission_matches',$addNewPermission);
+
+      } catch (Exception $e) {
+        die($e->getMessage());
+      }
+
+    }
 }
-  $deletions = $_POST['delete'];
-  if ($deletion_count = deleteUsers($deletions)){
-    $successes[] = lang("ACCOUNT_DELETIONS_SUCCESSFUL", array($deletion_count));
-  }
-  else {
-    $errors[] = lang("SQL_ERROR");
-  }
+
 }
 
 $userData = fetchAllUsers(); //Fetch information for all users
@@ -77,11 +166,59 @@ $userData = fetchAllUsers(); //Fetch information for all users
 				 <div class="row">
 		     <div class="col-md-12">
           <?php echo resultBlock($errors,$successes);
-
-
 				?>
 
 							 <hr />
+               <div class="row">
+               <div class="col-xs-12">
+               <?php
+               if (!$form_valid && Input::exists()){
+               	echo display_errors($validation->errors());
+               }
+               ?>
+
+               <form class="form-signup" action="admin_users.php" method="POST" id="payment-form">
+
+               	<h3 class="form-signin-heading"> Manually Add a New
+                <select name="perm">
+                  <?php
+
+                  foreach ($permOps as $permOp){
+                    echo "<option value='$permOp->id'>$permOp->name</option>";
+                  }
+                  ?>
+                  </select>
+                  </h3>
+
+               	<div class="form-group">
+                  <div class="col-xs-2">
+               		<input  class="form-control" type="text" name="username" id="username" placeholder="Username" value="<?php if (!$form_valid && !empty($_POST)){ echo $username;} ?>" required autofocus>
+</div>
+                  <div class="col-xs-2">
+               		<input type="text" class="form-control" id="fname" name="fname" placeholder="First Name" value="<?php if (!$form_valid && !empty($_POST)){ echo $fname;} ?>" required>
+</div>
+                  <div class="col-xs-2">
+               		<input type="text" class="form-control" id="lname" name="lname" placeholder="Last Name" value="<?php if (!$form_valid && !empty($_POST)){ echo $lname;} ?>" required>
+</div>
+                  <div class="col-xs-2">
+               		<input  class="form-control" type="text" name="email" id="email" placeholder="Email Address" value="<?php if (!$form_valid && !empty($_POST)){ echo $email;} ?>" required >
+</div>
+                  <div class="col-xs-2">
+               		<input  class="form-control" type="password" name="password" id="password" placeholder="Password" required aria-describedby="passwordhelp">
+</div>
+                  <div class="col-xs-2">
+               		<input  type="password" id="confirm" name="confirm" class="form-control" placeholder="Confirm Password" required >
+</div>
+               	</div>
+
+
+               	<input type="hidden" value="<?=Token::generate();?>" name="csrf">
+	            <input class='btn btn-primary' type='submit' name='addUser' value='Manually Add User' />
+               </form>
+               </div>
+               </div>
+        <div class="row">
+        <div class="col-xs-12">
 				 <div class="alluinfo">&nbsp;</div>
 				<form name="adminUsers" action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
 				 <div class="allutable table-responsive">
@@ -112,8 +249,8 @@ $userData = fetchAllUsers(); //Fetch information for all users
 				</table>
 				</div>
 
-					<input type="hidden" name="csrf" value="<?=Token::generate();?>" >
-				<input class='btn btn-primary' type='submit' name='Submit' value='Delete' /><br><br>
+
+				<input class='btn btn-danger' type='submit' name='Submit' value='Delete' /><br><br>
 				</form>
 
 		  </div>

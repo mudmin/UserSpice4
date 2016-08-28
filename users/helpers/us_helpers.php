@@ -324,8 +324,8 @@ function deleteUsers($users) {
 	$i = 0;
 	foreach($users as $id){
 		$query1 = $db->query("DELETE FROM users WHERE id = ?",array($id));
-		$query2 = $db->query("DELETE FROM user_permission_matches WHERE id = ?",array($id));
-		$query3 = $db->query("DELETE FROM profiles WHERE id = ?",array($id));
+		$query2 = $db->query("DELETE FROM user_permission_matches WHERE user_id = ?",array($id));
+		$query3 = $db->query("DELETE FROM profiles WHERE user_id = ?",array($id));
 		$i++;
 	}
 	return $i;
@@ -562,8 +562,8 @@ function deletePermission($permission) {
 			$errors[] = lang("CANNOT_DELETE_ADMIN");
 		}else{
 			$query1 = $db->query("DELETE FROM permissions WHERE id = ?",array($id));
-			$query2 = $db->query("DELETE FROM user_permission_matches WHERE id = ?",array($id));
-			$query3 = $db->query("DELETE FROM permission_page_matches WHERE id = ?",array($id));
+			$query2 = $db->query("DELETE FROM user_permission_matches WHERE permission_id = ?",array($id));
+			$query3 = $db->query("DELETE FROM permission_page_matches WHERE permission_id = ?",array($id));
 			$i++;
 		}
 	}

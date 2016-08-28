@@ -64,7 +64,7 @@ function money($ugly){
 
 function name_from_id($id){
 	$nfi = DB::getInstance()->get('users', array('id', '=', $id));
-	return $nfi->first()->name;
+	return $nfi->first()->username;
 }
 
 function display_errors($errors = array()){
