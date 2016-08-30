@@ -27,6 +27,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //PHP Goes Here!
 $errors = [];
 $successes = [];
+$val_err = null;
+$username = null;
+$fname = null;
+$lname = null;
+$email = null;
 $form_valid=FALSE;
 $permOpsQ = $db->query("SELECT * FROM permissions");
 $permOps = $permOpsQ->results();
@@ -123,12 +128,15 @@ if (!empty($_POST)){
         // bold($theNewId);
         $addNewPermission = array('user_id' => $theNewId, 'permission_id' => $perm);
         $db->insert('user_permission_matches',$addNewPermission);
+        $db->insert('profiles',['user_id'=>$theNewId, 'bio'=>'This is the bio']);
 
       } catch (Exception $e) {
         die($e->getMessage());
       }
 
-    }
+    }else{
+$val_err = display_errors($validation->errors());
+}
 }
 
 }
@@ -171,11 +179,7 @@ $userData = fetchAllUsers(); //Fetch information for all users
 							 <hr />
                <div class="row">
                <div class="col-xs-12">
-               <?php
-               if (!$form_valid && Input::exists()){
-               	echo display_errors($validation->errors());
-               }
-               ?>
+               <?php echo $val_err; ?>
 
                <form class="form-signup" action="admin_users.php" method="POST" id="payment-form">
 

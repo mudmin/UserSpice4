@@ -37,13 +37,13 @@ if(Input::exists()){
 }
 
 if(Input::get('reset') == 1){ //$_GET['reset'] is set when clicking the link in the password reset email.
-	
+
 	//display the reset form.
 	$email = Input::get('email');
 	$vericode = Input::get('vericode');
 	$ruser = new User($email);
 	if (Input::get('resetPassword')) {
-		
+
 		$validate = new Validate();
 		$validation = $validate->check($_POST,array(
 		'password' => array(
@@ -62,6 +62,7 @@ if(Input::get('reset') == 1){ //$_GET['reset'] is set when clicking the link in 
 			$ruser->update(array(
 			  'password' => password_hash(Input::get('password'), PASSWORD_BCRYPT, array('cost' => 12)),
 			  'vericode' => rand(100000,999999),
+				'email_verified' => true,
 			),$ruser->data()->id);
 			$reset_password_success=TRUE;
 		}else{

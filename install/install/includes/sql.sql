@@ -274,7 +274,7 @@ CREATE TABLE `users_online` (
   `id` int(10) NOT NULL,
   `ip` varchar(15) NOT NULL,
   `timestamp` varchar(15) NOT NULL,
-  `username` varchar(100) NOT NULL,
+  `user_id` int(10) NOT NULL,
   `session` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -282,7 +282,7 @@ CREATE TABLE `users_online` (
 -- Dumping data for table `users_online`
 --
 
-INSERT INTO `users_online` (`id`, `ip`, `timestamp`, `username`, `session`) VALUES
+INSERT INTO `users_online` (`id`, `ip`, `timestamp`, `user_id`, `session`) VALUES
 (26, '::1', '1455555707', '', ''),
 (27, '192.171.42.122', '1462976510', '', '');
 

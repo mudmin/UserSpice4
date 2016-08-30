@@ -26,7 +26,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 if (!securePage($_SERVER['PHP_SELF'])){die();}
 
 if ($settings->site_offline==1){die("The site is currently offline.");}?>
+
 <?php
+$emailQ = $db->query("SELECT * FROM email");
+$emailR = $emailQ->first();
+// dnd($emailR);
+// dnd($emailR->email_act);
 //PHP Goes Here!
 $errors=[];
 $successes=[];
@@ -67,13 +72,13 @@ if(!empty($_POST)) {
 		if($validation->passed()){
 			//echo 'Username changes are disabled by commenting out this field and disabling input in the form/view';
 			//$db->update('users',$userId,$fields);
-			
+
 			$successes[]="Username updated.";
 		}else{
 			//validation did not pass
 			foreach ($validation->errors() as $error) {
 				$errors[] = $error;
-			}			
+			}
 
 		}
     }else{
@@ -96,13 +101,13 @@ if(!empty($_POST)) {
 		));
 		if($validation->passed()){
 			$db->update('users',$userId,$fields);
-			
+
 			$successes[]='First name updated.';
 		}else{
 			//validation did not pass
 			foreach ($validation->errors() as $error) {
 				$errors[] = $error;
-			}			
+			}
 
 		}
     }else{
@@ -125,13 +130,13 @@ if(!empty($_POST)) {
       ));
     if($validation->passed()){
       $db->update('users',$userId,$fields);
-      
+
 	  $successes[]='Last name updated.';
     }else{
 			//validation did not pass
 			foreach ($validation->errors() as $error) {
 				$errors[] = $error;
-			}			
+			}
 
       }
     }else{
@@ -154,13 +159,17 @@ if(!empty($_POST)) {
       ));
     if($validation->passed()){
       $db->update('users',$userId,$fields);
-      
+			if($emailR->email_act=1){
+				$db->update('users',$userId,['email_verified'=>0]);
+			}
+
+
 	  $successes[]='Email updated.';
     }else{
 			//validation did not pass
 			foreach ($validation->errors() as $error) {
 				$errors[] = $error;
-			}					
+			}
       }
 
     }else{
@@ -186,12 +195,12 @@ if(!empty($_POST)) {
       ));
 		foreach ($validation->errors() as $error) {
 			$errors[] = $error;
-		}			
+		}
 
       if (!password_verify(Input::get('old'),$user->data()->password)) {
 			foreach ($validation->errors() as $error) {
 				$errors[] = $error;
-			}			
+			}
 			$errors[]='Your password does not match our records.';
       }
 		if (empty($errors)) {
@@ -222,42 +231,42 @@ if(!empty($_POST)) {
 <span><?=display_successes($successes);?></span>
 
 <form name='updateAccount' action='user_settings.php' method='post'>
-	
+
 	<div class="form-group">
 		<label>Username</label>
-		<input  class='form-control' type='text' name='username' value='<?=$displayname?>' />
+		<input  class='form-control' type='text' name='username' value='<?=$displayname?>' readonly/>
 	</div>
-	
+
 	<div class="form-group">
 		<label>First Name</label>
 		<input  class='form-control' type='text' name='fname' value='<?=$fname?>' />
 	</div>
-	
+
 	<div class="form-group">
 		<label>Last Name</label>
 		<input  class='form-control' type='text' name='lname' value='<?=$lname?>' />
 	</div>
-	
+
 	<div class="form-group">
 		<label>Email</label>
 		<input class='form-control' type='text' name='email' value='<?=$email?>' />
 	</div>
-	
+
 	<div class="form-group">
 		<label>Old Password (required to change password)</label>
 		<input class='form-control' type='password' name='old' />
 	</div>
-	
+
 	<div class="form-group">
 		<label>New Password (8 character minimum)</label>
 		<input class='form-control' type='password' name='password' />
 	</div>
-	
+
 	<div class="form-group">
 		<label>Confirm Password</label>
 		<input class='form-control' type='password' name='confirm' />
 	</div>
-	
+
 	<input type="hidden" name="csrf" value="<?=Token::generate();?>" />
 
 	<p><input class='btn btn-primary' type='submit' value='Update' class='submit' /></p>

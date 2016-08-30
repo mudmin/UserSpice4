@@ -24,15 +24,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <?php if (!securePage($_SERVER['PHP_SELF'])){die();} ?>
 <?php
+// What to look for
+$search = "Redirect::to('verify.php');";
+// Read from file
+$lines = file('init.php');
+foreach($lines as $line)
+{
+  if(strpos($line, $search) !== false)
+    bold("<br><br>You have a bug in your init.php that cannot be patched automatically.<br><br>Please replace verify.php with users/verify.php towards the bottom of your init.php file.");
+}
 
-//PHP Goes Here!
-$query = $db->query("SELECT * FROM email");
-$results = $query->first();
 
 $urlProtocol=isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
 
 
 if(!empty($_POST)){
+
   $token = $_POST['csrf'];
 	if(!Token::check($token)){
 		die('Token doesn\'t match!');
@@ -110,8 +117,11 @@ if(!empty($_POST)){
 
         }else{
             }
+            if($_POST['update_and_test']){
+              Redirect::to("email_test.php");
+            }else{
             Redirect::to("email_settings.php");
-
+    }
   }
 
 ?>
@@ -127,12 +137,12 @@ if(!empty($_POST)){
 
 <h1>Setup your email server</h1>
 <p>
-  These settings control all things email-related for the server including emailing your users and verifying the user's email address. 
-  You must obtain and verify all settings below for YOUR email server or hosting provider. Encryption with TLS is STRONGLY recommended, 
+  These settings control all things email-related for the server including emailing your users and verifying the user's email address.
+  You must obtain and verify all settings below for YOUR email server or hosting provider. Encryption with TLS is STRONGLY recommended,
   followed by SSL. No encryption is like shouting your login credentials out into a crowded field and is not supported for now.
 </p>
 </p>It is <strong>HIGHLY</strong> recommended that you test your email settings before turning on the feature to require new users to verify their email<br>
-  <a href="email_test.php" class="btn btn-danger">Test Your Settings</a><br><br>
+
 <form name='update' action='email_settings.php' method='post'>
 
 <label>Website Name:</label>
@@ -160,7 +170,7 @@ if(!empty($_POST)){
 <select class="form-control" name="transport">
 	<option value="tls" <?php if($results->transport=='tls') echo 'selected="selected"'; ?> >TLS (encrypted)</option>
 	<option value="ssl" <?php if($results->transport=='ssl') echo 'selected="selected"'; ?> >SSL (encrypted, but weak)</option>
-</select>  
+</select>
 
 <label>Root URL of your UserSpice install including http or https protocol (VERY Important) <br/><div class="text-muted"> <?="Default location would be: ".$urlProtocol.$_SERVER['HTTP_HOST'].$us_url_root?></div></label>
   <input required  size='50' class='form-control' type='text' name='verify_url' value='<?=$results->verify_url?>' />
@@ -170,7 +180,8 @@ if(!empty($_POST)){
 <input type="radio" name="email_act" value="0" <?php echo ($results->email_act==0)?'checked':''; ?> size="25">No</input>
 
 <input type="hidden" name="csrf" value="<?=Token::generate();?>" />
-<input class='btn btn-primary' type='submit' value='Update Email Settings' class='submit' /><br><br>
+<input class='btn btn-primary' name="update_only" type='submit' value='Update Email Settings' class='submit' /><br><br>
+<input class='btn btn-danger' name="update_and_test" type='submit' value='Update and Test Email Settings' class='submit' /><br><br>
 </form>
 
 </div>    <!-- /.row -->

@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <?php
 if($user->isLoggedIn()){
 	$user->logout();
-	Redirect::to('verify.php');
+	Redirect::to('users/verify.php');
 }
 
 $verify_success=FALSE;
@@ -46,7 +46,7 @@ if(Input::exists('get')){
 	if($validation->passed()){ //if email is valid, do this
 		//get the user info based on the email
 		$verify = new User(Input::get('email'));
-		
+
 		if ($verify->exists() && $verify->data()->vericode == $vericode){ //check if this email account exists in the DB
 			$verify->update(array('email_verified' => 1),$verify->data()->id);
 			$verify_success=TRUE;
