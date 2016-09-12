@@ -227,6 +227,7 @@ if(!empty($_POST)) {
 </div>
 <div class="col-xs-12 col-md-10">
 <h1>Update your user settings</h1>
+<strong>Want to change your profile picture? </strong><br> Visit <a href="https://en.gravatar.com/">https://en.gravatar.com/</a> and setup an account with the email address <?=$email?>.  It works across millions of sites. It's fast and easy!<br>
 <span class="bg-danger"><?=display_errors($errors);?></span>
 <span><?=display_successes($successes);?></span>
 

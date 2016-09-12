@@ -28,6 +28,8 @@ class Config {
 			foreach ($path as $bit) {
 				if(isset($config[$bit])){
 					$config = $config[$bit];
+				} else {
+					return false;
 				}
 			}
 

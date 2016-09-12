@@ -70,7 +70,7 @@ if(Input::exists()){
 	$email = Input::get('email');
 	$company = Input::get('company');
 	$agreement_checkbox = Input::get('agreement_checkbox');
-	
+
 	if ($agreement_checkbox=='on'){
 		$agreement_checkbox=TRUE;
 	}else{
@@ -125,13 +125,13 @@ if(Input::exists()){
 		'matches' => 'password',
 	  ),
 	));
-	
+
 	//if the agreement_checkbox is not checked, add error
 	if (!$agreement_checkbox){
 		$validation->addError(["Please read and accept terms and conditions"]);
 	}
-	
-	if($validation->passed() && $agreement_checkbox){			
+
+	if($validation->passed() && $agreement_checkbox){
 		//Logic if ReCAPTCHA is turned ON
 		if($settings->recaptcha == 1){
 			require_once("includes/recaptcha.config.php");
@@ -156,11 +156,11 @@ if(Input::exists()){
 				$form_valid=FALSE;
 				$validation->addError(["Please check the reCaptcha box."]);
 			}
-			
+
 		} //else for recaptcha
-		
+
 		if($reCaptchaValid || $settings->recaptcha == 0){
-			
+
 			//add user to the database
 			$user = new User();
 			$join_date = date("Y-m-d H:i:s");
@@ -172,7 +172,7 @@ if(Input::exists()){
 
 			if($act == 1) {
 				//Verify email address settings
-				$to = $email;
+				$to = rawurlencode($email);
 				$subject = 'Welcome to UserSpice!';
 				$body = email_body('_email_template_verify.php',$params);
 				email($to,$subject,$body);
@@ -200,7 +200,7 @@ if(Input::exists()){
 			}
 			Redirect::to($us_url_root.'users/joinThankYou.php');
 		}
-	
+
 	} //Validation and agreement checbox
 } //Input exists
 

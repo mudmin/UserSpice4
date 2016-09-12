@@ -40,7 +40,7 @@ $errors = array();
 if(Input::exists('post')){
 	$email = Input::get('email');
 	$fuser = new User($email);
-	
+
 	$validate = new Validate();
 	$validation = $validate->check($_POST,array(
 	'email' => array(
@@ -50,7 +50,7 @@ if(Input::exists('post')){
 	),
 	));
 	if($validation->passed()){ //if email is valid, do this
-	
+
 		if($fuser->exists()){
 			//send the email
 			$options = array(
@@ -58,9 +58,10 @@ if(Input::exists('post')){
 			  'email' => $email,
 			  'vericode' => $fuser->data()->vericode,
 			);
+			$encoded_email=rawurlencode($email);
 			$subject = 'Verify Your Email';
 			$body =  email_body('_email_template_verify.php',$options);
-			$email_sent=email($email,$subject,$body);
+			$email_sent=email($encoded_email,$subject,$body);
 			if(!$email_sent){
 				$errors[] = 'Email NOT sent due to error. Please contact site administrator.';
 			}

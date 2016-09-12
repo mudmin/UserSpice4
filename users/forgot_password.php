@@ -40,7 +40,7 @@ if (Input::get('forgotten_password')) {
 	//validate the form
 	$validate = new Validate();
 	$validation = $validate->check($_POST,array('email' => array('display' => 'Email','valid_email' => true,'required' => true,),));
-	
+
 	if($validation->passed()){
 		if($fuser->exists()){
 			//send the email
@@ -50,8 +50,9 @@ if (Input::get('forgotten_password')) {
 			  'vericode' => $fuser->data()->vericode,
 			);
 			$subject = 'Password Reset';
+			$encoded_email=rawurlencode($email);
 			$body =  email_body('_email_template_forgot_password.php',$options);
-			$email_sent=email($email,$subject,$body);
+			$email_sent=email($encoded_email,$subject,$body);
 			if(!$email_sent){
 				$errors[] = 'Email NOT sent due to error. Please contact site administrator.';
 			}

@@ -25,20 +25,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <?php if (!securePage($_SERVER['PHP_SELF'])){die();} ?>
 <?php
 //PHP Goes Here!
-$errors = [];
-$successes = [];
-$val_err = null;
-$username = null;
-$fname = null;
-$lname = null;
-$email = null;
-$form_valid=FALSE;
+$errors = $successes = [];
+$form_valid=TRUE;
 $permOpsQ = $db->query("SELECT * FROM permissions");
 $permOps = $permOpsQ->results();
 // dnd($permOps);
 
 //Forms posted
-if (!empty($_POST)){
+if (!empty($_POST)) {
   //Delete User Checkboxes
   if (!empty($_POST['delete'])){
     $deletions = $_POST['delete'];
@@ -50,8 +44,7 @@ if (!empty($_POST)){
     }
   }
   //Manually Add User
-  if(!empty($_POST['addUser']))
-  {
+  if(!empty($_POST['addUser'])) {
     $join_date = date("Y-m-d H:i:s");
     $username = Input::get('username');
   	$fname = Input::get('fname');
@@ -60,49 +53,50 @@ if (!empty($_POST)){
     $perm = Input::get('perm');
     $token = $_POST['csrf'];
 
-  if(!Token::check($token)){
-    die('Token doesn\'t match!');
-  }
+    if(!Token::check($token)){
+      die('Token doesn\'t match!');
+    }
 
-  $validation = new Validate();
-  $validation->check($_POST,array(
-    'username' => array(
-    'display' => 'Username',
-    'required' => true,
-    'min' => 5,
-    'max' => 35,
-    'unique' => 'users',
-    ),
-    'fname' => array(
-    'display' => 'First Name',
-    'required' => true,
-    'min' => 2,
-    'max' => 35,
-    ),
-    'lname' => array(
-    'display' => 'Last Name',
-    'required' => true,
-    'min' => 2,
-    'max' => 35,
-    ),
-    'email' => array(
-    'display' => 'Email',
-    'required' => true,
-    'valid_email' => true,
-    'unique' => 'users',
-    ),
-    'password' => array(
-    'display' => 'Password',
-    'required' => true,
-    'min' => 6,
-    'max' => 25,
-    ),
-    'confirm' => array(
-    'display' => 'Confirm Password',
-    'required' => true,
-    'matches' => 'password',
-    ),
-  ));
+    $form_valid=FALSE; // assume the worst
+    $validation = new Validate();
+    $validation->check($_POST,array(
+      'username' => array(
+      'display' => 'Username',
+      'required' => true,
+      'min' => 5,
+      'max' => 35,
+      'unique' => 'users',
+      ),
+      'fname' => array(
+      'display' => 'First Name',
+      'required' => true,
+      'min' => 2,
+      'max' => 35,
+      ),
+      'lname' => array(
+      'display' => 'Last Name',
+      'required' => true,
+      'min' => 2,
+      'max' => 35,
+      ),
+      'email' => array(
+      'display' => 'Email',
+      'required' => true,
+      'valid_email' => true,
+      'unique' => 'users',
+      ),
+      'password' => array(
+      'display' => 'Password',
+      'required' => true,
+      'min' => 6,
+      'max' => 25,
+      ),
+      'confirm' => array(
+      'display' => 'Confirm Password',
+      'required' => true,
+      'matches' => 'password',
+      ),
+    ));
   	if($validation->passed()) {
 		$form_valid=TRUE;
       try {
@@ -128,17 +122,15 @@ if (!empty($_POST)){
         // bold($theNewId);
         $addNewPermission = array('user_id' => $theNewId, 'permission_id' => $perm);
         $db->insert('user_permission_matches',$addNewPermission);
-        $db->insert('profiles',['user_id'=>$theNewId, 'bio'=>'This is the bio']);
+
+        $successes[] = lang("ACCOUNT_USER_ADDED");
 
       } catch (Exception $e) {
         die($e->getMessage());
       }
 
-    }else{
-$val_err = display_errors($validation->errors());
-}
-}
-
+    }
+  }
 }
 
 $userData = fetchAllUsers(); //Fetch information for all users
@@ -179,10 +171,15 @@ $userData = fetchAllUsers(); //Fetch information for all users
 							 <hr />
                <div class="row">
                <div class="col-xs-12">
-               <?php echo $val_err; ?>
+               <?php
+               if (!$form_valid && Input::exists()){
+               	echo display_errors($validation->errors());
+               }
+               ?>
 
                <form class="form-signup" action="admin_users.php" method="POST" id="payment-form">
 
+                <div class="well well-sm">
                	<h3 class="form-signin-heading"> Manually Add a New
                 <select name="perm">
                   <?php
@@ -215,9 +212,10 @@ $userData = fetchAllUsers(); //Fetch information for all users
 </div>
                	</div>
 
-
+                <br /><br />
                	<input type="hidden" value="<?=Token::generate();?>" name="csrf">
 	            <input class='btn btn-primary' type='submit' name='addUser' value='Manually Add User' />
+              </div>
                </form>
                </div>
                </div>

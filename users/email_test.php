@@ -17,6 +17,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+/*
+*/
 ?>
 <?php require_once 'init.php'; ?>
 <?php require_once $abs_us_root.$us_url_root.'users/includes/header.php'; ?>
@@ -27,20 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   Redirect::to('account.php');
 }
   ?>
-<?php
-//PHP Goes Here!
-
-$query = $db->query("SELECT * FROM email");
-$results = $query->first();
-
-if(!empty($_POST)){
-	$to = $_POST['test_acct'];
-	$subject = 'Testing Your Email Settings!';
-	$body = 'This is the body of your test email';
-	$mail_result=email($to,$subject,$body);
-}
-
-?>
 <div id="page-wrapper">
 
   <div class="container-fluid">
@@ -49,41 +38,45 @@ if(!empty($_POST)){
     <div class="row">
       <div class="col-sm-12">
 
-        <!-- Left Column -->
-        <div class="class col-sm-4"></div>
-
         <!-- Main Center Column -->
-        <div class="class col-sm-3">
+        <div class="class col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6">
           <!-- Content Goes Here. Class width can be adjusted -->
           <h1>
             Test your email settings.
           </h1><br>
           It's a good idea to test to make sure you can actually receive system emails before forcing your users to verify theirs. <br><br>
+          <strong>DEVELOPER NOTE:</strong>
+             If you are having difficulty with your email configuration, go to
+             users/helpers/helpers.php (around line 114) and set $mail->SMTPDebug
+             to a non-zero value. This is a development-platform-ONLY setting - be
+             sure to set it back to zero (or leave it unset) on any live platform -
+             otherwise you would open significant security holes.<br><br>
           <?php
-			if (!empty($_POST)){
-				if($mail_result){
-					echo 'Mail sent successfully<br/>';
-				}else{
-					echo 'Mail ERROR<br/>';
-				}
+                if (!empty($_POST)){
+                  $to = $_POST['test_acct'];
+                  $subject = 'Testing Your Email Settings!';
+                  $body = 'This is the body of your test email';
+                  $mail_result=email($to,$subject,$body);
 
-			}
-		  
-		  ?>
-		  
-		  <form class="" name="test_email" action="email_test.php" method="post">
+                    if($mail_result){
+                        echo '<div class="alert alert-success" role="alert">Mail sent successfully</div><br/>';
+                    }else{
+                        echo '<div class="alert alert-danger" role="alert">Mail ERROR</div><br/>';
+                    }
+                }
+              ?>
+
+          <form class="" name="test_email" action="email_test.php" method="post">
             <label>Send test to (Ideally different than your from address):
               <input required size='50' class='form-control' type='text' name='test_acct' value='' /></label>
 
-              <label>&nbsp;</label>
+              <label>&nbsp;</label><br />
               <input class='btn btn-primary' type='submit' value='Send A Test Email' class='submit' />
           </form>
 
           <!-- End of main content section
         </div>
 
-
-        <div class="class col-sm-1"></div>
       </div>
     </div>
 
