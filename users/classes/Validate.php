@@ -35,7 +35,7 @@ class Validate{
 				$value = trim($source[$item]);
 				$value = sanitize($value);
 
-				if ($rule === 'required' && empty($value)) {
+				if ($rule === 'required' && $rule_value && empty($value)) {
 					$this->addError(["{$display} is required",$item]);
 				} else if(!empty($value)){
 					switch ($rule) {
