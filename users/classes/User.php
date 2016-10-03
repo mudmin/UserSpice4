@@ -45,7 +45,7 @@ class User {
 			throw new Exception('There was a problem creating an account.');
 		}else
 		$user_id = $this->_db->lastId();
-		$query = $this->_db->insert("user_permission_matches",['user_id'=>$user_id,'permission_id'=>1]);
+		$query = $this->_db->insert("groups_users",['user_id'=>$user_id,'group_id'=>1]);
 		// return $user_id;
 		$query2 = $this->_db->insert("profiles",['user_id'=>$user_id, 'bio'=>'This is your bio']);
 		return $user_id;
@@ -75,7 +75,7 @@ class User {
 	}
 
 	public function login($username = null, $password = null, $remember = false){
-		
+
 		if (!$username && !$password && $this->exists()) {
 			Session::put($this->_sessionName, $this->data()->id);
 		} else {
@@ -146,6 +146,20 @@ class User {
 		return $this->_isLoggedIn;
 	}
 
+	public function isAdmin(){
+		if (!$this->_isLoggedIn)
+			return false;
+		if ($this->_data->id === 0)
+			return true;
+		if (!$adminGroups = Config::get('userspice/admin_groups'))
+			$adminGroups = array(2); // default in UserSpice
+		foreach ((array)$adminGroups as $group) {
+			if ( $this->_db->query('SELECT * FROM groups_users WHERE user_id = ? AND group_id = ?', array($this->_data->id, $group))->count() > 0)
+				return true;
+		}
+		return false;
+	}
+
 	public function notLoggedInRedirect($location){
 		if($this->_isLoggedIn){
 			return true;
@@ -172,26 +186,6 @@ class User {
 		}
 	}
 
-	//This is for future versions of UserSpice
-	public function hasPermission($key){
-		$group = $this->_db->get('permissions', array('id', '=', $this->data()->permissions));
-		if ($group->count()) {
-			$permissions = json_decode($group->first()->permissions, true);
-			if ($permissions[$key] == true) {
-				return true;
-			}
-		}
-		return false;
-	}
-	//This is for future versions of UserSpice
-	public function noPermissionRedirect($perm,$location){
-		if(!$this->hasPermission($perm)){
-			Redirect::to($location);
-		}else{
-			return true;
-		}
-	}
-
-
-
+	# PLB CODE-REVIEW ASDF - I don't understand what this is looking for?
+	# I have deleted hasPermission() and noPermissionRedirect()
 }
