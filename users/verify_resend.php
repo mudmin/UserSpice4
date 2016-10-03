@@ -55,10 +55,10 @@ if(Input::exists('post')){
 			//send the email
 			$options = array(
 			  'fname' => $fuser->data()->fname,
-			  'email' => $email,
+			  'email' => rawurlencode($email),
 			  'vericode' => $fuser->data()->vericode,
 			);
-			$encoded_email=rawurlencode($email);
+			$encoded_email=$email;
 			$subject = 'Verify Your Email';
 			$body =  email_body('_email_template_verify.php',$options);
 			$email_sent=email($encoded_email,$subject,$body);
