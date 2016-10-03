@@ -27,9 +27,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //PHP Goes Here!
 $errors = $successes = [];
 $form_valid=TRUE;
-$permOpsQ = $db->query("SELECT * FROM permissions");
-$permOps = $permOpsQ->results();
-// dnd($permOps);
+$groupList = fetchAllGroups();
+// dnd($groupList);
 
 //Forms posted
 if (!empty($_POST)) {
@@ -50,7 +49,7 @@ if (!empty($_POST)) {
   	$fname = Input::get('fname');
   	$lname = Input::get('lname');
   	$email = Input::get('email');
-    $perm = Input::get('perm');
+    $group = Input::get('group');
     $token = $_POST['csrf'];
 
     if(!Token::check($token)){
@@ -63,21 +62,21 @@ if (!empty($_POST)) {
       'username' => array(
       'display' => 'Username',
       'required' => true,
-      'min' => 5,
-      'max' => 35,
+      'min' => 3,
+      'max' => 150,
       'unique' => 'users',
       ),
       'fname' => array(
       'display' => 'First Name',
       'required' => true,
-      'min' => 2,
-      'max' => 35,
+      'min' => 1,
+      'max' => 150,
       ),
       'lname' => array(
       'display' => 'Last Name',
       'required' => true,
-      'min' => 2,
-      'max' => 35,
+      'min' => 1,
+      'max' => 150,
       ),
       'email' => array(
       'display' => 'Email',
@@ -89,7 +88,7 @@ if (!empty($_POST)) {
       'display' => 'Password',
       'required' => true,
       'min' => 6,
-      'max' => 25,
+      'max' => 150,
       ),
       'confirm' => array(
       'display' => 'Confirm Password',
@@ -120,10 +119,9 @@ if (!empty($_POST)) {
         $db->insert('users',$fields);
         $theNewId=$db->lastId();
         // bold($theNewId);
-        $addNewPermission = array('user_id' => $theNewId, 'permission_id' => $perm);
-        $db->insert('user_permission_matches',$addNewPermission);
+        addGroupsUsers_raw($group, $theNewId);
 
-        $successes[] = lang("ACCOUNT_USER_ADDED");
+        $successes[] = lang("ACCOUNT_USER_ADDED", Input::get('username'));
 
       } catch (Exception $e) {
         die($e->getMessage());
@@ -181,11 +179,11 @@ $userData = fetchAllUsers(); //Fetch information for all users
 
                 <div class="well well-sm">
                	<h3 class="form-signin-heading"> Manually Add a New
-                <select name="perm">
+                <select name="group">
                   <?php
 
-                  foreach ($permOps as $permOp){
-                    echo "<option value='$permOp->id'>$permOp->name</option>";
+                  foreach ($groupList as $group){
+                    echo "<option value='$group->id'>$group->name</option>";
                   }
                   ?>
                   </select>
