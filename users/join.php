@@ -85,21 +85,21 @@ if(Input::exists()){
 	  'username' => array(
 		'display' => 'Username',
 		'required' => true,
-		'min' => 5,
-		'max' => 35,
+		'min' => 1,
+		'max' => 150,
 		'unique' => 'users',
 	  ),
 	  'fname' => array(
 		'display' => 'First Name',
 		'required' => true,
-		'min' => 2,
-		'max' => 35,
+		'min' => 1,
+		'max' => 150,
 	  ),
 	  'lname' => array(
 		'display' => 'Last Name',
 		'required' => true,
-		'min' => 2,
-		'max' => 35,
+		'min' => 1,
+		'max' => 150,
 	  ),
 	  'email' => array(
 		'display' => 'Email',
@@ -117,7 +117,7 @@ if(Input::exists()){
 		'display' => 'Password',
 		'required' => true,
 		'min' => 6,
-		'max' => 25,
+		'max' => 150,
 	  ),
 	  'confirm' => array(
 		'display' => 'Confirm Password',
