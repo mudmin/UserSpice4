@@ -31,12 +31,13 @@
 	}
 
 // Pie Chart for Page Permission Counts
+// PLB CODE-REVIEW ASDF - code is non-functional, I believe
 function fetchUserjsonPIE()
 	{
 	// Example query
 	$db = DB::getInstance();
 	$stmt = $db->query("SELECT * AS ?,?
-	FROM permission_page_matches LEFT JOIN permissions ON permission_id = permissions.id  GROUP BY permission_id",[sum1,name]);
+	FROM groups_pages LEFT JOIN groups ON group_id = groups.id  GROUP BY group_id",[sum1,name]);
 	$results = $stmt->results();
 	$count = $stmt->count();
 	return $results;
@@ -44,6 +45,7 @@ function fetchUserjsonPIE()
 	}
 
 // Bar Chart for Login Counts
+// PLB CODE-REVIEW ASDF - code is non-functional, I believe
 function fetchUserjsonLG2()
 	{
 	// Example query
@@ -56,6 +58,7 @@ function fetchUserjsonLG2()
 	}
 
 // Bar Chart for Signup Counts
+// PLB CODE-REVIEW ASDF - code is non-functional, I believe
 function fetchUserjsonLG()
 	{
 	// Example query
