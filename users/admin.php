@@ -66,8 +66,8 @@ $user_count = $usersQ->count();
 $pagesQ = $db->query("SELECT * FROM pages");
 $page_count = $pagesQ->count();
 
-$levelsQ = $db->query("SELECT * FROM permissions");
-$level_count = $levelsQ->count();
+$groupsQ = $db->query("SELECT * FROM groups");
+$group_count = $groupsQ->count();
 
 $settingsQ = $db->query("SELECT * FROM settings");
 $settings = $settingsQ->first();
@@ -149,7 +149,7 @@ if(!empty($_POST['css'])){
 
 <h1 class="text-center">UserSpice Dashboard <?=$user_spice_ver?></h1>
 
-<div class="row"> <!-- row for Users, Permissions, Pages, Email settings panels -->
+<div class="row"> <!-- row for Users, Groups, Pages, Email settings panels -->
 	<h2>Admin Panels</h2>
 	<!-- Users Panel -->
 	<div class="col-xs-6 col-md-3">
@@ -164,13 +164,13 @@ if(!empty($_POST['css'])){
 	</div><!-- /panel -->
 	</div><!-- /col -->
 
-	<!-- Permissions Panel -->
+	<!-- Groups Panel -->
 	<div class="col-xs-6 col-md-3">
 	<div class="panel panel-default">
-	<div class="panel-heading"><strong>Permission Levels</strong></div>
-	<div class="panel-body text-center"><div class="huge"> <i class='fa fa-lock fa-1x'></i> <?=$level_count?></div></div>
+	<div class="panel-heading"><strong>Groups</strong></div>
+	<div class="panel-body text-center"><div class="huge"> <i class='fa fa-lock fa-1x'></i> <?=$group_count?></div></div>
 	<div class="panel-footer">
-	<span class="pull-left"><a href="admin_permissions.php">Manage</a></span>
+	<span class="pull-left"><a href="admin_groups.php">Manage</a></span>
 	<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
 	<div class="clearfix"></div>
 	</div> <!-- /panel-footer -->
