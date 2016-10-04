@@ -31,50 +31,44 @@ $errors = [];
 $successes = [];
 
 //Forms posted
-if(!empty($_POST))
-{
+if(!empty($_POST)) {
   $token = $_POST['csrf'];
   if(!Token::check($token)){
     die('Token doesn\'t match!');
   }
 
-  //Delete permission levels
+  //Delete groups
   if(!empty($_POST['delete'])){
     $deletions = $_POST['delete'];
-    if ($deletion_count = deletePermission($deletions)){
-      $successes[] = lang("PERMISSION_DELETIONS_SUCCESSFUL", array($deletion_count));
+    if ($deletion_count = deleteGroups($deletions)){
+      $successes[] = lang("GROUP_DELETIONS_SUCCESSFUL", array($deletion_count));
     }
   }
 
-  //Create new permission level
+  //Create new group
   if(!empty($_POST['name'])) {
-    $permission = Input::get('name');
-    $fields=array('name'=>$permission);
-    //NEW Validations
-        $validation->check($_POST,array(
-          'name' => array(
-            'display' => 'Permission Name',
-            'required' => true,
-            'unique' => 'permissions',
-            'min' => 1,
-            'max' => 25
-          )
-        ));
-        if($validation->passed()){
-          $db->insert('permissions',$fields);
-          echo "Permission Updated";
-
-  }else{
-
+    $groupName = Input::get('name');
+    $fields=array('name'=>$groupName);
+    $validation->check($_POST,array(
+      'name' => array(
+        'display' => 'Group Name',
+        'required' => true,
+        'unique' => 'groups',
+        'min' => 1,
+        'max' => 150
+      )
+    ));
+    if($validation->passed()){
+      $db->insert('groups',$fields);
+      echo "Group Added";
     }
   }
 }
 
-
-$permissionData = fetchAllPermissions(); //Retrieve list of all permission levels
+$groupData = fetchAllGroups(); //Retrieve list of all groups
 $count = 0;
-// dump($permissionData);
-// echo $permissionData[0]->name;
+// dump($groupData);
+// echo $groupData[0]->name;
 ?>
 <div id="page-wrapper">
 
@@ -94,30 +88,30 @@ $count = 0;
 
 
 			<?php
-			$errors = [];
-			$successes = [];
 			echo resultBlock($errors,$successes);
 			?>
-			<form name='adminPermissions' action='<?=$_SERVER['PHP_SELF']?>' method='post'>
-			  <h2>Create a new permission group</h2>
-			  <p>
-				<label>Permission Name:</label>
-				<input type='text' name='name' />
-			  </p>
+			<form name='adminGroups' action='<?=$_SERVER['PHP_SELF']?>' method='post'>
+        <div>
+          <h2> Administrate Groups </h2>
+        <div class="well">
+  			  <h4>Create a new group</h4>
+  				<label>Group Name:</label>
+  				<input type='text' name='name' />
+        </div>
 
 			  <br>
 			  <table class='table table-hover table-list-search'>
 				<tr>
-				  <th>Delete</th><th>Permission Name</th>
+				  <th>Delete</th><th>Group Name</th>
 				</tr>
 
 				<?php
 				//List each permission level
-				foreach ($permissionData as $v1) {
+				foreach ($groupData as $v1) {
 				  ?>
 				  <tr>
-					<td><input type='checkbox' name='delete[<?=$permissionData[$count]->id?>]' id='delete[<?=$permissionData[$count]->id?>]' value='<?=$permissionData[$count]->id?>'></td>
-					<td><a href='admin_permission.php?id=<?=$permissionData[$count]->id?>'><?=$permissionData[$count]->name?></a></td>
+					<td><input type='checkbox' name='delete[<?=$groupData[$count]->id?>]' id='delete[<?=$groupData[$count]->id?>]' value='<?=$groupData[$count]->id?>'></td>
+					<td><a href='admin_group.php?id=<?=$groupData[$count]->id?>'><?=$groupData[$count]->name?></a></td>
 				  </tr>
 				  <?php
 				  $count++;
@@ -129,8 +123,9 @@ $count = 0;
 
 			  <input type="hidden" name="csrf" value="<?=Token::generate();?>" >
 
-			  <input class='btn btn-primary' type='submit' name='Submit' value='Add/Update/Delete' /><br><br>
+			  <input class='btn btn-primary' type='submit' name='Submit' value='Save Changes' /><br><br>
 
+        </div>
 			</form>
 
           <!-- End of main content section -->

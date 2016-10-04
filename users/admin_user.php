@@ -25,9 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <?php if (!securePage($_SERVER['PHP_SELF'])){die();} ?>
 <?php
 $validation = new Validate();
-//PHP Goes Here!
-$errors = [];
-$successes = [];
+$errors = $successes = [];
+$validation_errors = '';
 $userId = Input::get('id');
 //Check if selected user exists
 if(!userIdExists($userId)){
@@ -35,144 +34,141 @@ if(!userIdExists($userId)){
 }
 
 $userdetails = fetchUserDetails(NULL, NULL, $userId); //Fetch user details
+$username = $userdetails->username;
+$email = $userdetails->email;
+$fname = $userdetails->fname;
+$lname = $userdetails->lname;
 
 //Forms posted
 if(!empty($_POST)) {
-    $token = $_POST['csrf'];
-    if(!Token::check($token)){
-      die('Token doesn\'t match!');
-    }else {
+  $token = $_POST['csrf'];
+  if(!Token::check($token)){
+    die('Token doesn\'t match!');
+  }
 
-    //Update display name
+  //Update username
 
-    if ($userdetails->username != $_POST['username']){
-      $displayname = Input::get("username");
+  if ($userdetails->username != $_POST['username']){
+    $username = Input::get("username");
 
-      $fields=array('username'=>$displayname);
-      $validation->check($_POST,array(
-        'username' => array(
-          'display' => 'Username',
-          'required' => true,
-          'unique_update' => 'users,'.$userId,
-          'min' => 1,
-          'max' => 25
-        )
-      ));
+    $fields=array('username'=>$username);
+    $validation->check($_POST,array(
+      'username' => array(
+        'display' => 'Username',
+        'required' => true,
+        'unique_update' => 'users,'.$userId,
+        'min' => 1,
+        'max' => 150
+      )
+    ));
     if($validation->passed()){
       $db->update('users',$userId,$fields);
-     $successes[] = "Username Updated";
-    }else{
-
-      }
+      $successes[] = "Username Updated";
+    } else {
+      $validation_errors .= $validation->display_errors();
     }
+  }
 
-    //Update first name
+  //Update first name
 
-    if ($userdetails->fname != $_POST['fname']){
-       $fname = Input::get("fname");
+  if ($userdetails->fname != $_POST['fname']) {
+    $fname = Input::get("fname");
 
-      $fields=array('fname'=>$fname);
-      $validation->check($_POST,array(
-        'fname' => array(
-          'display' => 'First Name',
-          'required' => true,
-          'min' => 1,
-          'max' => 25
-        )
-      ));
-    if($validation->passed()){
+    $fields=array('fname'=>$fname);
+    $validation->check($_POST,array(
+      'fname' => array(
+        'display' => 'First Name',
+        'required' => true,
+        'min' => 1,
+        'max' => 150
+      )
+    ));
+    if($validation->passed()) {
       $db->update('users',$userId,$fields);
       $successes[] = "First Name Updated";
-    }else{
-          ?><div id="form-errors">
-            <?=$validation->display_errors();?></div>
-            <?php
-      }
+    } else {
+      $validation_errors .= $validation->display_errors();
     }
+  }
 
-    //Update last name
+  //Update last name
 
-    if ($userdetails->lname != $_POST['lname']){
-      $lname = Input::get("lname");
+  if ($userdetails->lname != $_POST['lname']) {
+    $lname = Input::get("lname");
 
-      $fields=array('lname'=>$lname);
-      $validation->check($_POST,array(
-        'lname' => array(
-          'display' => 'Last Name',
-          'required' => true,
-          'min' => 1,
-          'max' => 25
-        )
-      ));
-    if($validation->passed()){
+    $fields=array('lname'=>$lname);
+    $validation->check($_POST,array(
+      'lname' => array(
+        'display' => 'Last Name',
+        'required' => true,
+        'min' => 1,
+        'max' => 150
+      )
+    ));
+    if($validation->passed()) {
       $db->update('users',$userId,$fields);
       $successes[] = "Last Name Updated";
-    }else{
-          ?><div id="form-errors">
-            <?=$validation->display_errors();?></div>
-            <?php
-      }
+    } else {
+      $validation_errors .= $validation->display_errors();
     }
+  }
 
-    //Block User
-    if ($userdetails->permissions != $_POST['active']){
-      $active = Input::get("active");
-      $fields=array('permissions'=>$active);
-      $db->update('users',$userId,$fields);
-    }
+  //Block User
+  if ($userdetails->permissions != $_POST['active']){
+    $active = Input::get("active");
+    $fields=array('permissions'=>$active);
+    $db->update('users',$userId,$fields);
+  }
 
-    //Update email
-    if ($userdetails->email != $_POST['email']){
-      $email = Input::get("email");
-      $fields=array('email'=>$email);
-      $validation->check($_POST,array(
-        'email' => array(
-          'display' => 'Email',
-          'required' => true,
-          'valid_email' => true,
-          'unique_update' => 'users,'.$userId,
-          'min' => 3,
-          'max' => 75
-        )
-      ));
+  //Update email
+  if ($userdetails->email != $_POST['email']) {
+    $email = Input::get("email");
+    $fields=array('email'=>$email);
+    $validation->check($_POST,array(
+      'email' => array(
+        'display' => 'Email',
+        'required' => true,
+        'valid_email' => true,
+        'unique_update' => 'users,'.$userId,
+        'min' => 3,
+        'max' => 150
+      )
+    ));
     if($validation->passed()){
       $db->update('users',$userId,$fields);
       $successes[] = "Email Updated";
-    }else{
-          ?><div id="form-errors">
-            <?=$validation->display_errors();?></div>
-            <?php
-      }
-
-    }
-
-    //Remove permission level
-    if(!empty($_POST['removePermission'])){
-      $remove = $_POST['removePermission'];
-      if ($deletion_count = removePermission($remove, $userId)){
-        $successes[] = lang("ACCOUNT_PERMISSION_REMOVED", array ($deletion_count));
-      }
-      else {
-        $errors[] = lang("SQL_ERROR");
-      }
-    }
-
-    if(!empty($_POST['addPermission'])){
-      $add = $_POST['addPermission'];
-      if ($addition_count = addPermission($add, $userId,'user')){
-        $successes[] = lang("ACCOUNT_PERMISSION_ADDED", array ($addition_count));
-      }
-      else {
-        $errors[] = lang("SQL_ERROR");
-      }
+    } else {
+      $validation_errors .= $validation->display_errors();
     }
   }
-    $userdetails = fetchUserDetails(NULL, NULL, $userId);
+
+  //Remove group(s)
+  if(!empty($_POST['removeGroup'])){
+    $groups = $_POST['removeGroup'];
+    if ($deletion_count = deleteGroupsUsers_raw($groups, $userId)){
+      $successes[] = lang("ACCOUNT_GROUP_REMOVED", array ($deletion_count));
+    }
+    else {
+      $errors[] = lang("SQL_ERROR");
+    }
   }
 
+  //Add group(s)
+  if(!empty($_POST['addGroup'])){
+    $group = $_POST['addGroup'];
+    if ($addition_count = addGroupsUsers_raw($group, $userId)){
+      $successes[] = lang("ACCOUNT_GROUP_ADDED", array ($addition_count));
+    }
+    else {
+      $errors[] = lang("SQL_ERROR");
+    }
+  }
+  $userdetails = fetchUserDetails(NULL, NULL, $userId);
+}
 
-$userPermission = fetchUserPermissions($userId);
-$permissionData = fetchAllPermissions();
+
+$userGroups = fetchUserGroups($userId);
+$groupsData = fetchAllGroups();
 
 $grav = get_gravatar(strtolower(trim($userdetails->email)));
 $useravatar = '<img src="'.$grav.'" class="img-responsive img-thumbnail" alt="">';
@@ -183,7 +179,7 @@ $useravatar = '<img src="'.$grav.'" class="img-responsive img-thumbnail" alt="">
 <div class="container">
 
 <?=resultBlock($errors,$successes);?>
-<?=$validation->display_errors();?>
+<?=$validation_errors;?>
 
 
 <div class="row">
@@ -206,37 +202,36 @@ $useravatar = '<img src="'.$grav.'" class="img-responsive img-thumbnail" alt="">
 	<label>Logins: </label> <?=$userdetails->logins?><br/>
 
 	<label>Username:</label>
-	<input  class='form-control' type='text' name='username' value='<?=$userdetails->username?>' />
+	<input  class='form-control' type='text' name='username' value='<?=$username?>' />
 
 	<label>Email:</label>
-	<input class='form-control' type='text' name='email' value='<?=$userdetails->email?>' />
+	<input class='form-control' type='text' name='email' value='<?=$email?>' />
 
 	<label>First Name:</label>
-	<input  class='form-control' type='text' name='fname' value='<?=$userdetails->fname?>' />
+	<input  class='form-control' type='text' name='fname' value='<?=$fname?>' />
 
 	<label>Last Name:</label>
-	<input  class='form-control' type='text' name='lname' value='<?=$userdetails->lname?>' />
+	<input  class='form-control' type='text' name='lname' value='<?=$lname?>' />
 
 	</div>
 	</div>
 
-	<h3>Permissions</h3>
+	<h3>Groups</h3>
 	<div class="panel panel-default">
-		<div class="panel-heading">Remove These Permission(s):</div>
+		<div class="panel-heading">Remove User From These Group(s):</div>
 		<div class="panel-body">
 		<?php
-		//NEW List of permission levels user is apart of
-
-		$perm_ids = [];
-		foreach($userPermission as $perm){
-			$perm_ids[] = $perm->permission_id;
+		//NEW List of groups user is apart of
+		$group_ids = [];
+		foreach($userGroups as $group){
+			$group_ids[] = $group->group_id;
 		}
 
-		foreach ($permissionData as $v1){
-		if(in_array($v1->id,$perm_ids)){ ?>
-		  <input type='checkbox' name='removePermission[]' id='removePermission[]' value='<?=$v1->id;?>' /> <?=$v1->name;?>
-		<?php
-		}
+		foreach ($groupsData as $v1) {
+  		if (in_array($v1->id,$group_ids)) { ?>
+  		  <label><input type='checkbox' name='removeGroup[]' id='removeGroup[]' value='<?=$v1->id;?>' /> <?=$v1->name;?></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  		<?php
+  		}
 		}
 		?>
 
@@ -244,14 +239,14 @@ $useravatar = '<img src="'.$grav.'" class="img-responsive img-thumbnail" alt="">
 	</div>
 
 	<div class="panel panel-default">
-		<div class="panel-heading">Add These Permission(s):</div>
+		<div class="panel-heading">Add User to These Group(s):</div>
 		<div class="panel-body">
 		<?php
-		foreach ($permissionData as $v1){
-		if(!in_array($v1->id,$perm_ids)){ ?>
-		  <input type='checkbox' name='addPermission[]' id='addPermission[]' value='<?=$v1->id;?>' /> <?=$v1->name;?>
-			<?php
-		}
+		foreach ($groupsData as $v1) {
+  		if (!in_array($v1->id,$group_ids)) { ?>
+  		  <label><input type='checkbox' name='addGroup[]' id='addGroup[]' value='<?=$v1->id;?>' /> <?=$v1->name;?></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  			<?php
+  		}
 		}
 		?>
 		</div>

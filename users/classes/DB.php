@@ -22,13 +22,15 @@ class DB {
 	private $_pdo, $_query, $_error = false, $_results, $_resultsArray, $_count = 0, $_lastId, $_queryCount=0;
 
 	private function __construct(){
+		if (!$opts = Config::get('mysql/options'))
+			$opts = array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET SESSION sql_mode = ''");
 		try{
 			$this->_pdo = new PDO('mysql:host=' .
-				Config::get('mysql/host') .';dbname='. 
-				Config::get('mysql/db'), 
-				Config::get('mysql/username'), 
+				Config::get('mysql/host') .';dbname='.
+				Config::get('mysql/db'),
+				Config::get('mysql/username'),
 				Config::get('mysql/password'),
-				array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET SESSION sql_mode = ''"));
+				$opts);
 		} catch(PDOException $e){
 			die($e->getMessage());
 		}
@@ -54,8 +56,10 @@ class DB {
 			}
 
 			if ($this->_query->execute()) {
-				$this->_results = $this->_query->fetchALL(PDO::FETCH_OBJ);
-				$this->_resultsArray = json_decode(json_encode($this->_results),true);
+				if ($this->_query->columnCount() > 0) {
+					$this->_results = $this->_query->fetchALL(PDO::FETCH_OBJ);
+					$this->_resultsArray = json_decode(json_encode($this->_results),true);
+				}
 				$this->_count = $this->_query->rowCount();
 				$this->_lastId = $this->_pdo->lastInsertId();
 			} else{
@@ -69,7 +73,7 @@ class DB {
 		return $this->action('SELECT *',$table);
 	}
 
-	public function findById($id,$table){
+	public function findById($table,$id){
 		return $this->action('SELECT *',$table,array('id','=',$id));
 	}
 
@@ -119,7 +123,7 @@ class DB {
 		}
 
 		$sql = "INSERT INTO {$table} (`". implode('`,`', $keys)."`) VALUES ({$values})";
-		
+
 		if (!$this->query($sql, $fields)->error()) {
 			return true;
 		}
@@ -166,9 +170,26 @@ class DB {
 	public function lastId(){
 		return $this->_lastId;
 	}
-	
+
 	public function getQueryCount(){
 		return $this->_queryCount;
-	}	
-	
+	}
+
+	//Add a condition allowing either an individual value or an array
+	// arrays will result with "fieldname IN (?,?,?)"
+	// values will result with "fieldname = ?"
+	// with the $bindvals updated appropriately
+	public function calcInOrEqual($fieldnm, $val, &$bindvals) {
+		if (!$val) return '';
+		$rtn = $fieldnm.' ';
+		if (is_array($val)) {
+			$rtn .= 'IN ('.str_repeat('?,', count($val) - 1). '?)';
+			$bindvals = array_merge($bindvals, $val);
+		} else {
+			$rtn .= '= ? ';
+			$bindvals[] = $val;
+		}
+		return $rtn;
+	}
+
 }

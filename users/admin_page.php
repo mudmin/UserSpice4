@@ -65,22 +65,22 @@ if(Input::exists()){
 		}
 	}
 
-	//Remove permission level(s) access to page
-	if(!empty($_POST['removePermission'])){
-		$remove = $_POST['removePermission'];
-		if ($deletion_count = removePage($pageId, $remove)){
+	//Remove group's access to page
+	if(!empty($_POST['removeGroup'])){
+		$remove = $_POST['removeGroup'];
+		if ($deletion_count = deleteGroupsPages($pageId, $remove)){
 			$successes[] = lang("PAGE_ACCESS_REMOVED", array($deletion_count));
 		}else{
 			$errors[] = lang("SQL_ERROR");
 		}
 	}
 
-	//Add permission level(s) access to page
-	if(!empty($_POST['addPermission'])){
-		$add = $_POST['addPermission'];
+	//Add group with access to page
+	if(!empty($_POST['addGroup'])){
+		$add = $_POST['addGroup'];
 		$addition_count = 0;
-		foreach($add as $perm_id){
-			if(addPage($pageId, $perm_id)){
+		foreach($add as $groupId){
+			if(addPage($pageId, $groupId)){
 				$addition_count++;
 			}
 		}
@@ -90,8 +90,8 @@ if(Input::exists()){
 	}
 	$pageDetails = fetchPageDetails($pageId);
 }
-$pagePermissions = fetchPagePermissions($pageId);
-$permissionData = fetchAllPermissions();
+$pageGroups = fetchGroupsByPage($pageId); // groups with auth to access page
+$groupData = fetchAllGroups();
 ?>
 <div id="page-wrapper">
 
@@ -104,13 +104,13 @@ $permissionData = fetchAllPermissions();
         <!-- Main Center Column -->
         <div class="col-xs-12">
           <!-- Content Goes Here. Class width can be adjusted -->
-		  
-			<h2>Page Permissions </h2>
+
+			<h2>Page Authorizations </h2>
 			<?php resultBlock($errors,$successes); ?>
 
 			<form name='adminPage' action='<?=$_SERVER['PHP_SELF'];?>?id=<?=$pageId;?>' method='post'>
 				<input type='hidden' name='process' value='1'>
-				
+
 			<div class="row">
 			<div class="col-md-3">
 				<div class="panel panel-default">
@@ -127,7 +127,7 @@ $permissionData = fetchAllPermissions();
 					</div>
 				</div><!-- /panel -->
 			</div><!-- /.col -->
-			
+
 			<div class="col-md-3">
 				<div class="panel panel-default">
 					<div class="panel-heading"><strong>Public or Private?</strong></div>
@@ -141,43 +141,43 @@ $permissionData = fetchAllPermissions();
 					</div>
 				</div><!-- /panel -->
 			</div><!-- /.col -->
-			
+
 			<div class="col-md-3">
 				<div class="panel panel-default">
 					<div class="panel-heading"><strong>Remove Access</strong></div>
 					<div class="panel-body">
 						<div class="form-group">
 						<?php
-						//Display list of permission levels with access
-						$perm_ids = [];
-						foreach($pagePermissions as $perm){
-							$perm_ids[] = $perm->permission_id;
+						//Display list of groups with access
+						$group_ids = [];
+						foreach($pageGroups as $group){
+							$group_ids[] = $group->group_id;
 						}
-						foreach ($permissionData as $v1){
-							if(in_array($v1->id,$perm_ids)){ ?>
-							<input type='checkbox' name='removePermission[]' id='removePermission[]' value='<?=$v1->id;?>'> <?=$v1->name;?><br/>
+						foreach ($groupData as $v1){
+							if(in_array($v1->id,$group_ids)){ ?>
+							<input type='checkbox' name='removeGroup[]' id='removeGroup[]' value='<?=$v1->id;?>'> <?=$v1->name;?><br/>
 							<?php }} ?>
 						</div>
 					</div>
 				</div><!-- /panel -->
 			</div><!-- /.col -->
-			
+
 			<div class="col-md-3">
 				<div class="panel panel-default">
 					<div class="panel-heading"><strong>Add Access</strong></div>
 					<div class="panel-body">
 						<div class="form-group">
 						<?php
-						//Display list of permission levels without access
-						foreach ($permissionData as $v1){
-						if(!in_array($v1->id,$perm_ids)){ ?>
-						<input type='checkbox' name='addPermission[]' id='addPermission[]' value='<?=$v1->id;?>'> <?=$v1->name;?><br/>
+						//Display list of groups without access
+						foreach ($groupData as $v1){
+						if(!in_array($v1->id,$group_ids)){ ?>
+						<input type='checkbox' name='addGroup[]' id='addGroup[]' value='<?=$v1->id;?>'> <?=$v1->name;?><br/>
 						<?php }} ?>
 						</div>
 					</div>
 				</div><!-- /panel -->
-			</div><!-- /.col -->			
-			</div><!-- /.row -->				
+			</div><!-- /.col -->
+			</div><!-- /.row -->
 
 			<input type="hidden" name="csrf" value="<?=Token::generate();?>" >
 			<p><input class='btn btn-primary' type='submit' value='Update' class='submit' /></p>
