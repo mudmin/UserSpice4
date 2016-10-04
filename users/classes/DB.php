@@ -175,4 +175,21 @@ class DB {
 		return $this->_queryCount;
 	}
 
+	//Add a condition allowing either an individual value or an array
+	// arrays will result with "fieldname IN (?,?,?)"
+	// values will result with "fieldname = ?"
+	// with the $bindvals updated appropriately
+	public function calcInOrEqual($fieldnm, $val, &$bindvals) {
+		if (!$val) return '';
+		$rtn = $fieldnm.' ';
+		if (is_array($val)) {
+			$rtn .= 'IN ('.str_repeat('?,', count($val) - 1). '?)';
+			$bindvals = array_merge($bindvals, $val);
+		} else {
+			$rtn .= '= ? ';
+			$bindvals[] = $val;
+		}
+		return $rtn;
+	}
+
 }
