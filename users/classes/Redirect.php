@@ -18,28 +18,39 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 class Redirect {
-	public static function to($location = null){
-		if ($location) {
-			if (is_numeric($location)) {
-				switch ($location) {
-					case '404':
-						header('HTTP/1.0 404 Not found');
-						include 'includes/errors/404.php';
-						break;
-				}
-			}
-   	 		if (!headers_sent()){
-				header('Location: '.$location);
-        		exit();
-        	} else {
-		        echo '<script type="text/javascript">';
-		        echo 'window.location.href="'.$location.'";';
-		        echo '</script>';
-		        echo '<noscript>';
-		        echo '<meta http-equiv="refresh" content="0;url='.$location.'" />';
-		        echo '</noscript>'; exit;
-		   	 	}
-		}
-	}
+    public static function to($location = null, $args=''){
+        global $us_url_root;
+        #die("Redirecting to $location<br />\n");
+        if ($location) {
+            if (is_numeric($location)) {
+                switch ($location) {
+                    case '404':
+                        header('HTTP/1.0 404 Not found');
+                        include 'includes/errors/404.php';
+                        break;
+                }
+            }
+            if (!preg_match('/^https?:\/\//', $location) && !file_exists($location)) {
+                foreach (array($us_url_root, '../', 'users/', substr($us_url_root, 1), '../../', '/', '/users/') as $prefix) {
+                    if (file_exists($prefix.$location)) {
+                        $location = $prefix.$location;
+                        break;
+                    }
+                }
+            }
+            if ($args) $location .= $args; // allows 'login.php?err=Error+Message' or the like
+            if (!headers_sent()){
+                header('Location: '.$location);
+            exit();
+        } else {
+        echo '<script type="text/javascript">';
+        echo 'window.location.href="'.$location.'";';
+        echo '</script>';
+        echo '<noscript>';
+        echo '<meta http-equiv="refresh" content="0;url='.$location.'" />';
+        echo '</noscript>'; exit;
+        }
+        }
+    }
 
 }

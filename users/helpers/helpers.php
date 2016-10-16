@@ -99,7 +99,7 @@ function email($to,$subject,$body,$attachment=false){
 	$db = DB::getInstance();
 	$query = $db->query("SELECT * FROM email");
 	$results = $query->first();
-	
+
 	$from = $results->from_email;
 	$from_name=$results->from_name;
 	$smtp_server=$results->smtp_server;
@@ -121,16 +121,16 @@ function email($to,$subject,$body,$attachment=false){
 	$mail->Port = $smtp_port;                                    // TCP port to connect to
 
 	$mail->setFrom($from, $from_name);
-	
+
 	$mail->addAddress($to);     // Add a recipient, name is optional
-	
+
 	$mail->isHTML(true);                                  // Set email format to HTML
 
 	$mail->Subject = $subject;
 	$mail->Body    = $body;
 
 	$result = $mail->send();
-	
+
 	return $result;
 }
 
@@ -144,14 +144,14 @@ function email_body($template,$options = array()){
 	for($i = 1; $i < $self_path_length; $i++){
 		array_splice($self_path, $self_path_length-$i, $i);
 		$us_url_root=implode("/",$self_path)."/";
-		
+
 		if (file_exists($abs_us_root.$us_url_root.'z_us_root.php')){
 			$file_found=TRUE;
 			break;
 		}else{
 			$file_found=FALSE;
 		}
-	}	
+	}
 	extract($options);
 	ob_start();
 	require $abs_us_root.$us_url_root.'users/views/'.$template;

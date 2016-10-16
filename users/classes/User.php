@@ -75,7 +75,7 @@ class User {
 	}
 
 	public function login($username = null, $password = null, $remember = false){
-		
+
 		if (!$username && !$password && $this->exists()) {
 			Session::put($this->_sessionName, $this->data()->id);
 		} else {
@@ -156,7 +156,8 @@ class User {
 
 	public function logout(){
 		$this->_db->query("DELETE FROM users_session WHERE user_id = ? AND uagent = ?",array($this->data()->id,Session::uagent_no_version()));
-
+		session_unset();
+		session_destroy();
 		Session::delete($this->_sessionName);
 		Cookie::delete($this->_cookieName);
 	}

@@ -50,7 +50,6 @@ if (!empty($_POST)) {
   	$fname = Input::get('fname');
   	$lname = Input::get('lname');
   	$email = Input::get('email');
-    $perm = Input::get('perm');
     $token = $_POST['csrf'];
 
     if(!Token::check($token)){
@@ -120,8 +119,14 @@ if (!empty($_POST)) {
         $db->insert('users',$fields);
         $theNewId=$db->lastId();
         // bold($theNewId);
+        $perm = Input::get('perm');
         $addNewPermission = array('user_id' => $theNewId, 'permission_id' => $perm);
         $db->insert('user_permission_matches',$addNewPermission);
+
+        if($perm != 1){
+          $addNewPermission2 = array('user_id' => $theNewId, 'permission_id' => 1);
+          $db->insert('user_permission_matches',$addNewPermission2);
+        }
 
         $successes[] = lang("ACCOUNT_USER_ADDED");
 

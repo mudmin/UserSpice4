@@ -24,6 +24,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <?php
 //check for a custom page
 $currentPage = currentPage();
+if(isset($_GET['err'])){
+	$err = Input::get('err');
+}
 if(file_exists($abs_us_root.$us_url_root.'usersc/'.$currentPage)){
 	if(currentFolder()!= 'usersc'){
 		Redirect::to($us_url_root.'usersc/'.$currentPage);
@@ -54,7 +57,7 @@ if($settings->track_guest == 1 && $user->isLoggedIn()){
 		$user_id=0;
 	}
 	new_user_online($user_id);
-	
+
 }
 ?>
 <!DOCTYPE html>
@@ -65,13 +68,13 @@ if($settings->track_guest == 1 && $user->isLoggedIn()){
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<meta name="description" content="">
 	<meta name="author" content="">
-	
+
 	<?php
 	if(file_exists($abs_us_root.$us_url_root.'usersc/includes/head_tags.php')){
 		require_once $abs_us_root.$us_url_root.'usersc/includes/head_tags.php';
 	}
 	?>
-	
+
 	<title><?=$settings->site_name;?></title>
 
 	<!-- Bootstrap Core CSS -->
@@ -90,3 +93,6 @@ if($settings->track_guest == 1 && $user->isLoggedIn()){
 </head>
 
 <body>
+	<?php if(isset($_GET['err'])){
+		bold("<br>".$err);
+	} ?>

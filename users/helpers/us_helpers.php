@@ -18,6 +18,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
  // UserSpice Specific Functions
+require_once $abs_us_root.$us_url_root.'usersc/includes/custom_functions.php';
+require_once $abs_us_root.$us_url_root.'usersc/includes/analytics.php';
+
 function testUS(){
 	echo "<br>";
 	echo "UserSpice Functions have been properly included";
@@ -337,7 +340,7 @@ function securePage($uri){
 	//Separate document name from uri
 	//$tokens = explode('/', $uri);
 	//$page = end($tokens);
-	
+
 	$abs_us_root=$_SERVER['DOCUMENT_ROOT'];
 
 	$self_path=explode("/", $_SERVER['PHP_SELF']);
@@ -347,7 +350,7 @@ function securePage($uri){
 	for($i = 1; $i < $self_path_length; $i++){
 		array_splice($self_path, $self_path_length-$i, $i);
 		$us_url_root=implode("/",$self_path)."/";
-		
+
 		if (file_exists($abs_us_root.$us_url_root.'z_us_root.php')){
 			$file_found=TRUE;
 			break;
@@ -355,12 +358,12 @@ function securePage($uri){
 			$file_found=FALSE;
 		}
 	}
-	
+
 	$urlRootLength=strlen($us_url_root);
 	$page=substr($uri,$urlRootLength,strlen($uri)-$urlRootLength);
-	
+
 	//bold($page);
-	
+
 	$db = DB::getInstance();
 	$id = null;
 	$private = null;
@@ -392,7 +395,7 @@ function securePage($uri){
 	}elseif ($pageDetails['private'] == 0){//If page is public, allow access
 		return true;
 	}elseif(!$user->isLoggedIn()){ //If user is not logged in, deny access
-		Redirect::to($us_url_root.'users/login.php');
+		Redirect::to($us_url_root.'users/login.php?afterLoginGoto='.$_SERVER['PHP_SELF']);
 		return false;
 	}else {
 		//Retrieve list of permission levels with access to page
@@ -512,7 +515,7 @@ function lang($key,$markers = NULL){
 		}
 	}
 	//Ensure we have something to return
-	if($str == ""){
+	if($str = ""){
 		return ("No language key found");
 	}else{
 		return $str;

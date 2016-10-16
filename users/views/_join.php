@@ -20,38 +20,38 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ?>
 <div class="row">
 <div class="col-xs-12">
-<?php 
+<?php
 if (!$form_valid && Input::exists()){
 	echo display_errors($validation->errors());
 }
 ?>
 
 <form class="form-signup" action="<?=$form_action;?>" method="<?=$form_method;?>" id="payment-form">
-	
+
 	<h2 class="form-signin-heading"> <?=lang("SIGNUP_TEXT","");?></h2>
 
 	<div class="form-group">
-		<label for="username">Choose a Username</label>
+		<label for="username">Choose a Username*</label>
 		<input  class="form-control" type="text" name="username" id="username" placeholder="Username" value="<?php if (!$form_valid && !empty($_POST)){ echo $username;} ?>" required autofocus>
-		<p class="help-block">No Spaces or Special Characters - Min 5 characters</p>
+		<p class="help-block"></p>
 
-		<label for="fname">First Name</label>
+		<label for="fname">First Name*</label>
 		<input type="text" class="form-control" id="fname" name="fname" placeholder="First Name" value="<?php if (!$form_valid && !empty($_POST)){ echo $fname;} ?>" required>
 
-		<label for="lname">Last Name</label>
+		<label for="lname">Last Name*</label>
 		<input type="text" class="form-control" id="lname" name="lname" placeholder="Last Name" value="<?php if (!$form_valid && !empty($_POST)){ echo $lname;} ?>" required>
 
-		<label for="email">Email Address</label>
+		<label for="email">Email Address*</label>
 		<input  class="form-control" type="text" name="email" id="email" placeholder="Email Address" value="<?php if (!$form_valid && !empty($_POST)){ echo $email;} ?>" required >
 
 		<label for="company">Company Name</label>
 		<input type="text" class="form-control" id="company" name="company" placeholder="Company Name" value="<?php if (!$form_valid && !empty($_POST)){ echo $company;} ?>">
 
-		<label for="password">Choose a Password</label>
+		<label for="password">Choose a Password*</label>
 		<input  class="form-control" type="password" name="password" id="password" placeholder="Password" required aria-describedby="passwordhelp">
 		<span class="help-block" id="passwordhelp">Must be at least 6 characters</span>
 
-		<label for="confirm">Confirm Password</label>
+		<label for="confirm">Confirm Password*</label>
 		<input  type="password" id="confirm" name="confirm" class="form-control" placeholder="Confirm Password" required >
 
 		<label for="confirm">Registration User Terms and Conditions</label>

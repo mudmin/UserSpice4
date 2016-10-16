@@ -28,68 +28,75 @@ ini_set("allow_url_fopen", 1);
 $settingsQ = $db->query("SELECT * FROM settings");
 $settings = $settingsQ->first();
 $error_message = '';
+if (@$_REQUEST['err']) $error_message = $_REQUEST['err']; // allow redirects to display a message
 $reCaptchaValid=FALSE;
 
 if (Input::exists()) {
-	$token = Input::get('csrf');
-	if(!Token::check($token)){
-		die('Token doesn\'t match!');
-	}
+    $token = Input::get('csrf');
+    if(!Token::check($token)){
+        die('Token doesn\'t match!');
+    }
+    //Check to see if recaptcha is enabled
+    if($settings->recaptcha == 1){
+        require_once 'includes/recaptcha.config.php';
 
-	//Check to see if recaptcha is enabled
-	if($settings->recaptcha == 1){
-		require_once 'includes/recaptcha.config.php';
+        //reCAPTCHA 2.0 check
+        $response = null;
 
-		//reCAPTCHA 2.0 check
-		$response = null;
+        // check secret key
+        $reCaptcha = new ReCaptcha($privatekey);
 
-		// check secret key
-		$reCaptcha = new ReCaptcha($privatekey);
+        // if submitted check response
+        if ($_POST["g-recaptcha-response"]) {
+            $response = $reCaptcha->verifyResponse($_SERVER["REMOTE_ADDR"],$_POST["g-recaptcha-response"]);
+        }
+        if ($response != null && $response->success) {
+            $reCaptchaValid=TRUE;
 
-		// if submitted check response
-		if ($_POST["g-recaptcha-response"]) {
-			$response = $reCaptcha->verifyResponse($_SERVER["REMOTE_ADDR"],$_POST["g-recaptcha-response"]);
-		}
-		if ($response != null && $response->success) {
-			$reCaptchaValid=TRUE;
+        }else{
+            $reCaptchaValid=FALSE;
+            $error_message .= 'Please check the reCaptcha.';
+        }
+    }else{
+        $reCaptchaValid=TRUE;
+    }
 
-		}else{
-			$reCaptchaValid=FALSE;
-			$error_message .= 'Please check the reCaptcha.';
-		}
-	}else{
-		$reCaptchaValid=TRUE;
-	}
+    if($reCaptchaValid || $settings->recaptcha == 0){ //if recaptcha valid or recaptcha disabled
 
-	if($reCaptchaValid || $settings->recaptcha == 0){ //if recaptcha valid or recaptcha disabled
+        $validate = new Validate();
+        $validation = $validate->check($_POST, array(
+            'username' => array('display' => 'Username','required' => true),
+            'password' => array('display' => 'Password', 'required' => true)));
 
-		$validate = new Validate();
-		$validation = $validate->check($_POST, array('username' => array('display' => 'Username','required' => true),'password' => array('display' => 'Password', 'required' => true)));
+        if ($validation->passed()) {
+            //Log user in
 
-		if ($validation->passed()) {
-			//Log user in
-
-			$remember = (Input::get('remember') === 'on') ? true : false;
-			$user = new User();
-			$login = $user->loginEmail(Input::get('username'), trim(Input::get('password')), $remember);
-			if ($login) {
-				if(file_exists($abs_us_root.$us_url_root.'usersc/scripts/custom_login_script.php')){
-					require_once $abs_us_root.$us_url_root.'usersc/scripts/custom_login_script.php';
-				}else{
-					//Feel free to change where the user goes after login!
-					Redirect::to('account.php');
-				}
-			} else {
-				$error_message .= 'Log in failed. Please check your username and password and try again.';
-			}
-		} else{
-			$error_message .= '<ul>';
-			foreach ($validation->errors() as $error) {
-				$error_message .= '<li>' . $error . '</li>';
-			}
-			$error_message .= '</ul>';
-		}
-	}
+            $remember = (Input::get('remember') === 'on') ? true : false;
+            $user = new User();
+            $login = $user->loginEmail(Input::get('username'), trim(Input::get('password')), $remember);
+            if ($login) {
+                if(file_exists($abs_us_root.$us_url_root.'usersc/scripts/custom_login_script.php')){
+                    # Note that the custom_login_script often contains a Redirect::to() call
+                    require_once $abs_us_root.$us_url_root.'usersc/scripts/custom_login_script.php';
+                }else{
+                    //var_dump($_POST);
+                    if (($dest = Input::get('afterLoginGoto')) ||
+                            ($dest = Config::get('homepage')) ||
+                            ($dest = 'account.php')) {
+                        Redirect::to($dest);
+                    }
+                }
+            } else {
+                $error_message .= 'Log in failed. Please check your username and password and try again.';
+            }
+        } else{
+            $error_message .= '<ul>';
+            foreach ($validation->errors() as $error) {
+                $error_message .= '<li>' . $error . '</li>';
+            }
+            $error_message .= '</ul>';
+        }
+    }
 }
 
 ?>
@@ -97,48 +104,49 @@ if (Input::exists()) {
 <div id="page-wrapper">
 <div class="container">
 <div class="row">
-	<div class="col-xs-12">
-	<div class="bg-danger"><?=$error_message;?></div>
-	<form name="login" class="form-signin" action="login.php" method="post">
-	<h2 class="form-signin-heading"></i> <?=lang("SIGNIN_TITLE","");?></h2>
+    <div class="col-xs-12">
+    <div class="bg-danger"><?=$error_message;?></div>
+    <form name="login" class="form-signin" action="login.php" method="post">
+    <h2 class="form-signin-heading"></i> <?=lang("SIGNIN_TITLE","");?></h2>
+    <input type="hidden" name="afterLoginGoto" value="<?= @$_REQUEST['afterLoginGoto'] ?>" />
 
-	<div class="form-group">
-		<label for="username" >Username OR Email</label>
-		<input  class="form-control" type="text" name="username" id="username" placeholder="Username/Email" required autofocus>
-	</div>
+    <div class="form-group">
+        <label for="username" >Username OR Email</label>
+        <input  class="form-control" type="text" name="username" id="username" placeholder="Username/Email" required autofocus>
+    </div>
 
-	<div class="form-group">
-		<label for="password">Password</label>
-		<input type="password" class="form-control"  name="password" id="password"  placeholder="Password" required autocomplete="off">
-	</div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control"  name="password" id="password"  placeholder="Password" required autocomplete="off">
+    </div>
 
-	<?php
-	if($settings->recaptcha == 1){
-	?>
-	<div class="form-group">
-	<label>Please check the box below to continue</label>
-	<div class="g-recaptcha" data-sitekey="<?=$publickey; ?>"></div>
-	</div>
-	<?php } ?>
+    <?php
+    if($settings->recaptcha == 1){
+    ?>
+    <div class="form-group">
+    <label>Please check the box below to continue</label>
+    <div class="g-recaptcha" data-sitekey="<?=$publickey; ?>"></div>
+    </div>
+    <?php } ?>
 
-	<div class="form-group">
-	<label for="remember">
-	<input type="checkbox" name="remember" id="remember" > Remember Me</label>
-	</div>
+    <div class="form-group">
+    <label for="remember">
+    <input type="checkbox" name="remember" id="remember" > Remember Me</label>
+    </div>
 
-	<input type="hidden" name="csrf" value="<?=Token::generate(); ?>">
-	<button class="submit  btn  btn-primary" type="submit"><i class="fa fa-sign-in"></i> <?=lang("SIGNIN_BUTTONTEXT","");?></button>
+    <input type="hidden" name="csrf" value="<?=Token::generate(); ?>">
+    <button class="submit  btn  btn-primary" type="submit"><i class="fa fa-sign-in"></i> <?=lang("SIGNIN_BUTTONTEXT","");?></button>
 
-	</form>
-	</div>
+    </form>
+    </div>
 </div>
 <div class="row">
-	<div class="col-xs-6"><br>
-		<a class="pull-left" href='forgot_password.php'><i class="fa fa-wrench"></i> Forgot Password</a><br><br>
-	</div>
-	<div class="col-xs-6"><br>
-		<a class="pull-right" href='join.php'><i class="fa fa-plus-square"></i> <?=lang("SIGNUP_TEXT","");?></a><br><br>
-	</div>
+    <div class="col-xs-6"><br>
+        <a class="pull-left" href='forgot_password.php'><i class="fa fa-wrench"></i> Forgot Password</a><br><br>
+    </div>
+    <div class="col-xs-6"><br>
+        <a class="pull-right" href='join.php'><i class="fa fa-plus-square"></i> <?=lang("SIGNUP_TEXT","");?></a><br><br>
+    </div>
 </div>
 </div>
 </div>
@@ -148,7 +156,7 @@ if (Input::exists()) {
 
     <!-- Place any per-page javascript here -->
 
-<?php 	if($settings->recaptcha == 1){ ?>
+<?php   if($settings->recaptcha == 1){ ?>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <?php } ?>
 <?php require_once $abs_us_root.$us_url_root.'users/includes/html_footer.php'; // currently just the closing /body and /html ?>

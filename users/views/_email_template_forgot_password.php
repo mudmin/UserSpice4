@@ -12,7 +12,7 @@ $results = $query->first();
     <p>Hello <?=$fname;?>,</p>
     <p>You are receiving this email because a request was made to reset your password. If this was not you, you may disgard this email.</p>
     <p>If this was you, click the link below to continue with the password reset process.</p>
-    <p><a href="<?php echo $results->verify_url."users/forgot_password_reset.php?email=".urlencode($email)."&vericode=$vericode&reset=1"; ?>">Reset Password</a></p>
+    <p><a href="<?php echo $results->verify_url."users/forgot_password_reset.php?email=".rawurlencode($email)."&vericode=$vericode&reset=1"; ?>">Reset Password</a></p>
     <p>Sincerely,</p>
     <p>-The Team-</p>
   </body>

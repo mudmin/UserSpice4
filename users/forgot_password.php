@@ -50,7 +50,7 @@ if (Input::get('forgotten_password')) {
 			  'vericode' => $fuser->data()->vericode,
 			);
 			$subject = 'Password Reset';
-			$encoded_email=rawurlencode($email);
+			$encoded_email=urlencode($email);
 			$body =  email_body('_email_template_forgot_password.php',$options);
 			$email_sent=email($encoded_email,$subject,$body);
 			if(!$email_sent){

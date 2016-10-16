@@ -259,7 +259,7 @@ if(!empty($_POST)) {
 	</div>
 
 	<div class="form-group">
-		<label>New Password (8 character minimum)</label>
+		<label>New Password (6 character minimum)</label>
 		<input class='form-control' type='password' name='password' />
 	</div>
 

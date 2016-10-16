@@ -26,6 +26,7 @@ $lang = array();
 
 //Account
 $lang = array_merge($lang,array(
+	"ACCOUNT_USER_ADDED" 		=> "New user added!",
 	"ACCOUNT_SPECIFY_USERNAME" 		=> "Please enter your username",
 	"ACCOUNT_SPECIFY_PASSWORD" 		=> "Please enter your password",
 	"ACCOUNT_SPECIFY_EMAIL"			=> "Please enter your email address",
