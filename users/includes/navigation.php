@@ -81,16 +81,16 @@ $email_act=$results->email_act;
 								<li><a href="<?=$us_url_root?>users/admin.php"><i class="fa fa-fw fa-cogs"></i> Admin Dashboard</a></li> <!-- regular Admin menu link -->
 							<?php } // is user an admin ?>
 							<li class="divider"></li>
-							<li><a href="<?=$us_url_root?>users/logout.php"><i class="fa fa-fw fa-sign-out"></i> <?=lang("SIGNOUT_TEXT","");?></a></li> <!-- regular Logout menu link -->
+							<li><a href="<?=$us_url_root?>users/logout.php"><i class="fa fa-fw fa-sign-out"></i> Logout</a></li> <!-- regular Logout menu link -->
 						</ul> <!-- close tag for User dropdown menu -->
 					</li>
 
-					<li class="hidden-sm hidden-md hidden-lg"><a href="<?=$us_url_root?>users/logout.php"><i class="fa fa-fw fa-sign-out"></i> <?=lang("SIGNOUT_TEXT","");?></a></li> <!-- regular Hamburger logout menu link -->
+					<li class="hidden-sm hidden-md hidden-lg"><a href="<?=$us_url_root?>users/logout.php"><i class="fa fa-fw fa-sign-out"></i> Logout</a></li> <!-- regular Hamburger logout menu link -->
 
 				<?php }else{ // no one is logged in so display default items ?>
-					<li><a href="<?=$us_url_root?>users/login.php" class=""><i class="fa fa-sign-in"></i> <?=lang("SIGNIN_TEXT","");?></a></li>
-					<li><a href="<?=$us_url_root?>users/join.php" class=""><i class="fa fa-plus-square"></i> <?=lang("SIGNUP_TEXT","");?></a></li>
-					<li class="dropdown"><a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="fa fa-life-ring"></i><?=lang("NAVTOP_HELPTEXT","");?> <b class="caret"></b></a>
+					<li><a href="<?=$us_url_root?>users/login.php" class=""><i class="fa fa-sign-in"></i> Login</a></li>
+					<li><a href="<?=$us_url_root?>users/join.php" class=""><i class="fa fa-plus-square"></i> Register</a></li>
+					<li class="dropdown"><a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="fa fa-life-ring"></i> Help <b class="caret"></b></a>
 					<ul class="dropdown-menu">
 					<li><a href="<?=$us_url_root?>users/forgot_password.php"><i class="fa fa-wrench"></i> Forgot Password</a></li>
 					<?php if ($email_act){ //Only display following menu item if activation is enabled ?>
