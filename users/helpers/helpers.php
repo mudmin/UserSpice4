@@ -110,7 +110,7 @@ function email($to,$subject,$body,$attachment=false){
 
 	$mail = new PHPMailer;
 
-	//$mail->SMTPDebug = 3;                               // Enable verbose debug output
+	// $mail->SMTPDebug = 3;                               // Enable verbose debug output
 
 	$mail->isSMTP();                                      // Set mailer to use SMTP
 	$mail->Host = $smtp_server;  // Specify main and backup SMTP servers
@@ -122,7 +122,7 @@ function email($to,$subject,$body,$attachment=false){
 
 	$mail->setFrom($from, $from_name);
 
-	$mail->addAddress($to);     // Add a recipient, name is optional
+	$mail->addAddress(rawurldecode($to));     // Add a recipient, name is optional
 
 	$mail->isHTML(true);                                  // Set email format to HTML
 

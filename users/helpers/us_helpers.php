@@ -515,7 +515,7 @@ function lang($key,$markers = NULL){
 		}
 	}
 	//Ensure we have something to return
-	if($str = ""){
+	if($str == ""){
 		return ("No language key found");
 	}else{
 		return $str;

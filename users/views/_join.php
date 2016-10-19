@@ -67,7 +67,7 @@ if (!$form_valid && Input::exists()){
 	</div>
 	<?php } ?>
 	<input type="hidden" value="<?=Token::generate();?>" name="csrf">
-	<button class="submit btn btn-primary " type="submit" id="next_button"><i class="fa fa-plus-square"></i> <?=lang("SIGNUP_BUTTONTEXT","");?></button>
+	<button class="submit btn btn-primary " type="submit" id="next_button"><i class="fa fa-plus-square"></i> Register</button>
 </form>
 </div>
 </div>

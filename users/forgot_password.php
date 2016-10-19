@@ -29,40 +29,45 @@ $email_sent=FALSE;
 
 $token = Input::get('csrf');
 if(Input::exists()){
-	if(!Token::check($token)){
-		die('Token doesn\'t match!');
-	}
+    if(!Token::check($token)){
+        die('Token doesn\'t match!');
+    }
 }
 
 if (Input::get('forgotten_password')) {
-	$email = Input::get('email');
-	$fuser = new User($email);
-	//validate the form
-	$validate = new Validate();
-	$validation = $validate->check($_POST,array('email' => array('display' => 'Email','valid_email' => true,'required' => true,),));
+    $email = Input::get('email');
+    $fuser = new User($email);
+    //validate the form
+    $validate = new Validate();
+    $validation = $validate->check($_POST,array('email' => array('display' => 'Email','valid_email' => true,'required' => true,),));
 
-	if($validation->passed()){
-		if($fuser->exists()){
-			//send the email
-			$options = array(
-			  'fname' => $fuser->data()->fname,
-			  'email' => $email,
-			  'vericode' => $fuser->data()->vericode,
-			);
-			$subject = 'Password Reset';
-			$encoded_email=urlencode($email);
-			$body =  email_body('_email_template_forgot_password.php',$options);
-			$email_sent=email($encoded_email,$subject,$body);
-			if(!$email_sent){
-				$errors[] = 'Email NOT sent due to error. Please contact site administrator.';
-			}
-		}else{
-			$errors[] = 'That email does not exist in our database';
-		}
-	}else{
-		//display the errors
-		$errors = $validation->errors();
-	}
+    if($validation->passed()){
+        if($fuser->exists()){
+            //send the email
+            $options = array(
+              'fname' => $fuser->data()->fname,
+              'email' => rawurlencode($email),
+              'vericode' => $fuser->data()->vericode,
+            );
+            $subject = 'Password Reset';
+            $encoded_email=rawurlencode($email);
+            $body =  email_body('_email_template_forgot_password.php',$options);
+            $email_sent=email($email,$subject,$body);
+            if(!$email_sent){
+                $errors[] = 'Email NOT sent due to error. Please contact site administrator.';
+            }
+        }else{
+            $errors[] = 'That email does not exist in our database';
+        }
+    }else{
+        //display the errors
+        $errors = $validation->errors();
+    }
+}
+?>
+<?php
+if ($user->isLoggedIn()) {
+Redirect::to('account.php');
 }
 ?>
 
@@ -71,9 +76,9 @@ if (Input::get('forgotten_password')) {
 <?php
 
 if($email_sent){
-	require 'views/_forgot_password_sent.php';
+    require 'views/_forgot_password_sent.php';
 }else{
-	require 'views/_forgot_password.php';
+    require 'views/_forgot_password.php';
 }
 
 ?>

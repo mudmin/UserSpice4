@@ -23,54 +23,54 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <?php
 if($user->isLoggedIn()){
-	$user->logout();
-	Redirect::to('verify_resend.php');
+    $user->logout();
+    Redirect::to('verify_resend.php');
 }
 
 $token = Input::get('csrf');
 if(Input::exists()){
-	if(!Token::check($token)){
-		die('Token doesn\'t match!');
-	}
+    if(!Token::check($token)){
+        die('Token doesn\'t match!');
+    }
 }
 
 $email_sent=FALSE;
 
 $errors = array();
 if(Input::exists('post')){
-	$email = Input::get('email');
-	$fuser = new User($email);
+    $email = Input::get('email');
+    $fuser = new User($email);
 
-	$validate = new Validate();
-	$validation = $validate->check($_POST,array(
-	'email' => array(
-	  'display' => 'Email',
-	  'valid_email' => true,
-	  'required' => true,
-	),
-	));
-	if($validation->passed()){ //if email is valid, do this
+    $validate = new Validate();
+    $validation = $validate->check($_POST,array(
+    'email' => array(
+      'display' => 'Email',
+      'valid_email' => true,
+      'required' => true,
+    ),
+    ));
+    if($validation->passed()){ //if email is valid, do this
 
-		if($fuser->exists()){
-			//send the email
-			$options = array(
-			  'fname' => $fuser->data()->fname,
-			  'email' => $email,
-			  'vericode' => $fuser->data()->vericode,
-			);
-			$encoded_email=rawurlencode($email);
-			$subject = 'Verify Your Email';
-			$body =  email_body('_email_template_verify.php',$options);
-			$email_sent=email($encoded_email,$subject,$body);
-			if(!$email_sent){
-				$errors[] = 'Email NOT sent due to error. Please contact site administrator.';
-			}
-		}else{
-			$errors[] = 'That email does not exist in our database';
-		}
-	}else{
-		$errors = $validation->errors();
-	}
+        if($fuser->exists()){
+            //send the email
+            $options = array(
+              'fname' => $fuser->data()->fname,
+              'email' => rawurlencode($email),
+              'vericode' => $fuser->data()->vericode,
+            );
+            $encoded_email=rawurlencode($email);
+            $subject = 'Verify Your Email';
+            $body =  email_body('_email_template_verify.php',$options);
+            $email_sent=email($email,$subject,$body);
+            if(!$email_sent){
+                $errors[] = 'Email NOT sent due to error. Please contact site administrator.';
+            }
+        }else{
+            $errors[] = 'That email does not exist in our database';
+        }
+    }else{
+        $errors = $validation->errors();
+    }
 }
 
 ?>
@@ -81,9 +81,9 @@ if(Input::exists('post')){
 <?php
 
 if ($email_sent){
-	require 'views/_verify_resend_success.php';
+    require 'views/_verify_resend_success.php';
 }else{
-	require 'views/_verify_resend.php';
+    require 'views/_verify_resend.php';
 }
 
 ?>
