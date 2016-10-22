@@ -30,8 +30,8 @@ if ($settings->site_offline==1){die("The site is currently offline.");}?>
 <?php
 $emailQ = $db->query("SELECT * FROM email");
 $emailR = $emailQ->first();
-// dnd($emailR);
-// dnd($emailR->email_act);
+// dump($emailR);
+// dump($emailR->email_act);
 //PHP Goes Here!
 $errors=[];
 $successes=[];
@@ -159,7 +159,7 @@ if(!empty($_POST)) {
       ));
     if($validation->passed()){
       $db->update('users',$userId,$fields);
-			if($emailR->email_act=1){
+			if($emailR->email_act==1){
 				$db->update('users',$userId,['email_verified'=>0]);
 			}
 

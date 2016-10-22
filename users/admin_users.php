@@ -62,7 +62,7 @@ if (!empty($_POST)) {
       'username' => array(
       'display' => 'Username',
       'required' => true,
-      'min' => 5,
+      'min' => 2,
       'max' => 35,
       'unique' => 'users',
       ),
@@ -122,6 +122,7 @@ if (!empty($_POST)) {
         $perm = Input::get('perm');
         $addNewPermission = array('user_id' => $theNewId, 'permission_id' => $perm);
         $db->insert('user_permission_matches',$addNewPermission);
+        $db->insert('profiles',['user_id'=>$theNewId, 'bio'=>'This is your bio']);
 
         if($perm != 1){
           $addNewPermission2 = array('user_id' => $theNewId, 'permission_id' => 1);
