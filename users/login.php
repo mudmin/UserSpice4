@@ -80,7 +80,7 @@ if (Input::exists()) {
                     require_once $abs_us_root.$us_url_root.'usersc/scripts/custom_login_script.php';
                 }else{
                     //var_dump($_POST);
-                    if (($dest = Input::get('afterLoginGoto')) ||
+                    if (($dest = sanitizedAfterLoginGoto()) ||
                             ($dest = Config::get('homepage')) ||
                             ($dest = 'account.php')) {
                         Redirect::to($dest);
