@@ -334,10 +334,10 @@ function deleteUsers($users) {
 	return $i;
 }
 
-// retrieve ?afterLoginGoto=page and check that it exists in the legitimate pages in the
+// retrieve ?dest=page and check that it exists in the legitimate pages in the
 // database or is in the Config::get('whitelisted_destinations')
-function sanitizedAfterLoginGoto() {
-	if ($dest = Input::get('afterLoginGoto')) {
+function sanitizedDest($varname='dest') {
+	if ($dest = Input::get($varname)) {
 		// if it exists in the database then it is a legitimate destination
 		$db = DB::getInstance();
 		$query = $db->query("SELECT id, page, private FROM pages WHERE page = ?",[$dest]);
@@ -345,11 +345,11 @@ function sanitizedAfterLoginGoto() {
 		if ($count>0){
 			return $dest;
 		}
-	}
-	// if the administrator has intentionally whitelisted a destination it is legitimate
-	if ($whitelist = Config::get('whitelisted_destinations')) {
-		if (in_array($dest, (array)$whitelist)) {
-			return $dest;
+		// if the administrator has intentionally whitelisted a destination it is legitimate
+		if ($whitelist = Config::get('whitelisted_destinations')) {
+			if (in_array($dest, (array)$whitelist)) {
+				return $dest;
+			}
 		}
 	}
 	return false;
@@ -415,7 +415,7 @@ function securePage($uri){
 	}elseif ($pageDetails['private'] == 0){//If page is public, allow access
 		return true;
 	}elseif(!$user->isLoggedIn()){ //If user is not logged in, deny access
-		Redirect::to($us_url_root.'users/login.php', '?afterLoginGoto='.$page);
+		Redirect::to($us_url_root.'users/login.php', '?dest='.$page);
 		return false;
 	}else {
 		//Retrieve list of permission levels with access to page
