@@ -198,7 +198,7 @@ if(Input::exists()){
 			} catch (Exception $e) {
 				die($e->getMessage());
 			}
-			Redirect::to($us_url_root.'users/joinThankYou.php');
+			Redirect::to('joinThankYou.php');
 		}
 
 	} //Validation and agreement checbox

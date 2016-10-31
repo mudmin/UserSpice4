@@ -24,19 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <?php if (!securePage($_SERVER['PHP_SELF'])){die();} ?>
 <?php
-// What to look for
-$search = "Redirect::to('verify.php');";
-// Read from file
-$lines = file('init.php');
-foreach($lines as $line)
-{
-  if(strpos($line, $search) !== false)
-    bold("<br><br>You have a bug in your init.php that cannot be patched automatically.<br><br>Please replace verify.php with users/verify.php towards the bottom of your init.php file.");
-}
-
 
 $urlProtocol=isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
-
 
 if(!empty($_POST)){
 

@@ -52,7 +52,7 @@ if(!empty($_POST)) {
         ));
       if($validation->passed()){
         $db->update('profiles',$id,$fields);
-        Redirect::to('profile.php?id='.$userID);
+        Redirect::to('profile.php', '?id='.$userID);
       }
     }
   }
