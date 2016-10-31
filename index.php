@@ -34,7 +34,7 @@ require_once $abs_us_root.$us_url_root.'users/includes/navigation.php';
 <div class="col-md-6">
 	<div class="panel panel-default">
 		<div class="panel-heading"><strong>Step 1: Change your password!</strong></div>
-		<div class="panel-body">You're going to login with the default username of <strong>admin</strong> and the default password of <strong>password</strong>. 
+		<div class="panel-body">You're going to login with the default username of <strong>admin</strong> and the default password of <strong>password</strong>.
 		You can also login as a standard level user with the credentials of <strong>user</strong> and <strong>password</strong>.
 		If you cannot login for some reason, edit the login.php file and uncomment out the lines<br> error_reporting(E_ALL);<br>
 		ini_set('display_errors', 1);<br> to see if there are any errors in your server configuration.
@@ -44,7 +44,7 @@ require_once $abs_us_root.$us_url_root.'users/includes/navigation.php';
 <div class="col-md-6">
 	<div class="panel panel-default">
 		<div class="panel-heading"><strong>Step 2: Change some settings</strong></div>
-		<div class="panel-body">You want to go to the Admin Dashboard. From there you can personalize your settings. 
+		<div class="panel-body">You want to go to the Admin Dashboard. From there you can personalize your settings.
 		You can decide whether or not you want to use reCaptcha, force SSL, or mess with some CSS.
 		</div>
 	</div><!-- /panel -->
@@ -55,9 +55,9 @@ require_once $abs_us_root.$us_url_root.'users/includes/navigation.php';
 <div class="col-md-6">
 	<div class="panel panel-default">
 		<div class="panel-heading"><strong>Step 3: Explore</strong></div>
-		<div class="panel-body">From the Admin Dashboard, you can go to Admin Permissions and add some new user levels. 
-		Then check out Admin Pages to decide which pages are private and which are public. Once you make a page private, 
-		you can decide how what level of access someone needs to access it. 
+		<div class="panel-body">From the Admin Dashboard, you can go to Admin Permissions and add some new user levels.
+		Then check out Admin Pages to decide which pages are private and which are public. Once you make a page private,
+		you can decide how what level of access someone needs to access it.
 		Any new pages you create in your site folder will automatically show up here.
 		</div>
 	</div><!-- /panel -->
@@ -65,7 +65,7 @@ require_once $abs_us_root.$us_url_root.'users/includes/navigation.php';
 <div class="col-md-6">
 	<div class="panel panel-default">
 		<div class="panel-heading"><strong>Step 4: Check out the other resources</strong></div>
-		<div class="panel-body">The users/blank_pages folder contains a blank version of this page and one with the sidebar 
+		<div class="panel-body">The users/blank_pages folder contains a blank version of this page and one with the sidebar
 		included for your convenience. There are also special_blanks that you can drop into your site folder and load up to
 		check out all the things you can do with Bootstrap.
 		</div>
@@ -77,7 +77,7 @@ require_once $abs_us_root.$us_url_root.'users/includes/navigation.php';
 <div class="col-md-6">
 	<div class="panel panel-default">
 		<div class="panel-heading"><strong>Step 5: Design and secure your own pages</strong></div>
-		<div class="panel-body">Of course, using our blanks is the quickest way to get up and running, 
+		<div class="panel-body">Of course, using our blanks is the quickest way to get up and running,
 		but you can also secure any page. Simply add this php code to the top of your page and it will
 		perform a check to see if you've set any special permissions.<br/>
 		require_once 'users/init.php';<br/>
@@ -111,7 +111,7 @@ require_once $abs_us_root.$us_url_root.'users/includes/navigation.php';
 		<div class="panel-heading"><strong>Step 8: Avoid editing the UserSpice files</strong></div>
 		<div class="panel-body">But what if you want to change the UserSpice files?
 		We have a solution that lets you edit our files and still not break future upgrades.
-		For instance, if you want to modify the account.php file... just copy our file into 
+		For instance, if you want to modify the account.php file... just copy our file into
 		the "usersc" folder.  Then you can edit away and your file will be loaded instead of ours!
 		</div>
 	</div><!-- /panel -->

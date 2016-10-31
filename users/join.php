@@ -205,6 +205,7 @@ if(Input::exists()){
 } //Input exists
 
 ?>
+<?php header('X-Frame-Options: DENY'); ?>
 <div id="page-wrapper">
 <div class="container">
 <?php

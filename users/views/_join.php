@@ -48,11 +48,11 @@ if (!$form_valid && Input::exists()){
 		<input type="text" class="form-control" id="company" name="company" placeholder="Company Name" value="<?php if (!$form_valid && !empty($_POST)){ echo $company;} ?>">
 
 		<label for="password">Choose a Password*</label>
-		<input  class="form-control" type="password" name="password" id="password" placeholder="Password" required aria-describedby="passwordhelp">
+		<input  class="form-control" type="password" name="password" id="password" placeholder="Password" required autocomplete="off" aria-describedby="passwordhelp">
 		<span class="help-block" id="passwordhelp">Must be at least 6 characters</span>
 
 		<label for="confirm">Confirm Password*</label>
-		<input  type="password" id="confirm" name="confirm" class="form-control" placeholder="Confirm Password" required >
+		<input  type="password" id="confirm" name="confirm" class="form-control" placeholder="Confirm Password" required autocomplete="off" >
 
 		<label for="confirm">Registration User Terms and Conditions</label>
 		<textarea id="agreement" name="agreement" rows="5" class="form-control" disabled ><?php require $abs_us_root.$us_url_root.'usersc/includes/user_agreement.php'; ?></textarea>

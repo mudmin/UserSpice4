@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ?>
 <?php require_once $abs_us_root.$us_url_root.'users/helpers/helpers.php'; ?>
 <?php require_once $abs_us_root.$us_url_root.'users/includes/user_spice_ver.php'; ?>
+
 <?php
 //check for a custom page
 $currentPage = currentPage();
@@ -41,6 +42,7 @@ if ($settings->site_offline==1){
 }
 
 if ($settings->force_ssl==1){
+
 	if (!isset($_SERVER['HTTPS']) || !$_SERVER['HTTPS']) {
 		// if request is not secure, redirect to secure url
 		$url = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];

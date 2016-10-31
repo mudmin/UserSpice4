@@ -18,7 +18,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 class Cookie {
-
 	public static function exists($name){
 		return (isset($_COOKIE[$name])) ? true : false;
 	}
@@ -27,8 +26,8 @@ class Cookie {
 		return $_COOKIE[$name];
 	}
 
-	public static function put($name, $value, $expiry){
-		if (setcookie($name, $value, time() + $expiry, "/")) {
+	public static function put($name, $value, $expiry, $path="/", $domain="", $secure=true, $httponly=true){
+		if (setcookie($name, $value, time() + $expiry, $path, $domain, $secure, $httponly)) {
 			return true;
 		}
 		return false;

@@ -75,14 +75,18 @@ if (Input::exists()) {
             $user = new User();
             $login = $user->loginEmail(Input::get('username'), trim(Input::get('password')), $remember);
             if ($login) {
-                if(file_exists($abs_us_root.$us_url_root.'usersc/scripts/custom_login_script.php')){
-                    # Note that the custom_login_script often contains a Redirect::to() call
+                # if user was attempting to get to a page before login, go there
+                if ($dest = sanitizedDest('dest')) {
+                    Redirect::to($dest);
+                } elseif (file_exists($abs_us_root.$us_url_root.'usersc/scripts/custom_login_script.php')) {
+                    # if site has custom login script, use it
+                    # Note that the custom_login_script.php normally contains a Redirect::to() call
                     require_once $abs_us_root.$us_url_root.'usersc/scripts/custom_login_script.php';
-                }else{
-                    //var_dump($_POST);
-                    if (($dest = sanitizedAfterLoginGoto()) ||
-                            ($dest = Config::get('homepage')) ||
+                } else {
+                    if (($dest = Config::get('homepage')) ||
                             ($dest = 'account.php')) {
+                        #echo "DEBUG: dest=$dest<br />\n";
+                        #die;
                         Redirect::to($dest);
                     }
                 }
@@ -98,6 +102,9 @@ if (Input::exists()) {
         }
     }
 }
+if (!$dest = sanitizedDest('dest')) {
+  $dest = '';
+}
 
 ?>
 
@@ -108,7 +115,7 @@ if (Input::exists()) {
     <div class="bg-danger"><?=$error_message;?></div>
     <form name="login" class="form-signin" action="login.php" method="post">
     <h2 class="form-signin-heading"></i> <?=lang("SIGNIN_TITLE","");?></h2>
-    <input type="hidden" name="afterLoginGoto" value="<?= @$_REQUEST['afterLoginGoto'] ?>" />
+    <input type="hidden" name="dest" value="<?= $dest ?>" />
 
     <div class="form-group">
         <label for="username" >Username OR Email</label>
