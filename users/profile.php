@@ -27,36 +27,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 if($user->isLoggedIn()) { $thisUserID = $user->data()->id;} else { $thisUserID = 0; }
 
-if(isset($_GET['id']))
-	{
+if(isset($_GET['id'])) {
 	$userID = Input::get('id');
-	
+} else {
+	$userID = $thisUserID;
+}
+if ($userID) {
 	$userQ = $db->query("SELECT * FROM profiles LEFT JOIN users ON user_id = users.id WHERE user_id = ?",array($userID));
 	$thatUser = $userQ->first();
 
-	if($thisUserID == $userID)
-		{
+	if($thisUserID == $userID) {
 		$editbio = ' <small><a href="edit_profile.php">Edit Bio</a></small>';
-		}
-	else
-		{
+	} else {
 		$editbio = '';
-		}
-	
+	}
+
 	$ususername = ucfirst($thatUser->username)."'s Profile";
 	$grav = get_gravatar(strtolower(trim($thatUser->email)));
 	$useravatar = '<img src="'.$grav.'" class="img-thumbnail" alt="'.$ususername.'">';
 	$usbio = html_entity_decode($thatUser->bio);
 	//Uncomment out the line below to see what's available to you.
 	//dump($thisUser);
-	}
-else
-	{
+} else {
 	$ususername = '404';
 	$usbio = 'User not found';
 	$useravatar = '';
 	$editbio = ' <small><a href="/">Go to the homepage</a></small>';
-	}
+}
 ?>
    <div id="page-wrapper">
 
@@ -70,18 +67,18 @@ else
 						<div class="col-xs-12 col-md-10">
 						<h1><?php echo $ususername;?></h1>
 							<h2><?php echo $usbio.$editbio;?></h2>
-	
+
 					</div>
 					</div>
 				</div>
-				
+
 										<a class="btn btn-success" href="view_all_users.php" role="button">All Users</a>
 
 
     </div> <!-- /container -->
 
 </div> <!-- /#page-wrapper -->
- 
+
 <!-- footers -->
 <?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; // the final html footer copyright row + the external js calls ?>
 <!-- Place any per-page javascript here -->

@@ -415,7 +415,7 @@ function securePage($uri){
 	}elseif ($pageDetails['private'] == 0){//If page is public, allow access
 		return true;
 	}elseif(!$user->isLoggedIn()){ //If user is not logged in, deny access
-		Redirect::to($us_url_root.'users/login.php', '?afterLoginGoto='.$page);
+		Redirect::to('login.php', '?afterLoginGoto='.$page);
 		return false;
 	}else {
 		//Retrieve list of permission levels with access to page
@@ -626,4 +626,24 @@ function updateEmail($id, $email) {
 	$db->update('users',$id,$fields);
 
 	return true;
+}
+
+//Given a page name, locate the preferred path to that page_footer
+function findPageLocation($pagename) {
+	global $abs_us_root, $us_url_root;
+  if (preg_match('/^https?:\/\//', $pagename)) {
+		return $pagename;
+	}
+  if (!$dirlist = Config::get('page_search_paths')) {
+      $root = $us_url_root;
+      $dirlist = array($root, $root.'usersc/', $root.'users/', './', '../', '../../');
+  }
+  foreach ($dirlist as $prefix) {
+      if (($prefix{0} == '.' && file_exists($prefix.$pagename)) ||
+						($prefix{0} == '/' && file_exists($abs_us_root.$prefix.$pagename))) {
+          $location = $prefix.$pagename;
+          break;
+      }
+  }
+	return $location;
 }
