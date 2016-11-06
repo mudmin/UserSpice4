@@ -44,9 +44,6 @@ if (!$form_valid && Input::exists()){
 		<label for="email">Email Address*</label>
 		<input  class="form-control" type="text" name="email" id="email" placeholder="Email Address" value="<?php if (!$form_valid && !empty($_POST)){ echo $email;} ?>" required >
 
-		<label for="company">Company Name</label>
-		<input type="text" class="form-control" id="company" name="company" placeholder="Company Name" value="<?php if (!$form_valid && !empty($_POST)){ echo $company;} ?>">
-
 		<label for="password">Choose a Password*</label>
 		<input  class="form-control" type="password" name="password" id="password" placeholder="Password" required autocomplete="off" aria-describedby="passwordhelp">
 		<span class="help-block" id="passwordhelp">Must be at least 6 characters</span>

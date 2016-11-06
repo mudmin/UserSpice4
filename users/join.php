@@ -68,7 +68,6 @@ if(Input::exists()){
 	$fname = Input::get('fname');
 	$lname = Input::get('lname');
 	$email = Input::get('email');
-	$company = Input::get('company');
 	$agreement_checkbox = Input::get('agreement_checkbox');
 
 	if ($agreement_checkbox=='on'){
@@ -85,7 +84,7 @@ if(Input::exists()){
 	  'username' => array(
 		'display' => 'Username',
 		'required' => true,
-		'min' => 5,
+		'min' => 2,
 		'max' => 35,
 		'unique' => 'users',
 	  ),
@@ -107,12 +106,7 @@ if(Input::exists()){
 		'valid_email' => true,
 		'unique' => 'users',
 	  ),
-	  'company' => array(
-		'display' => 'Company Name',
-		'required' => false,
-		'min' => 0,
-		'max' => 75,
-	  ),
+
 	  'password' => array(
 		'display' => 'Password',
 		'required' => true,
