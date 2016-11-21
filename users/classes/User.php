@@ -20,7 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class User {
 	private $_db, $_data, $_sessionName, $_isLoggedIn, $_cookieName;
 
-	public function __construct($user = null){
+	public function __construct($user = null) {
+		#dbg("User::__construct($user): Entering<br />\n");
 		$this->_db = DB::getInstance();
 		$this->_sessionName = Config::get('session/session_name');
 		$this->_cookieName = Config::get('remember/cookie_name');
@@ -29,21 +30,23 @@ class User {
 			if (Session::exists($this->_sessionName)) {
 				$user = Session::get($this->_sessionName);
 
-				if ($this->find($user)) {
+				#dbg("User::__construct(): found session, looking up user=$user<br />\n");
+				if ($this->findById($user)) {
 					$this->_isLoggedIn = true;
 				} else {
 					//process Logout
 				}
 			}
 		} else {
-			$this->find($user);
+			#dbg("User::__construct(): user passed in, looking up user=$user<br />\n");
+			$this->findById($user);
 		}
 	}
 
-	public function create($fields = array()){
+	public function create($fields = array()) {
 		if (!$this->_db->insert('users', $fields)) {
 			throw new Exception('There was a problem creating an account.');
-		}else
+		} else
 		$user_id = $this->_db->lastId();
 		$query = $this->_db->insert("user_permission_matches",['user_id'=>$user_id,'permission_id'=>1]);
 		// return $user_id;
@@ -51,35 +54,52 @@ class User {
 		return $user_id;
 	}
 
-	public function find($user = null){
+	public function findById($id) {
+		return $this->find($id, 'id');
+	}
+	public function findByEmailOrUsername($username) {
+		if (!filter_var($username, FILTER_VALIDATE_EMAIL) === false) {
+			$field = 'email';
+		} else {
+			$field = 'username';
+		}
+		return $this->find($username, $field);
+	}
+	public function find($user = null, $field = null) {
+		#dbg("User::find($user): Entering<br />\n");
 		if ($user) {
-			if(is_numeric($user)){
-				$field = 'id';
-			}elseif(!filter_var($user, FILTER_VALIDATE_EMAIL) === false){
-				$field = 'email';
-			}else{
-				$field = 'username';
+			if (!$field) {
+				if(is_numeric($user)) {
+					$field = 'id';
+				} elseif(!filter_var($user, FILTER_VALIDATE_EMAIL) === false) {
+					$field = 'email';
+				} else {
+					$field = 'username';
+				}
+				#dbg("User::find($user): field=$field<br />\n");
 			}
 
 			$data = $this->_db->get('users', array($field, '=', $user));
 
 			if ($data->count()) {
 				$this->_data = $data->first();
-				if($this->data()->account_id == 0 && $this->data()->account_owner == 1){
+				if($this->data()->account_id == 0 && $this->data()->account_owner == 1) {
 					$this->_data->account_id = $this->_data->id;
 				}
+				#dbg("User::find($user): FOUND - returning true<br />\n");
 				return true;
 			}
 		}
+		#dbg("User::find($user): NOT found - returning false<br />\n");
 		return false;
 	}
 
-	public function login($username = null, $password = null, $remember = false){
-
+	public function login($username = null, $password = null, $remember = false) {
+		#dbg("User::login($username): Entering<br />\n");
 		if (!$username && !$password && $this->exists()) {
 			Session::put($this->_sessionName, $this->data()->id);
 		} else {
-			$user = $this->find($username);
+			$user = $this->findByEmailOrUsername($username);
 			if ($user) {
 				if (password_verify($password,$this->data()->password)) {
 					Session::put($this->_sessionName, $this->data()->id);
@@ -103,12 +123,11 @@ class User {
 		return false;
 	}
 
-	public function loginEmail($email = null, $password = null, $remember = false){
-
+	public function loginEmail($email = null, $password = null, $remember = false) {
 		if (!$email && !$password && $this->exists()) {
 			Session::put($this->_sessionName, $this->data()->id);
 		} else {
-			$user = $this->find($email);
+			$user = $this->findByEmailOrUsername($email);
 
 			if ($user) {
 				if (password_verify($password,$this->data()->password)) {
@@ -134,27 +153,27 @@ class User {
 		return false;
 	}
 
-	public function exists(){
+	public function exists() {
 		return (!empty($this->_data)) ? true : false;
 	}
 
-	public function data(){
+	public function data() {
 		return $this->_data;
 	}
 
-	public function isLoggedIn(){
+	public function isLoggedIn() {
 		return $this->_isLoggedIn;
 	}
 
-	public function notLoggedInRedirect($location){
-		if($this->_isLoggedIn){
+	public function notLoggedInRedirect($location) {
+		if($this->_isLoggedIn) {
 			return true;
-		}else{
+		} else {
 			Redirect::to($location);
 		}
 	}
 
-	public function logout(){
+	public function logout() {
 		$this->_db->query("DELETE FROM users_session WHERE user_id = ? AND uagent = ?",array($this->data()->id,Session::uagent_no_version()));
 		session_unset();
 		session_destroy();
@@ -162,7 +181,7 @@ class User {
 		Cookie::delete($this->_cookieName);
 	}
 
-	public function update($fields = array(), $id=null){
+	public function update($fields = array(), $id=null) {
 
 		if (!$id && $this->isLoggedIn()) {
 			$id = $this->data()->id;
@@ -174,7 +193,7 @@ class User {
 	}
 
 	//This is for future versions of UserSpice
-	public function hasPermission($key){
+	public function hasPermission($key) {
 		$group = $this->_db->get('permissions', array('id', '=', $this->data()->permissions));
 		if ($group->count()) {
 			$permissions = json_decode($group->first()->permissions, true);
@@ -185,10 +204,10 @@ class User {
 		return false;
 	}
 	//This is for future versions of UserSpice
-	public function noPermissionRedirect($perm,$location){
-		if(!$this->hasPermission($perm)){
+	public function noPermissionRedirect($perm,$location) {
+		if(!$this->hasPermission($perm)) {
 			Redirect::to($location);
-		}else{
+		} else {
 			return true;
 		}
 	}
