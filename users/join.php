@@ -84,8 +84,8 @@ if(Input::exists()){
 	  'username' => array(
 		'display' => 'Username',
 		'required' => true,
-		'min' => 2,
-		'max' => 35,
+		'min' => $settings->min_un,
+		'max' => $settings->max_un,
 		'unique' => 'users',
 	  ),
 	  'fname' => array(
@@ -110,8 +110,8 @@ if(Input::exists()){
 	  'password' => array(
 		'display' => 'Password',
 		'required' => true,
-		'min' => 6,
-		'max' => 25,
+		'min' => $settings->min_pw,
+		'max' => $settings->max_pw,
 	  ),
 	  'confirm' => array(
 		'display' => 'Confirm Password',
@@ -203,6 +203,12 @@ if(Input::exists()){
 <div id="page-wrapper">
 <div class="container">
 <?php
+if($settings->glogin==1 && !$user->isLoggedIn()){
+require_once $abs_us_root.$us_url_root.'users/includes/google_oauth_login.php';
+}
+if($settings->fblogin==1 && !$user->isLoggedIn()){
+require_once $abs_us_root.$us_url_root.'users/includes/facebook_oauth.php';
+}
 require 'views/_join.php';
 ?>
 

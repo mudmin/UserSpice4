@@ -62,8 +62,8 @@ if (!empty($_POST)) {
       'username' => array(
       'display' => 'Username',
       'required' => true,
-      'min' => 2,
-      'max' => 35,
+      'min' => $settings->min_un,
+      'max' => $settings->max_un,
       'unique' => 'users',
       ),
       'fname' => array(
@@ -87,8 +87,8 @@ if (!empty($_POST)) {
       'password' => array(
       'display' => 'Password',
       'required' => true,
-      'min' => 6,
-      'max' => 25,
+      'min' => $settings->min_pw,
+      'max' => $settings->max_pw,
       ),
       'confirm' => array(
       'display' => 'Confirm Password',

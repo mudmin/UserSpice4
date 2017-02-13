@@ -112,8 +112,8 @@ function email($to,$subject,$body,$attachment=false){
 
 	// $mail->SMTPDebug = 3;                               // Enable verbose debug output
 
-	$mail->isSMTP();                                      // Set mailer to use SMTP
-	$mail->Host = $smtp_server;  // Specify main and backup SMTP servers
+	// $mail->isSMTP();                                    // Set mailer to use SMTP
+	$mail->Host = $smtp_server;  													// Specify main and backup SMTP servers
 	$mail->SMTPAuth = true;                               // Enable SMTP authentication
 	$mail->Username = $smtp_username;                 // SMTP username
 	$mail->Password = $smtp_password;                           // SMTP password
@@ -200,6 +200,13 @@ function bold($text){
 	echo $text;
 	echo "</h4></span></text>";
 }
+
+function err($text){
+	echo "<span><text padding='1em' align='center'><font color='red'><h4></span>";
+	echo $text;
+	echo "</h4></span></font></text>";
+}
+
 function redirect($location){
 	header("Location: {$location}");
 }

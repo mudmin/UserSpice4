@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // error_reporting(E_ALL);
 // ini_set('display_errors', 1);
 ini_set("allow_url_fopen", 1);
+if(isset($_SESSION)){session_destroy();}
 ?>
 <?php require_once 'init.php'; ?>
 <?php require_once $abs_us_root.$us_url_root.'users/includes/header.php'; ?>
@@ -113,6 +114,14 @@ if (!$dest = sanitizedDest('dest')) {
 <div class="row">
     <div class="col-xs-12">
     <div class="bg-danger"><?=$error_message;?></div>
+    <?php
+if($settings->glogin==1 && !$user->isLoggedIn()){
+require_once $abs_us_root.$us_url_root.'users/includes/google_oauth_login.php';
+}
+if($settings->fblogin==1 && !$user->isLoggedIn()){
+require_once $abs_us_root.$us_url_root.'users/includes/facebook_oauth.php';
+}
+?>
     <form name="login" class="form-signin" action="login.php" method="post">
     <h2 class="form-signin-heading"></i> <?=lang("SIGNIN_TITLE","");?></h2>
     <input type="hidden" name="dest" value="<?= $dest ?>" />

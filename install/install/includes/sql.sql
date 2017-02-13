@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.6.0
+-- version 4.5.1
 -- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Generation Time: May 11, 2016 at 07:55 AM
--- Server version: 5.6.25-log
--- PHP Version: 7.0.4
+-- Host: 127.0.0.1
+-- Generation Time: Feb 13, 2017 at 09:36 PM
+-- Server version: 10.1.9-MariaDB
+-- PHP Version: 5.6.15
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,8 +17,23 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `us4`
+-- Database: `42`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `audit`
+--
+
+CREATE TABLE `audit` (
+  `id` int(11) NOT NULL,
+  `user` int(11) NOT NULL,
+  `page` varchar(255) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `ip` varchar(255) NOT NULL,
+  `viewed` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -107,7 +122,12 @@ INSERT INTO `pages` (`id`, `page`, `private`) VALUES
 (25, 'users/verify.php', 0),
 (26, 'users/verify_resend.php', 0),
 (27, 'users/view_all_users.php', 1),
-(28, 'usersc/empty.php', 0);
+(28, 'usersc/empty.php', 0),
+(31, 'users/oauth_success.php', 0),
+(33, 'users/fb-callback.php', 0),
+(37, 'users/check_updates.php', 1),
+(38, 'users/google_helpers.php', 0),
+(39, 'users/tomfoolery.php', 1);
 
 -- --------------------------------------------------------
 
@@ -158,7 +178,9 @@ INSERT INTO `permission_page_matches` (`id`, `permission_id`, `page_id`) VALUES
 (12, 2, 6),
 (13, 2, 5),
 (14, 2, 4),
-(15, 1, 3);
+(15, 1, 3),
+(16, 2, 37),
+(17, 2, 39);
 
 -- --------------------------------------------------------
 
@@ -177,7 +199,7 @@ CREATE TABLE `profiles` (
 --
 
 INSERT INTO `profiles` (`id`, `user_id`, `bio`) VALUES
-(1, 1, '<h1>This is the Admin\'s bio.</h1>'),
+(1, 1, '<h1>This is the Admin''s bio.</h1>'),
 (2, 2, 'This is your bio');
 
 -- --------------------------------------------------------
@@ -207,15 +229,32 @@ CREATE TABLE `settings` (
   `reserverd2` varchar(100) NOT NULL,
   `custom1` varchar(100) NOT NULL,
   `custom2` varchar(100) NOT NULL,
-  `custom3` varchar(100) NOT NULL
+  `custom3` varchar(100) NOT NULL,
+  `glogin` int(1) NOT NULL DEFAULT '0',
+  `fblogin` int(1) NOT NULL,
+  `gid` varchar(255) NOT NULL,
+  `gsecret` varchar(255) NOT NULL,
+  `gredirect` varchar(255) NOT NULL,
+  `ghome` varchar(255) NOT NULL,
+  `fbid` varchar(255) NOT NULL,
+  `fbsecret` varchar(255) NOT NULL,
+  `fbcallback` varchar(255) NOT NULL,
+  `graph_ver` varchar(255) NOT NULL,
+  `finalredir` varchar(255) NOT NULL,
+  `req_cap` int(1) NOT NULL,
+  `req_num` int(1) NOT NULL,
+  `min_pw` int(2) NOT NULL,
+  `max_pw` int(3) NOT NULL,
+  `min_un` int(2) NOT NULL,
+  `max_un` int(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `settings`
 --
 
-INSERT INTO `settings` (`id`, `recaptcha`, `force_ssl`, `login_type`, `css_sample`, `us_css1`, `us_css2`, `us_css3`, `css1`, `css2`, `css3`, `site_name`, `language`, `track_guest`, `site_offline`, `force_pr`, `reserved1`, `reserverd2`, `custom1`, `custom2`, `custom3`) VALUES
-(1, 0, 0, '', 1, '../users/css/color_schemes/standard.css', '../users/css/sb-admin.css', '../users/css/custom.css', '', '', '', 'UserSpice', 'en', 0, 0, 0, '', '', '', '', '');
+INSERT INTO `settings` (`id`, `recaptcha`, `force_ssl`, `login_type`, `css_sample`, `us_css1`, `us_css2`, `us_css3`, `css1`, `css2`, `css3`, `site_name`, `language`, `track_guest`, `site_offline`, `force_pr`, `reserved1`, `reserverd2`, `custom1`, `custom2`, `custom3`, `glogin`, `fblogin`, `gid`, `gsecret`, `gredirect`, `ghome`, `fbid`, `fbsecret`, `fbcallback`, `graph_ver`, `finalredir`, `req_cap`, `req_num`, `min_pw`, `max_pw`, `min_un`, `max_un`) VALUES
+(1, 0, 0, '', 1, '../users/css/color_schemes/standard.css', '../users/css/sb-admin.css', '../users/css/custom.css', '', '', '', 'UserSpice', 'en', 1, 0, 0, '', '', '', '', '', 0, 0, 'Google ID Here', 'Google Secret Here', 'http://localhost/userspice/users/oauth_success.php', 'http://localhost/userspice/', 'FB ID Here', 'FB Secret Here', 'http://localhost/userspice/users/fb-callback.php', 'v2.2', 'account.php', 1, 1, 6, 20, 2, 40);
 
 -- --------------------------------------------------------
 
@@ -252,16 +291,25 @@ CREATE TABLE `users` (
   `custom2` varchar(255) NOT NULL,
   `custom3` varchar(255) NOT NULL,
   `custom4` varchar(255) NOT NULL,
-  `custom5` varchar(255) NOT NULL
+  `custom5` varchar(255) NOT NULL,
+  `oauth_provider` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `oauth_uid` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `gender` varchar(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `locale` varchar(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `gpluslink` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `picture` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `created` datetime NOT NULL,
+  `modified` datetime NOT NULL,
+  `fb_uid` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `email`, `username`, `password`, `fname`, `lname`, `permissions`, `logins`, `account_owner`, `account_id`, `company`, `stripe_cust_id`, `billing_phone`, `billing_srt1`, `billing_srt2`, `billing_city`, `billing_state`, `billing_zip_code`, `join_date`, `last_login`, `email_verified`, `vericode`, `title`, `active`, `custom1`, `custom2`, `custom3`, `custom4`, `custom5`) VALUES
-(1, 'userspicephp@gmail.com', 'admin', '$2y$12$1v06jm2KMOXuuo3qP7erTuTIJFOnzhpds1Moa8BadnUUeX0RV3ex.', 'Admin', 'User', 1, 0, 1, 0, 'UserSpice', '', '', '', '', '', '', '', '2016-01-01 00:00:00', '2016-05-11 10:25:01', 1, '322418', '', 0, '', '', '', '', ''),
-(2, 'noreply@userspice.com', 'user', '$2y$12$HZa0/d7evKvuHO8I3U8Ff.pOjJqsGTZqlX8qURratzP./EvWetbkK', 'user', 'user', 1, 0, 1, 0, 'none', '', '', '', '', '', '', '', '2016-01-02 00:00:00', '2016-01-02 00:00:00', 1, '970748', '', 1, '', '', '', '', '');
+INSERT INTO `users` (`id`, `email`, `username`, `password`, `fname`, `lname`, `permissions`, `logins`, `account_owner`, `account_id`, `company`, `stripe_cust_id`, `billing_phone`, `billing_srt1`, `billing_srt2`, `billing_city`, `billing_state`, `billing_zip_code`, `join_date`, `last_login`, `email_verified`, `vericode`, `title`, `active`, `custom1`, `custom2`, `custom3`, `custom4`, `custom5`, `oauth_provider`, `oauth_uid`, `gender`, `locale`, `gpluslink`, `picture`, `created`, `modified`, `fb_uid`) VALUES
+(1, 'userspicephp@gmail.com', 'admin', '$2y$12$1v06jm2KMOXuuo3qP7erTuTIJFOnzhpds1Moa8BadnUUeX0RV3ex.', 'Admin', 'User', 1, 34, 1, 0, 'UserSpice', '', '', '', '', '', '', '', '2016-01-01 00:00:00', '2016-11-27 11:35:57', 1, '322418', '', 0, '', '', '', '', '', '', '', '', '', '', '', '0000-00-00 00:00:00', '1899-11-30 00:00:00', ''),
+(2, 'noreply@userspice.com', 'user', '$2y$12$HZa0/d7evKvuHO8I3U8Ff.pOjJqsGTZqlX8qURratzP./EvWetbkK', 'user', 'user', 1, 0, 1, 0, 'none', '', '', '', '', '', '', '', '2016-01-02 00:00:00', '2016-01-02 00:00:00', 1, '970748', '', 1, '', '', '', '', '', '', '', '', '', '', '', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '');
 
 -- --------------------------------------------------------
 
@@ -282,8 +330,7 @@ CREATE TABLE `users_online` (
 --
 
 INSERT INTO `users_online` (`id`, `ip`, `timestamp`, `user_id`, `session`) VALUES
-(1, '::1', '1455555707', '', ''),
-(2, '192.171.42.122', '1462976510', '', '');
+(1, '::1', '1487017942', 1, '');
 
 -- --------------------------------------------------------
 
@@ -297,13 +344,6 @@ CREATE TABLE `users_session` (
   `hash` varchar(255) NOT NULL,
   `uagent` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `users_session`
---
-
-INSERT INTO `users_session` (`id`, `user_id`, `hash`, `uagent`) VALUES
-(1, 1, 'e5c284103ce354831561e3b447d1758976c799922d7e20743e9f8c290dfe078f', 'Mozilla (Windows NT 6.1; Win64; x64) AppleWebKit (KHTML, like Gecko) Chrome Safari');
 
 -- --------------------------------------------------------
 
@@ -322,13 +362,19 @@ CREATE TABLE `user_permission_matches` (
 --
 
 INSERT INTO `user_permission_matches` (`id`, `user_id`, `permission_id`) VALUES
-(1, 1, 1),
-(2, 1, 2),
-(3, 2, 1);
+(100, 1, 1),
+(101, 1, 2),
+(102, 2, 1);
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `audit`
+--
+ALTER TABLE `audit`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `email`
@@ -402,6 +448,11 @@ ALTER TABLE `user_permission_matches`
 --
 
 --
+-- AUTO_INCREMENT for table `audit`
+--
+ALTER TABLE `audit`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT for table `email`
 --
 ALTER TABLE `email`
@@ -415,7 +466,7 @@ ALTER TABLE `keys`
 -- AUTO_INCREMENT for table `pages`
 --
 ALTER TABLE `pages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 --
 -- AUTO_INCREMENT for table `permissions`
 --
@@ -425,7 +476,7 @@ ALTER TABLE `permissions`
 -- AUTO_INCREMENT for table `permission_page_matches`
 --
 ALTER TABLE `permission_page_matches`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 --
 -- AUTO_INCREMENT for table `profiles`
 --
@@ -445,17 +496,17 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `users_online`
 --
 ALTER TABLE `users_online`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `users_session`
 --
 ALTER TABLE `users_session`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `user_permission_matches`
 --
 ALTER TABLE `user_permission_matches`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

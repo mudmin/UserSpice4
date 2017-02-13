@@ -45,12 +45,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             Test your email settings.
           </h1><br>
           It's a good idea to test to make sure you can actually receive system emails before forcing your users to verify theirs. <br><br>
-          <strong>DEVELOPER NOTE:</strong>
+          <strong>DEVELOPER NOTE 1:</strong>
              If you are having difficulty with your email configuration, go to
              users/helpers/helpers.php (around line 114) and set $mail->SMTPDebug
              to a non-zero value. This is a development-platform-ONLY setting - be
              sure to set it back to zero (or leave it unset) on any live platform -
              otherwise you would open significant security holes.<br><br>
+             <strong>DEVELOPER NOTE 2:</strong>
+                Gmail is significantly easier to use for sending mail than your average SMTP mailer. However, if you are using SMTP and your mail is not sending, you can try uncommenting out line 115 of users/helpers/helpers.php. <br><br>
+             <br>
           <?php
                 if (!empty($_POST)){
                   $to = $_POST['test_acct'];

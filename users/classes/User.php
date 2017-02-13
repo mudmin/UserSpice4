@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 class User {
 	private $_db, $_data, $_sessionName, $_isLoggedIn, $_cookieName;
+	public $tableName = 'users';
 
 	public function __construct($user = null){
 		$this->_db = DB::getInstance();
@@ -134,6 +135,62 @@ class User {
 		return false;
 	}
 
+	//Google oAuth Login Stuff
+		public function  checkUser($oauth_provider,$oauth_uid,$fname,$lname,$email,$gender,$locale,$link,$picture){
+
+			$this->_db = DB::getInstance();
+			$this->_sessionName = Config::get('session/session_name');
+			$this->_cookieName = Config::get('remember/cookie_name');
+			$fakeUN = $email;
+			$active = 1;
+				$findExistingUser = $this->_db->query("SELECT * FROM $this->tableName WHERE email = ?",array($email));
+				$foundCount = $this->_db->count();
+				if($foundCount>0){$found = $this->_db->first();}
+
+
+				$this->_db->query("UPDATE users SET last_login = ?, logins = logins + 1 WHERE id = ?",[date("Y-m-d H:i:s"),$found->id]);
+
+				//Check to see if a user has Google oAuth
+				$prevQuery = $this->_db->query("SELECT * FROM users WHERE oauth_provider = '".$oauth_provider."' AND oauth_uid = '".$oauth_uid."'") or die("Google oAuth Error");
+
+				//If a user is already setup with oAuth, get the latest info
+				if($prevQuery->count() > 0){
+					// die("user already has oauth");
+					$update = $this->_db->query("UPDATE $this->tableName SET oauth_provider = '".$oauth_provider."', oauth_uid = '".$oauth_uid."', fname = '".$fname."', lname = '".$lname."', email = '".$email."', gender = '".$gender."', locale = '".$locale."', username = '".$fakeUN."',permissions = '".$active."',email_verfied = '".$active."',active = '".$active."',picture = '".$picture."', gpluslink = '".$link."', modified = '".date("Y-m-d H:i:s")."' WHERE oauth_provider = '".$oauth_provider."' AND oauth_uid = '".$oauth_uid."'") or die("Google oAuth Error");
+
+				}else{
+				//Check to see if the user has a regular UserSpice account that matches the google email.
+				$findExistingUS=$this->_db->query("SELECT * FROM users WHERE email = ?",array($email));
+				$foundUS=$findExistingUS->count();
+				$found=$findExistingUS->count();
+
+
+				if ($foundUS == 1){
+					//Found an existing UserSpice user with the same email
+					// die("user already has userspice");
+					$this->_db->query("UPDATE users WHERE id = 3 SET lname = ?",array($email)) or die("Google oAuth Error");
+
+				}else{
+					//If a user has neither UserSpice nor oAuth creds
+						//die("user has neither");
+						$password = password_hash(Token::generate(),PASSWORD_BCRYPT,array('cost' => 12));
+						$insert = $this->_db->query("INSERT INTO $this->tableName SET password = '".$password."',username = '".$email."',active = '".$active."',oauth_provider = '".$oauth_provider."', oauth_uid = '".$oauth_uid."',permissions = '".$active."', email_verified = '".$active."', fname = '".$fname."', lname = '".$lname."', email = '".$email."', gender = '".$gender."', locale = '".$locale."',picture = '".$picture."', gpluslink = '".$link."', join_date = '".date("Y-m-d H:i:s")."',created = '".date("Y-m-d H:i:s")."', modified = '".date("Y-m-d H:i:s")."'") or die("Google oAuth Error");
+						$lastID = $insert->lastId();
+
+						$insert2 = $this->_db->query("INSERT INTO user_permission_matches SET user_id = $lastID, permission_id = 1");
+
+						$insert3 = $this->_db->query("INSERT INTO profiles SET user_id = $lastID, bio = 'This is your bio'");
+				}
+
+
+				}
+
+				$query = $this->_db->query("SELECT * FROM $this->tableName WHERE oauth_provider = '".$oauth_provider."' AND oauth_uid = '".$oauth_uid."'") or die("Google oAuth Error");
+				$result = $query->first();
+				return $result;
+			}
+		// End of Google Section
+
 	public function exists(){
 		return (!empty($this->_data)) ? true : false;
 	}
@@ -156,10 +213,11 @@ class User {
 
 	public function logout(){
 		$this->_db->query("DELETE FROM users_session WHERE user_id = ? AND uagent = ?",array($this->data()->id,Session::uagent_no_version()));
-		session_unset();
-		session_destroy();
+
 		Session::delete($this->_sessionName);
 		Cookie::delete($this->_cookieName);
+		session_unset();
+		session_destroy();
 	}
 
 	public function update($fields = array(), $id=null){
@@ -192,7 +250,5 @@ class User {
 			return true;
 		}
 	}
-
-
 
 }

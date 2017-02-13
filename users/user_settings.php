@@ -274,6 +274,11 @@ if(!empty($_POST)) {
 	<p><a class="btn btn-info" href="account.php">Cancel</a></p>
 
 </form>
+<?php
+if($user->data()->oauth_provider != null){
+	echo "<strong>NOTE:</strong> If you originally signed up with your Google/Facebook account, you will need to use the forgot password link to change your password...unless you're really good at guessing.";
+}
+?>
 </div>
 </div>
 </div>

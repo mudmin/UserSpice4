@@ -72,6 +72,8 @@ $level_count = $levelsQ->count();
 $settingsQ = $db->query("SELECT * FROM settings");
 $settings = $settingsQ->first();
 
+$tomC = $db->query("SELECT * FROM audit")->count();
+
 if(!empty($_POST['settings'])){
 	$token = $_POST['csrf'];
 	if(!Token::check($token)){
@@ -143,11 +145,117 @@ if(!empty($_POST['css'])){
 	Redirect::to('admin.php');
 }
 
+if(!empty($_POST['social'])){
+	if($settings->req_cap != $_POST['req_cap']) {
+		$req_cap = Input::get('req_cap');
+		$fields=array('req_cap'=>$req_cap);
+		$db->update('settings',1,$fields);
+	}
+
+	if($settings->req_num != $_POST['req_num']) {
+		$req_num = Input::get('req_num');
+		$fields=array('req_num'=>$req_num);
+		$db->update('settings',1,$fields);
+	}
+
+	if($settings->min_pw != $_POST['min_pw']) {
+		$min_pw = Input::get('min_pw');
+		$fields=array('min_pw'=>$min_pw);
+		$db->update('settings',1,$fields);
+	}
+
+	if($settings->max_pw != $_POST['max_pw']) {
+		$max_pw = Input::get('max_pw');
+		$fields=array('max_pw'=>$max_pw);
+		$db->update('settings',1,$fields);
+	}
+
+	if($settings->min_un != $_POST['min_un']) {
+		$min_un = Input::get('min_un');
+		$fields=array('min_un'=>$min_un);
+		$db->update('settings',1,$fields);
+	}
+
+	if($settings->max_un != $_POST['max_un']) {
+		$max_un = Input::get('max_un');
+		$fields=array('max_un'=>$max_un);
+		$db->update('settings',1,$fields);
+	}
+
+	if($settings->glogin != $_POST['glogin']) {
+		$glogin = Input::get('glogin');
+		$fields=array('glogin'=>$glogin);
+		$db->update('settings',1,$fields);
+	}
+
+	if($settings->fblogin != $_POST['fblogin']) {
+		$fblogin = Input::get('fblogin');
+		$fields=array('fblogin'=>$fblogin);
+		$db->update('settings',1,$fields);
+	}
+
+	if($settings->gid != $_POST['gid']) {
+		$gid = Input::get('gid');
+		$fields=array('gid'=>$gid);
+		$db->update('settings',1,$fields);
+	}
+
+	if($settings->gsecret != $_POST['gsecret']) {
+		$gsecret = Input::get('gsecret');
+		$fields=array('gsecret'=>$gsecret);
+		$db->update('settings',1,$fields);
+	}
+
+	if($settings->gredirect != $_POST['gredirect']) {
+		$gredirect = Input::get('gredirect');
+		$fields=array('gredirect'=>$gredirect);
+		$db->update('settings',1,$fields);
+	}
+
+	if($settings->ghome != $_POST['ghome']) {
+		$ghome = Input::get('ghome');
+		$fields=array('ghome'=>$ghome);
+		$db->update('settings',1,$fields);
+	}
+
+	if($settings->fbid != $_POST['fbid']) {
+		$fbid = Input::get('fbid');
+		$fields=array('fbid'=>$fbid);
+		$db->update('settings',1,$fields);
+	}
+
+	if($settings->fbsecret != $_POST['fbsecret']) {
+		$fbsecret = Input::get('fbsecret');
+		$fields=array('fbsecret'=>$fbsecret);
+		$db->update('settings',1,$fields);
+	}
+
+	if($settings->fbcallback != $_POST['fbcallback']) {
+		$fbcallback = Input::get('fbcallback');
+		$fields=array('fbcallback'=>$fbcallback);
+		$db->update('settings',1,$fields);
+	}
+
+	if($settings->graph_ver != $_POST['graph_ver']) {
+		$graph_ver = Input::get('graph_ver');
+		$fields=array('graph_ver'=>$graph_ver);
+		$db->update('settings',1,$fields);
+	}
+
+	if($settings->finalredir != $_POST['finalredir']) {
+		$finalredir = Input::get('finalredir');
+		$fields=array('finalredir'=>$finalredir);
+		$db->update('settings',1,$fields);
+	}
+
+	Redirect::to('admin.php');
+}
+
 ?>
 <div id="page-wrapper"> <!-- leave in place for full-screen backgrounds etc -->
 <div class="container"> <!-- -fluid -->
 
-<h1 class="text-center">UserSpice Dashboard <?=$user_spice_ver?></h1>
+<h1 class="text-center">UserSpice Dashboard Version <?=$user_spice_ver?></h1>
 
 <div class="row"> <!-- row for Users, Permissions, Pages, Email settings panels -->
 	<h2>Admin Panels</h2>
@@ -278,6 +386,17 @@ if(file_exists($abs_us_root.$us_url_root.'usersc/includes/admin_panels.php')){
 	</div>
 	</div>
 	</div><!--/panel-->
+
+	<div class="panel panel-default">
+	<div class="panel-heading"><strong>Security Events</strong><span align="right" class="small"><a href="tomfoolery.php"> (View Logs)</a></span></div>
+	<div class="panel-body" align="center">
+	There have been<br>
+	<h2><?=$tomC?></h2>
+	security events triggered
+	</div>
+	</div><!--/panel-->
+
+
 	</div> <!-- /col2/2 -->
 </div> <!-- /row -->
 
@@ -306,7 +425,7 @@ if(file_exists($abs_us_root.$us_url_root.'usersc/includes/admin_panels.php')){
 
 		<!-- Force SSL -->
 		<div class="form-group">
-			<label for="force_ssl">Force SSL (experimental)</label>
+			<label for="force_ssl">Force HTTPS Connections</label>
 			<select id="force_ssl" class="form-control" name="force_ssl">
 				<option value="1" <?php if($settings->force_ssl==1) echo 'selected="selected"'; ?> >Yes</option>
 				<option value="0" <?php if($settings->force_ssl==0) echo 'selected="selected"'; ?> >No</option>
@@ -404,6 +523,102 @@ if(file_exists($abs_us_root.$us_url_root.'usersc/includes/admin_panels.php')){
 		<p><input class='btn btn-large btn-primary' type='submit' name="css" value='Save CSS Settings'/></p>
 		</form>
 	</div> <!-- /col1/3 -->
+</div> <!-- /row -->
+
+<!-- Social Login -->
+<div class="col-xs-12 col-md-12">
+	<form class="" action="admin.php" name="social" method="post">
+	<h2>Register and Login Settings</h2>
+<strong>Please note:</strong> Social logins require that you do some configuration on your own with Google and/or Facebook.<br>It is strongly recommended that you <a href="http://www.userspice.com/documentation-social-logins/">check the documentation at UserSpice.com.</a><br><br>
+<div class="form-group">
+	<label for="min_pw">Minimum Password Length</label>
+	<input type="text" class="form-control" name="min_pw" id="min_pw" value="<?=$settings->min_pw?>">
+</div>
+<div class="form-group">
+	<label for="max_pw">Maximum Password Length</label>
+	<input type="text" class="form-control" name="max_pw" id="max_pw" value="<?=$settings->max_pw?>">
+</div>
+<div class="form-group">
+	<label for="req_num">Recommend a Number in the Password? (1=Yes)</label>
+	<input type="text" class="form-control" name="req_num" id="req_num" value="<?=$settings->req_num?>">
+</div>
+<div class="form-group">
+	<label for="req_cap">Recommend a Capital Letter in the Password? (1=Yes)</label>
+	<input type="text" class="form-control" name="req_cap" id="req_cap" value="<?=$settings->req_cap?>">
+</div>
+<div class="form-group">
+	<label for="min_un">Minimum Username Length</label>
+	<input type="text" class="form-control" name="min_un" id="min_un" value="<?=$settings->min_un?>">
+</div>
+<div class="form-group">
+	<label for="max_un">Maximum Username Length</label>
+	<input type="text" class="form-control" name="max_un" id="max_un" value="<?=$settings->max_un?>">
+</div>
+
+	<div class="form-group">
+		<label for="glogin">Enable Google Login</label>
+		<select id="glogin" class="form-control" name="glogin">
+			<option value="1" <?php if($settings->glogin==1) echo 'selected="selected"'; ?> >Enabled</option>
+			<option value="0" <?php if($settings->glogin==0) echo 'selected="selected"'; ?> >Disabled</option>
+		</select>
+	</div>
+
+	<div class="form-group">
+		<label for="fblogin">Enable Facebook Login</label>
+		<select id="fblogin" class="form-control" name="fblogin">
+			<option value="1" <?php if($settings->fblogin==1) echo 'selected="selected"'; ?> >Enabled</option>
+			<option value="0" <?php if($settings->fblogin==0) echo 'selected="selected"'; ?> >Disabled</option>
+		</select>
+	</div>
+
+	<div class="form-group">
+		<label for="gid">Google Client ID</label>
+		<input type="text" class="form-control" name="gid" id="gid" value="<?=$settings->gid?>">
+	</div>
+
+	<div class="form-group">
+		<label for="gsecret">Google Client Secret</label>
+		<input type="text" class="form-control" name="gsecret" id="gsecret" value="<?=$settings->gsecret?>">
+	</div>
+
+	<div class="form-group">
+		<label for="ghome">Full Home URL of Website - include the final /</label>
+		<input type="text" class="form-control" name="ghome" id="ghome" value="<?=$settings->ghome?>">
+	</div>
+
+	<div class="form-group">
+		<label for="gredirect">Google Redirect URL (Path to oauth_success.php)</label>
+		<input type="text" class="form-control" name="gredirect" id="gredirect" value="<?=$settings->gredirect?>">
+	</div>
+
+	<div class="form-group">
+		<label for="fbid">Facebook App ID</label>
+		<input type="text" class="form-control" name="fbid" id="fbid" value="<?=$settings->fbid?>">
+	</div>
+
+	<div class="form-group">
+		<label for="fbsecret">Facebook Secret</label>
+		<input type="text" class="form-control" name="fbsecret" id="fbsecret" value="<?=$settings->fbsecret?>">
+	</div>
+
+	<div class="form-group">
+		<label for="fbcallback">Facebook Callback URL</label>
+		<input type="text" class="form-control" name="fbcallback" id="fbcallback" value="<?=$settings->fbcallback?>">
+	</div>
+
+	<div class="form-group">
+		<label for="graph_ver">Facebook Graph Version - Formatted as v2.2</label>
+		<input type="text" class="form-control" name="graph_ver" id="graph_ver" value="<?=$settings->graph_ver?>">
+	</div>
+
+	<div class="form-group">
+		<label for="finalredir">Redirect After Facebook Login</label>
+		<input type="text" class="form-control" name="finalredir" id="finalredir" value="<?=$settings->finalredir?>">
+	</div>
+
+	<p><input class='btn btn-large btn-primary' type='submit' name="social" value='Save Register and Login Settings'/></p>
+	</form>
+</div> <!-- /col1/3 -->
 </div> <!-- /row -->
 
 

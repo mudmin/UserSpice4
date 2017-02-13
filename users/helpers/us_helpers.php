@@ -408,13 +408,19 @@ function securePage($uri){
 	$pageDetails = array( 'id' =>$results->id, 'page' => $results->page, 'private' =>$results->private);
 
 	$pageID = $results->id;
-
+	$ip = ipCheck();
 	//If page does not exist in DB, allow access
 	if (empty($pageDetails)){
 		return true;
 	}elseif ($pageDetails['private'] == 0){//If page is public, allow access
 		return true;
 	}elseif(!$user->isLoggedIn()){ //If user is not logged in, deny access
+		$fields = array(
+			'user'	=> 0,
+			'page'	=> $pageID,
+			'ip'		=> $ip,
+		);
+		$db->insert('audit',$fields);
 		Redirect::to($us_url_root.'users/login.php', '?dest='.$page);
 		return false;
 	}else {
@@ -433,6 +439,12 @@ function securePage($uri){
 		}else {
 			if (!$homepage = Config::get('homepage'))
 				$homepage = 'index.php';
+			$fields = array(
+				'user'	=> $user->data()->id,
+				'page'	=> $pageID,
+				'ip'		=> $ip,
+			);
+			$db->insert('audit',$fields);
 			Redirect::to($homepage);
 			return false;
 		}
@@ -627,3 +639,127 @@ function updateEmail($id, $email) {
 
 	return true;
 }
+
+function echoId($id,$table,$column){
+$db = DB::getInstance();
+$query = $db->query("SELECT $column FROM $table WHERE id = $id LIMIT 1");
+$count=$query->count();
+
+if ($count > 0) {
+  $results=$query->first();
+  foreach ($results as $result){
+    echo $result;
+  }
+} else {
+  echo "Not in database";
+  Return false;
+}
+}
+
+function bin($number){
+  if ($number == 0){
+    echo "<strong><font color='red'>No</font></strong>";
+  }
+  if ($number == 1){
+    echo "<strong><font color='green'>Yes</font></strong>";
+  }
+  if ($number != 0 && $number !=1){
+    echo "<strong><font color='blue'>Other</font></strong>";
+  }
+}
+
+function echouser($id){
+  $db = DB::getInstance();
+	$query = $db->query("SELECT fname,lname FROM users WHERE id = ? LIMIT 1",array($id));
+  $count=$query->count();
+
+	if ($count > 0) {
+    $results=$query->first();
+  	echo $results->fname." ".$results->lname;
+	} else {
+		echo "-";
+	}
+}
+
+function generateForm($table,$id, $skip=[]){
+    $db = DB::getInstance();
+    $fields = [];
+    $q=$db->query("SELECT * FROM {$table} WHERE id = ?",array($id));
+    $r=$q->first();
+
+    foreach($r as $field => $value) {
+      if(!in_array($field, $skip)){
+        echo '<div class="form-group">';
+      		echo '<label for="'.$field.'">'.ucfirst($field).'</label>';
+      		echo '<input type="text" class="form-control" name="'.$field.'" id="'.$field.'" value="'.$value.'">';
+      	echo '</div>';
+      }
+    }
+    return true;
+  }
+
+  function generateAddForm($table, $skip=[]){
+    $db = DB::getInstance();
+    $fields = [];
+    $q=$db->query("SELECT * FROM {$table}");
+    $r=$q->first();
+
+    foreach($r as $field => $value) {
+      if(!in_array($field, $skip)){
+        echo '<div class="form-group">';
+          echo '<label for="'.$field.'">'.ucfirst($field).'</label>';
+          echo '<input type="text" class="form-control" name="'.$field.'" id="'.$field.'" value="">';
+        echo '</div>';
+      }
+    }
+    return true;
+  }
+
+  function updateFields2($post, $skip=[]){
+    $fields = [];
+    foreach($post as $field => $value) {
+      if(!in_array($field, $skip)){
+        $fields[$field] = sanitize($post[$field]);
+      }
+    }
+    return $fields;
+  }
+
+  function hasPerm($permissions, $id) {
+  	$db = DB::getInstance();
+  	global $user;
+  	//Grant access if master user
+  	$access = 0;
+
+  foreach($permissions as $permission){
+
+  	if ($access == 0){
+  		$query = $db->query("SELECT id FROM user_permission_matches  WHERE user_id = ? AND permission_id = ?",array($id,$permission));
+  		$results = $query->count();
+  		if ($results > 0){
+  			$access = 1;
+  		}
+  	}
+  }
+  	if ($access == 1){
+  		return true;
+  	}
+  	if ($user->data()->id == 1){
+  		return true;
+  	}else{
+  		return false;
+  	}
+  }
+	
+	function echopage($id){
+	  $db = DB::getInstance();
+		$query = $db->query("SELECT page FROM pages WHERE id = ? LIMIT 1",array($id));
+	  $count=$query->count();
+
+		if ($count > 0) {
+	    $results=$query->first();
+	  	echo $results->page;
+		} else {
+			echo "Unknown";
+		}
+	}

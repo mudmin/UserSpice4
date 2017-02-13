@@ -28,6 +28,11 @@ $currentPage = currentPage();
 if(isset($_GET['err'])){
 	$err = Input::get('err');
 }
+
+if(isset($_GET['msg'])){
+	$msg = Input::get('msg');
+}
+
 if(file_exists($abs_us_root.$us_url_root.'usersc/'.$currentPage)){
 	if(currentFolder()!= 'usersc'){
 		Redirect::to($us_url_root.'usersc/'.$currentPage);
@@ -39,6 +44,10 @@ $settingsQ = $db->query("Select * FROM settings");
 $settings = $settingsQ->first();
 if ($settings->site_offline==1){
 	die("The site is currently offline.");
+}
+
+if($settings->glogin==1 && !$user->isLoggedIn()){
+require_once $abs_us_root.$us_url_root.'users/includes/google_oauth.php';
 }
 
 if ($settings->force_ssl==1){
@@ -80,6 +89,8 @@ if($settings->track_guest == 1 && $user->isLoggedIn()){
 	<title><?=$settings->site_name;?></title>
 
 	<!-- Bootstrap Core CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
 	<!-- AKA Primary CSS -->
 	<link href="<?=$us_url_root?><?=str_replace('../','',$settings->us_css1);?>" rel="stylesheet">
 
@@ -90,11 +101,21 @@ if($settings->track_guest == 1 && $user->isLoggedIn()){
 	<!-- Your Custom CSS Goes Here!-->
 	<link href="<?=$us_url_root?><?=str_replace('../','',$settings->us_css3);?>" rel="stylesheet">
 
-	<!-- Custom Fonts -->
-	<link href="<?=$us_url_root?>users/fonts/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<!-- Custom Fonts/Animation/Styling-->
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<script src="<?=$us_url_root?>users/js/jquery.min.js"></script>
+
 </head>
 
-<body>
-	<?php if(isset($_GET['err'])){
-		bold("<br>".$err);
-	} ?>
+<body class="nav-md">
+	<?php
+	if(isset($_GET['err'])){
+		err("<br>".$err);
+	}
+
+	if(isset($_GET['msg'])){
+		bold("<br>".$msg);
+	}
+
+	?>
