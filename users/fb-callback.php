@@ -13,7 +13,7 @@ $secret=$settings->fbsecret;
 $version=$settings->graph_ver;
 $whereNext=$settings->finalredir;
 
-require_once("/src/Facebook/autoload.php");
+require_once("src/Facebook/autoload.php");
 $fb = new Facebook\Facebook([
   'app_id' => $appID, // Replace {app-id} with your app id
   'app_secret' => $secret,

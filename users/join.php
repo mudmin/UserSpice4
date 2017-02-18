@@ -167,7 +167,7 @@ if(Input::exists()){
 			if($act == 1) {
 				//Verify email address settings
 				$to = rawurlencode($email);
-				$subject = 'Welcome to UserSpice!';
+				$subject = $settings->site_name;
 				$body = email_body('_email_template_verify.php',$params);
 				email($to,$subject,$body);
 			}

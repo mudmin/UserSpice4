@@ -104,7 +104,7 @@ if($settings->track_guest == 1 && $user->isLoggedIn()){
 	<!-- Custom Fonts/Animation/Styling-->
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
-<script src="<?=$us_url_root?>users/js/jquery.min.js"></script>
+<script src="<?=$us_url_root?>users/js/jquery.js"></script>
 
 </head>
 

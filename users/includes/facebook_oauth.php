@@ -48,7 +48,7 @@ $version=$settings->graph_ver;
 $callback=$settings->fbcallback;
 
 if(!isset($_SESSION)){session_start();}
-require_once("/src/Facebook/autoload.php");
+require_once("src/Facebook/autoload.php");
 $fb = new Facebook\Facebook([
   'app_id' => $appID,
   'app_secret' => $secret,
@@ -61,5 +61,5 @@ $permissions = ['email']; // Optional permissions
 $loginUrl = $helper->getLoginUrl($callback, $permissions);
 
 echo '<a href="' . htmlspecialchars($loginUrl) . '"><img align=right src="'
-.$us_url_root.'/users/images/facebook.png" alt=""/></a>';
+.$us_url_root.'users/images/facebook.png" alt=""/></a>';
 ?>
