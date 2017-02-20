@@ -69,7 +69,7 @@ if(!empty($_POST['send_message'])){
 if(!empty($_POST['search'])){
   $query = Input::get('input');
   $query = htmlspecialchars($query);
-  $usersQ = $db->query("SELECT * FROM users WHERE username LIKE '%$query%' OR fname LIKE '%$query%' OR lname LIKE '%$query%'");
+  $usersQ = $db->query("SELECT * FROM users WHERE username LIKE '%$query%' OR fname LIKE '%$query%' OR lname LIKE '%$query%' LIMIT 200");
   $count = $usersQ->count();
 
   if($count > 0){
@@ -116,7 +116,7 @@ if(!empty($_POST['search'])){
                 </div>
               </form>
               <?php if(isset($count) && $count >0){ ?>
-                <table>
+                <table class="table table-striped">
                   <thead>
                     <tr>
                       <th>Username</th>

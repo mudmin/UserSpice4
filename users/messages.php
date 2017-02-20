@@ -38,7 +38,13 @@ $messages = $messagesQ->results();
   <div class="container-fluid">
     <div class="row">
       <div class="col-sm-12">
-        <h3>Your messages</h3>
+        <div class="row">
+          <div class="col-sm-6">
+            <h3>Your messages</h3>
+          </div>
+          <div class="col-sm-2">
+          <a class="btn btn-primary" href="create_message.php">Compose New Message</a>
+        </div>
         <!-- Content Goes Here. Class width can be adjusted -->
         <table class="table table-hover">
           <thead>

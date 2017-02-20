@@ -105,6 +105,10 @@ $single = $findMessageQ->first();
 $findUnread = $db->query("SELECT * FROM messages WHERE msg_thread = ? AND msg_to = ? AND msg_read != 1",array($id, $user->data()->id));
 $myUnread = $findUnread->count();
 
+//make sure there are messages TO me in the thread so I don't get a false unread button
+$checkToQ = $db->query("SELECT * FROM messages WHERE msg_thread = ? AND msg_to = ?",array($id, $user->data()->id));
+$checkTo = $checkToQ->count();
+
 
 if (($single->msg_to != $user->data()->id) && ($single->msg_from != $user->data()->id)){
   $ip = ipCheck();
@@ -189,7 +193,7 @@ if(!empty($_POST['reply'])){
           </div>
           <div class="col-sm-2">
             <?php
-            if($myUnread == 0){
+            if($myUnread == 0 && $checkTo > 0){
               ?>
               <form class="" action="message.php?id=<?php echo $id?>" method="post">
                 <input type="submit" class="btn btn-danger" name="markUnread" value="Mark as Unread">
