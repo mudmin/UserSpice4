@@ -28,7 +28,7 @@ ini_set("allow_url_fopen", 1);
 <?php
 $settingsQ = $db->query("SELECT * FROM settings");
 $settings = $settingsQ->first();
-if($settings->recaptcha == 1){
+if(($settings->recaptcha == 1) || ($settings->recaptcha == 2)){
 	require_once("includes/recaptcha.config.php");
 }
 //There is a lot of commented out code for a future release of sign ups with payments
@@ -127,7 +127,7 @@ if(Input::exists()){
 
 	if($validation->passed() && $agreement_checkbox){
 		//Logic if ReCAPTCHA is turned ON
-		if($settings->recaptcha == 1){
+	if(($settings->recaptcha == 1) || ($settings->recaptcha == 2)){
 			require_once("includes/recaptcha.config.php");
 			//reCAPTCHA 2.0 check
 			$response = null;
@@ -167,7 +167,7 @@ if(Input::exists()){
 			if($act == 1) {
 				//Verify email address settings
 				$to = rawurlencode($email);
-				$subject = $settings->site_name;
+				$subject = 'Welcome to '.$settings->site_name;
 				$body = email_body('_email_template_verify.php',$params);
 				email($to,$subject,$body);
 			}

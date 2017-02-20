@@ -93,13 +93,15 @@ if(!empty($_POST)) {
     </div> <!-- /container -->
 
 </div> <!-- /#page-wrapper -->
-<!-- If you disable this script below you will get a standard textarea with NO WYSIWYG editor. That simple -->
+
+<?php if ($settings->wys == 1){  ?>
 <script src='//cdn.tinymce.com/4/tinymce.min.js'></script>
 <script>
 tinymce.init({
   selector: '#mytextarea'
 });
 </script>
+<?php } ?>
 
     <!-- footers -->
 <?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; // the final html footer copyright row + the external js calls ?>

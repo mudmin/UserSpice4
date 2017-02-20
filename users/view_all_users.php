@@ -38,13 +38,13 @@ $users = $userQ->results();
 
     <!-- Page Heading -->
     <div class="row">
-	
+
       <div class="col-xs-12 col-md-6">
 		<h1 >View All Users</h1>
 	  </div>
-	  
+
 	  <div class="col-xs-12 col-md-6">
-			<form class="">   
+			<form class="">
 				<label for="system-search">Search:</label>
 				<div class="input-group">
                     <input class="form-control" id="system-search" name="q" placeholder="Search Users..." type="text">
@@ -52,15 +52,15 @@ $users = $userQ->results();
 						<button type="submit" class="btn btn-default"><i class="fa fa-times"></i></button>
                     </span>
                 </div>
-			</form>  
+			</form>
 		  </div>
-		  
+
 	 </div>
-		 
+
 		 <div class="row">
 		     <div class="col-md-12">
-                           
-       
+
+
 <hr />
  <div class="allutable table-responsive">
 <table class='table table-hover table-list-search'>
@@ -86,17 +86,16 @@ foreach ($users as $v1) {
 		<td>
 			<a href="profile.php?id=<?=$v1->id?>"><?php echo $useravatar;?></a>
 		</td>
-  
+
 		  <td>
 			<h4><a href="profile.php?id=<?=$v1->id?>"><?=$ususername?>  </a></h4>
 			<p><?=$ususerbio?></p>
 		</td>
-
 	</tr>
 <?php } ?>
   </tbody>
 </table>
-	  </div>	
+	  </div>
 
       </div>
     </div>

@@ -670,15 +670,54 @@ function bin($number){
 
 function echouser($id){
   $db = DB::getInstance();
+	$settingsQ = $db->query("SELECT echouser FROM settings");
+	$settings = $settingsQ->first();
+
+	if($settings->echouser == 0){
 	$query = $db->query("SELECT fname,lname FROM users WHERE id = ? LIMIT 1",array($id));
   $count=$query->count();
-
 	if ($count > 0) {
-    $results=$query->first();
-  	echo $results->fname." ".$results->lname;
+		$results=$query->first();
+		echo $results->fname." ".$results->lname;
 	} else {
 		echo "-";
 	}
+	}
+
+	if($settings->echouser == 1){
+	$query = $db->query("SELECT username FROM users WHERE id = ? LIMIT 1",array($id));
+  $count=$query->count();
+	if ($count > 0) {
+		$results=$query->first();
+		echo ucfirst($results->username);
+	} else {
+		echo "-";
+	}
+	}
+
+	if($settings->echouser == 2){
+	$query = $db->query("SELECT username,fname,lname FROM users WHERE id = ? LIMIT 1",array($id));
+  $count=$query->count();
+	if ($count > 0) {
+		$results=$query->first();
+		echo ucfirst($results->username).'('.$results->fname.' '.$results->lname.')';
+	} else {
+		echo "-";
+	}
+	}
+
+	if($settings->echouser == 3){
+	$query = $db->query("SELECT username,fname FROM users WHERE id = ? LIMIT 1",array($id));
+  $count=$query->count();
+	if ($count > 0) {
+		$results=$query->first();
+		echo ucfirst($results->username).'('.$results->fname.')';
+	} else {
+		echo "-";
+	}
+	}
+
+
 }
 
 function generateForm($table,$id, $skip=[]){
@@ -750,7 +789,7 @@ function generateForm($table,$id, $skip=[]){
   		return false;
   	}
   }
-	
+
 	function echopage($id){
 	  $db = DB::getInstance();
 		$query = $db->query("SELECT page FROM pages WHERE id = ? LIMIT 1",array($id));

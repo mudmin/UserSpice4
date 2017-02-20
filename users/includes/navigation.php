@@ -67,6 +67,10 @@ $email_act=$results->email_act;
 			<ul class="nav navbar-nav ">
 				<?php if($user->isLoggedIn()){ //anyone is logged in?>
 					<li><a href="<?=$us_url_root?>users/account.php"><i class="fa fa-fw fa-user"></i> <?php echo ucfirst($user->data()->username);?></a></li> <!-- Common for Hamburger and Regular menus link -->
+
+					<?php if($settings->messaging == 1){ ?>
+					<li><a href="<?=$us_url_root?>users/messages.php"><i class="fa fa-fw fa-envelope"></i><?=$msgC?> <?=$grammar?></a></li>
+					<?php } ?>
 					<li class="hidden-sm hidden-md hidden-lg"><a href="<?=$us_url_root?>"><i class="fa fa-fw fa-home"></i> Home</a></li> <!-- Hamburger menu link -->
 					<?php if (checkMenu(2,$user->data()->id)){  //Links for permission level 2 (default admin) ?>
 						<li class="hidden-sm hidden-md hidden-lg"><a href="<?=$us_url_root?>users/admin.php"><i class="fa fa-fw fa-cogs"></i> Admin Dashboard</a></li> <!-- Hamburger menu link -->
@@ -74,7 +78,12 @@ $email_act=$results->email_act;
 					<li class="dropdown hidden-xs"><a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="fa fa-fw fa-cog"></i><b class="caret"></b></a> <!-- regular user menu -->
 						<ul class="dropdown-menu"> <!-- open tag for User dropdown menu -->
 							<li><a href="<?=$us_url_root?>"><i class="fa fa-fw fa-home"></i> Home</a></li> <!-- regular user menu link -->
-							<li><a href="<?=$us_url_root?>users/account.php"><i class="fa fa-fw fa-user"></i> Account</a></li> <!-- regular user menu link -->
+							<li><a href="<?=$us_url_root?>users/account.php"><i class="fa fa-fw fa-user"></i> Account</a></li>
+						<?php if($settings->messaging == 1){ ?>
+							<li><a href="<?=$us_url_root?>users/messages.php"><i class="fa fa-fw fa-envelope"></i><?=$msgC?> Messages</a></li>
+						<?php } ?>
+
+									 <!-- regular user menu link -->
 
 							<?php if (checkMenu(2,$user->data()->id)){  //Links for permission level 2 (default admin) ?>
 								<li class="divider"></li>

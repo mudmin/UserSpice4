@@ -59,7 +59,10 @@ if(!empty($_POST)) {
     if ($userdetails->username != $_POST['username']){
 		$displayname = Input::get("username");
 
-		$fields=array('username'=>$displayname);
+		$fields=array(
+			'username'=>$displayname,
+			'un_changed' => 1,
+		);
 		$validation->check($_POST,array(
 		'username' => array(
 		  'display' => 'Username',
@@ -70,8 +73,10 @@ if(!empty($_POST)) {
 		)
 		));
 		if($validation->passed()){
-			//echo 'Username changes are disabled by commenting out this field and disabling input in the form/view';
-			//$db->update('users',$userId,$fields);
+			if(($settings->change_un == 2) && ($user->data()->un_changed == 1)){
+				Redirect::to('user_settings.php?err=Username+has+already+been+changed+once.');
+			}
+			$db->update('users',$userId,$fields);
 
 			$successes[]="Username updated.";
 		}else{
@@ -235,7 +240,12 @@ if(!empty($_POST)) {
 
 	<div class="form-group">
 		<label>Username</label>
-		<input  class='form-control' type='text' name='username' value='<?=$displayname?>' readonly/>
+		<?php if (($settings->change_un == 0) || (($settings->change_un == 2) && ($user->data()->un_changed == 1)) ) {
+	echo "<input  class='form-control' type='text' name='username' value='$displayname' readonly/>";
+	}else{
+		echo "<input  class='form-control' type='text' name='username' value='$displayname'>";
+	}
+	?>
 	</div>
 
 	<div class="form-group">

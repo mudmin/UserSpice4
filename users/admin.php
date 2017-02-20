@@ -85,11 +85,31 @@ if(!empty($_POST['settings'])){
 		$fields=array('recaptcha'=>$recaptcha);
 		$db->update('settings',1,$fields);
 	}
+
+	if($settings->messaging != $_POST['messaging']) {
+		$messaging = Input::get('messaging');
+		$fields=array('messaging'=>$messaging);
+		$db->update('settings',1,$fields);
+	}
+
+	if($settings->echouser != $_POST['echouser']) {
+		$echouser = Input::get('echouser');
+		$fields=array('echouser'=>$echouser);
+		$db->update('settings',1,$fields);
+	}
+
+	if($settings->wys != $_POST['wys']) {
+		$wys = Input::get('wys');
+		$fields=array('wys'=>$wys);
+		$db->update('settings',1,$fields);
+	}
+
 	if($settings->site_name != $_POST['site_name']) {
 		$site_name = Input::get('site_name');
 		$fields=array('site_name'=>$site_name);
 		$db->update('settings',1,$fields);
 	}
+
 	if($settings->login_type != $_POST['login_type']) {
 		$login_type = Input::get('login_type');
 		$fields=array('login_type'=>$login_type);
@@ -146,6 +166,13 @@ if(!empty($_POST['css'])){
 }
 
 if(!empty($_POST['social'])){
+
+		if($settings->change_un != $_POST['change_un']) {
+		$change_un = Input::get('change_un');
+		$fields=array('change_un'=>$change_un);
+		$db->update('settings',1,$fields);
+	}
+
 	if($settings->req_cap != $_POST['req_cap']) {
 		$req_cap = Input::get('req_cap');
 		$fields=array('req_cap'=>$req_cap);
@@ -420,6 +447,36 @@ if(file_exists($abs_us_root.$us_url_root.'usersc/includes/admin_panels.php')){
 			<select id="recaptcha" class="form-control" name="recaptcha">
 				<option value="1" <?php if($settings->recaptcha==1) echo 'selected="selected"'; ?> >Enabled</option>
 				<option value="0" <?php if($settings->recaptcha==0) echo 'selected="selected"'; ?> >Disabled</option>
+				<option value="2" <?php if($settings->recaptcha==2) echo 'selected="selected"'; ?> >For Join Only</option>
+			</select>
+		</div>
+
+		<!-- Messaging Option -->
+		<div class="form-group">
+			<label for="messaging">Messaging (Experimental)</label>
+			<select id="messaging" class="form-control" name="messaging">
+				<option value="1" <?php if($settings->messaging==1) echo 'selected="selected"'; ?> >Enabled</option>
+				<option value="0" <?php if($settings->messaging==0) echo 'selected="selected"'; ?> >Disabled</option>
+			</select>
+		</div>
+
+		<!-- echouser Option -->
+		<div class="form-group">
+			<label for="echouser">echouser Function</label>
+			<select id="echouser" class="form-control" name="echouser">
+				<option value="0" <?php if($settings->echouser==0) echo 'selected="selected"'; ?> >FName LName</option>
+				<option value="1" <?php if($settings->echouser==1) echo 'selected="selected"'; ?> >Username</option>
+				<option value="2" <?php if($settings->echouser==2) echo 'selected="selected"'; ?> >Username (FName LName)</option>
+				<option value="3" <?php if($settings->echouser==3) echo 'selected="selected"'; ?> >Username (FName)</option>
+			</select>
+		</div>
+
+		<!-- WYSIWYG Option -->
+		<div class="form-group">
+			<label for="wys">WYSIWYG Editor</label>
+			<select id="wys" class="form-control" name="wys">
+				<option value="0" <?php if($settings->wys==0) echo 'selected="selected"'; ?> >Disabled</option>
+				<option value="1" <?php if($settings->wys==1) echo 'selected="selected"'; ?> >Enabled</option>
 			</select>
 		</div>
 
@@ -530,6 +587,15 @@ if(file_exists($abs_us_root.$us_url_root.'usersc/includes/admin_panels.php')){
 	<form class="" action="admin.php" name="social" method="post">
 	<h2>Register and Login Settings</h2>
 <strong>Please note:</strong> Social logins require that you do some configuration on your own with Google and/or Facebook.<br>It is strongly recommended that you <a href="http://www.userspice.com/documentation-social-logins/">check the documentation at UserSpice.com.</a><br><br>
+<!-- Allow users to change Usernames -->
+<div class="form-group">
+	<label for="change_un">Allow users to change their Usernames</label>
+	<select id="change_un" class="form-control" name="change_un">
+		<option value="0" <?php if($settings->change_un==0) echo 'selected="selected"'; ?> >Disabled</option>
+		<option value="1" <?php if($settings->change_un==1) echo 'selected="selected"'; ?> >Enabled</option>
+		<option value="2" <?php if($settings->change_un==2) echo 'selected="selected"'; ?> >Only once</option>
+	</select>
+</div>
 <div class="form-group">
 	<label for="min_pw">Minimum Password Length</label>
 	<input type="text" class="form-control" name="min_pw" id="min_pw" value="<?=$settings->min_pw?>">

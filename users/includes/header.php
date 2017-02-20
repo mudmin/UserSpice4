@@ -35,8 +35,15 @@ if(isset($_GET['msg'])){
 
 if(file_exists($abs_us_root.$us_url_root.'usersc/'.$currentPage)){
 	if(currentFolder()!= 'usersc'){
-		Redirect::to($us_url_root.'usersc/'.$currentPage);
+		$url = $us_url_root.'usersc/'.$currentPage;
+		if(isset($_GET)){
+			$url .= '?'; //add initial ?
+			foreach ($_GET as $key=>$value){
+				$url .= '&'.$key.'='.$value;
+			}
+		}
 	}
+	Redirect::to($url);
 }
 
 $db = DB::getInstance();
@@ -47,7 +54,7 @@ if ($settings->site_offline==1){
 }
 
 if($settings->glogin==1 && !$user->isLoggedIn()){
-require_once $abs_us_root.$us_url_root.'users/includes/google_oauth.php';
+	require_once $abs_us_root.$us_url_root.'users/includes/google_oauth.php';
 }
 
 if ($settings->force_ssl==1){
@@ -84,6 +91,16 @@ if($settings->track_guest == 1 && $user->isLoggedIn()){
 	if(file_exists($abs_us_root.$us_url_root.'usersc/includes/head_tags.php')){
 		require_once $abs_us_root.$us_url_root.'usersc/includes/head_tags.php';
 	}
+
+	if(($settings->messaging == 1) && ($user->isLoggedIn())){
+		$msgQ = $db->query("SELECT id FROM messages WHERE msg_to = ? AND msg_read = 0 AND deleted = 0",array($user->data()->id));
+		$msgC = $msgQ->count();
+		if($msgC == 1){
+			$grammar = 'Message';
+		}else{
+			$grammar = 'Messages';
+		}
+	}
 	?>
 
 	<title><?=$settings->site_name;?></title>
@@ -102,9 +119,9 @@ if($settings->track_guest == 1 && $user->isLoggedIn()){
 	<link href="<?=$us_url_root?><?=str_replace('../','',$settings->us_css3);?>" rel="stylesheet">
 
 	<!-- Custom Fonts/Animation/Styling-->
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
-<script src="<?=$us_url_root?>users/js/jquery.js"></script>
+	<script src="<?=$us_url_root?>users/js/jquery.js"></script>
 
 </head>
 
