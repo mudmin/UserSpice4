@@ -97,7 +97,7 @@ CREATE TABLE `messages` (
   `msg_to` int(11) NOT NULL,
   `msg_body` text NOT NULL,
   `msg_read` int(1) NOT NULL,
-  `msg_thread` int(1) NOT NULL,
+  `msg_thread` int(11) NOT NULL,
   `deleted` int(1) NOT NULL,
   `sent_on` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
