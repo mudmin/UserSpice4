@@ -173,8 +173,8 @@ if ($settings->req_num == 1){ ?>
 		<input type="checkbox" id="agreement_checkbox" name="agreement_checkbox" class="form-control">
 	</div>
 
-	<?php if(($settings->recaptcha == 1) || ($settings->recaptcha == 2)){ ?>
-	<div class="form-group">
+	<?php if($settings->recaptcha == 1|| $settings->recaptcha == 2){ ?>
+	<div class="form-group" align="center">
 		<div class="g-recaptcha" data-sitekey="<?=$publickey; ?>"></div>
 	</div>
 	<?php } ?>
