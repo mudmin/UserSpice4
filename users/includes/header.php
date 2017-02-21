@@ -42,8 +42,8 @@ if(file_exists($abs_us_root.$us_url_root.'usersc/'.$currentPage)){
 				$url .= '&'.$key.'='.$value;
 			}
 		}
+			Redirect::to($url);
 	}
-	Redirect::to($url);
 }
 
 $db = DB::getInstance();
@@ -120,8 +120,6 @@ if($settings->track_guest == 1 && $user->isLoggedIn()){
 
 	<!-- Custom Fonts/Animation/Styling-->
 	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-
-	<script src="<?=$us_url_root?>users/js/jquery.js"></script>
 
 </head>
 
