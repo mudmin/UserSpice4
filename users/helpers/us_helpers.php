@@ -421,6 +421,7 @@ function securePage($uri){
 			'ip'		=> $ip,
 		);
 		$db->insert('audit',$fields);
+		require_once $abs_us_root.$us_url_root.'usersc/scripts/not_logged_in.php';
 		Redirect::to($us_url_root.'users/login.php', '?dest='.$page);
 		return false;
 	}else {
@@ -445,6 +446,7 @@ function securePage($uri){
 				'ip'		=> $ip,
 			);
 			$db->insert('audit',$fields);
+			require_once $abs_us_root.$us_url_root.'usersc/scripts/did_not_have_permission.php';
 			Redirect::to($homepage);
 			return false;
 		}

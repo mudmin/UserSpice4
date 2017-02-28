@@ -150,17 +150,35 @@ if(!empty($_POST['markRead'])){
   Redirect::to('message.php?id='.$id);
 }
 //
+$validation = new Validate();
+//PHP Goes Here!
+
+$errors = [];
+$successes = [];
+
 if(!empty($_POST['reply'])){
+  $token = $_POST['csrf'];
+  if(!Token::check($token)){
+    die('Token doesn\'t match!');
+  }
+
   $to = $single->msg_to;
   if($to == $user->data()->id){
     $to = $single->msg_from;
   }
-
+  $msg_body = Input::get('msg_body');
+  $validation->check($_POST,array(
+    'msg_body' => array(
+      'display' => 'Message',
+      'required' => true
+    )
+  ));
+  if($validation->passed()){
   $date = date("Y-m-d H:i:s");
   $fields = array(
     'msg_from'    => $user->data()->id,
     'msg_to'      => $to,
-    'msg_body'    => Input::get('msg_body'),
+    'msg_body'    => $msg_body,
     'msg_thread'  => $id,
     'sent_on'     => $date,
   );
@@ -176,8 +194,7 @@ if(!empty($_POST['reply'])){
 
   Redirect::to('message.php?id='.$id."&err=Reply+sent!");
 }
-
-// $msg = html_entity_decode($message->msg_body);
+}
 
 
 //PHP Goes Here!
@@ -186,6 +203,8 @@ if(!empty($_POST['reply'])){
   <div class="container-fluid">
 
     <div class="row">
+      <div id="form-errors">
+          <?=$validation->display_errors();?></div>
       <div class="col-sm-10 col-sm-offset-1">
         <div class="row">
           <div class="col-sm-10">
@@ -262,14 +281,12 @@ if(!empty($_POST['reply'])){
                 <form name="reply_form" action="message.php?id=<?=$id?>" method="post">
                   <input type="submit" class="btn btn-primary" name="reply" value="Reply">
                   <div align="center">
-                    <textarea required rows="10" cols="80"  id="mytextarea" name="msg_body" ></textarea></div>
+                    <textarea rows="10" cols="80"  id="mytextarea" name="msg_body"></textarea></div>
                     <input type="hidden" name="csrf" value="<?=Token::generate();?>" >
                   </p>
                   <p>
                     <input type="submit" class="btn btn-primary" name="reply" value="Reply">
                   </form>
-                  <!-- Content Goes Here. Class width can be adjusted -->
-                  <!-- End of main content section -->
                 </div> <!-- /.col -->
               </div> <!-- /.row -->
             </div> <!-- /.container -->
