@@ -85,8 +85,6 @@ if ($settings->req_num == 1){
 
 		//3.) Javascript to check to see if user has met conditions on keyup (NOTE: It seems like we shouldn't have to include jquery here because it's already included by UserSpice, but the code doesn't work without it.)
 		echo '
-			<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
-
 			<script type="text/javascript">
 			$(document).ready(function(){
 
