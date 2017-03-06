@@ -23,9 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <?php require_once $abs_us_root.$us_url_root.'users/includes/navigation.php'; ?>
 
 <?php
-if (!securePage($_SERVER['PHP_SELF'])){die();}
-
-if ($settings->site_offline==1){die("The site is currently offline.");}?>
+if (!securePage($_SERVER['PHP_SELF'])){die();}?>
 
 <?php
 $emailQ = $db->query("SELECT * FROM email");

@@ -28,11 +28,52 @@
           <div class="row">
               <div class="col-xs-3"></div>
               <div class="col-xs-6">
+                                <form class="form" action="" method="post">
+                <h2>Please select your region/timezone</h2>
+                
+                  <?php
+  $regions = array(
+      'Africa' => DateTimeZone::AFRICA,
+      'America' => DateTimeZone::AMERICA,
+      'Antarctica' => DateTimeZone::ANTARCTICA,
+      'Asia' => DateTimeZone::ASIA,
+      'Atlantic' => DateTimeZone::ATLANTIC,
+      'Europe' => DateTimeZone::EUROPE,
+      'Indian' => DateTimeZone::INDIAN,
+      'Pacific' => DateTimeZone::PACIFIC
+  );
+  $timezones = array();
+  foreach ($regions as $name => $mask)
+  {
+      $zones = DateTimeZone::listIdentifiers($mask);
+      foreach($zones as $timezone)
+      {
+  		// Lets sample the time there right now
+  		$time = new DateTime(NULL, new DateTimeZone($timezone));
+  		// Us dumb Americans can't handle millitary time
+  		$ampm = $time->format('H') > 12 ? ' ('. $time->format('g:i a'). ')' : '';
+  		// Remove region name and add a sample time
+  		$timezones[$name][$timezone] = substr($timezone, strlen($name) + 1) . ' - ' . $time->format('H:i') . $ampm;
+  	}
+  }
+  // View
+  print '<label>Select Your Timezone</label><select id="timezone" name="timezone">';
+
+  foreach($timezones as $region => $list)
+  {
+  	print '<optgroup label="' . $region . '">' . "\n";
+  	foreach($list as $timezone => $name)
+  	{
+  		print '<option value="' . $timezone . '"name="' . $timezone . '">' . $name . '</option>' . "\n";
+  	}
+  	print '<optgroup>' . "\n";
+  }
+  print '</select>';?>
                 <H2>Please fill in your ReCaptcha Keys</H2>
                 <p>
                   If you do not have recaptcha keys, you can get them from Google in the link provided when you hit the "test settings" button.  We are offering "test" keys if you would like to put ReCaptcha into test mode, but we strongly suggest you take the time to get real keys from Google.
                 </p><br><br>
-                <form class="form" action="" method="post">
+
 
                   <p>
                   <strong>Test Public Key:  </strong>6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI
@@ -83,6 +124,9 @@ if (!empty($_POST['submit'])) {
   $fh=fopen($config_file , "a+");
   $end = "';";
 
+  $timezone_syn='$timezone_string = \'';
+  $tz=$_POST['timezone'];
+
   $copyright_syn='$copyright_message = \'';
   $copyright=$_POST['copyright'];
 
@@ -90,6 +134,7 @@ if (!empty($_POST['submit'])) {
   $public_syn='$your_public_key = \'';
 
 fwrite($fh ,
+  $timezone_syn . $tz . $end . PHP_EOL .
   $copyright_syn . $copyright . $end . PHP_EOL .
   $private_syn   . $privatekey . $end . PHP_EOL .
   $public_syn    . $publickey . $end . PHP_EOL

@@ -1,6 +1,11 @@
 $publickey = $your_public_key;
 $privatekey = $your_private_key;
 
+date_default_timezone_set($timezone_string);
+
+//adding more ids to this array allows people to access everything, whether offline or not. Use caution.
+$master_account = [1];
+
 //Put Your Stripe Keys Here (if you have them)
 $test_secret = "Insert_Your_Own_Key_Here";
 $test_public = "Insert_Your_Own_Key_Here";
@@ -33,10 +38,7 @@ if(Cookie::exists(Config::get('remember/cookie_name')) && !Session::exists(Confi
 	}
 }
 
-//Set Time Zone string
-//php.net/manual/en/timezones.php
-$timezone_string="America/Toronto";
-date_default_timezone_set($timezone_string);
+
 
 //Check to see that user is logged in on a temporary password
 $user = new User();

@@ -22,8 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <?php require_once $abs_us_root.$us_url_root.'users/includes/header.php'; ?>
 <?php require_once $abs_us_root.$us_url_root.'users/includes/navigation.php'; ?>
 
-<?php if (!securePage($_SERVER['PHP_SELF'])){die();}
- if ($settings->site_offline==1){die("The site is currently offline.");}?>
+<?php if (!securePage($_SERVER['PHP_SELF'])){die();}?>
 <?php
 $grav = get_gravatar(strtolower(trim($user->data()->email)));
 $get_info_id = $user->data()->id;
@@ -41,7 +40,7 @@ $userdetails = fetchUserDetails(NULL, NULL, $get_info_id); //Fetch user details
 		<p><img src="<?=$grav; ?>" class="img-thumbnail" alt="Generic placeholder thumbnail"></p>
 		<p><a href="user_settings.php" class="btn btn-primary">Edit Account Info</a></p>
 		<p><a class="btn btn-primary " href="profile.php?id=<?=$get_info_id;?>" role="button">Public Profile</a></p>
-		
+
 	</div>
 	<div class="col-xs-12 col-md-9">
 		<h1><?=ucfirst($user->data()->username)?></h1>

@@ -42,15 +42,32 @@ if(file_exists($abs_us_root.$us_url_root.'usersc/'.$currentPage)){
 				$url .= '&'.$key.'='.$value;
 			}
 		}
-			Redirect::to($url);
+		Redirect::to($url);
 	}
 }
 
 $db = DB::getInstance();
 $settingsQ = $db->query("Select * FROM settings");
 $settings = $settingsQ->first();
-if ($settings->site_offline==1){
-	die("The site is currently offline.");
+
+//dealing with if the user is logged in
+if($user->isLoggedIn()){
+	if (($settings->site_offline==1) && (!in_array($user->data()->id, $master_account)) && ($currentPage != 'login.php')){
+		die("The site is currently offline.");
+	}
+}
+
+//deal with non logged in users
+if(!$user->isLoggedIn()){
+	if (($settings->site_offline==1) && ($currentPage != 'login.php')){
+		die("The site is currently offline.");
+	}
+}
+//notifiy master_account that the site is offline
+if($user->isLoggedIn()){
+	if (($settings->site_offline==1) && (in_array($user->data()->id, $master_account)) && ($currentPage != 'login.php')){
+		err("<br>The site is currently offline.");
+	}
 }
 
 if($settings->glogin==1 && !$user->isLoggedIn()){

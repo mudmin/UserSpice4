@@ -283,6 +283,7 @@ if(!empty($_POST['social'])){
 <div class="container"> <!-- -fluid -->
 
 <h1 class="text-center">UserSpice Dashboard Version <?=$user_spice_ver?></h1>
+<p class="text-center"><a href="check_updates.php">(Check for Updates)</a></p>
 
 <div class="row"> <!-- row for Users, Permissions, Pages, Email settings panels -->
 	<h2>Admin Panels</h2>

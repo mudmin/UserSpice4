@@ -435,7 +435,7 @@ function securePage($uri){
 		//Check if user's permission levels allow access to page
 		if (checkPermission($pagePermissions)){
 			return true;
-		}elseif ($user->data()->id == $master_account){ //Grant access if master user
+		}elseif  (in_array($user->data()->id, $master_account)){ //Grant access if master user
 			return true;
 		}else {
 			if (!$homepage = Config::get('homepage'))
@@ -785,7 +785,7 @@ function generateForm($table,$id, $skip=[]){
   	if ($access == 1){
   		return true;
   	}
-  	if ($user->data()->id == 1){
+  	if (in_array($user->data()->id, $master_account)){
   		return true;
   	}else{
   		return false;

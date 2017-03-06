@@ -20,21 +20,39 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ?>
 <?php
 require_once 'init.php';
+require_once $abs_us_root.$us_url_root.'users/includes/header.php';
+require_once $abs_us_root.$us_url_root.'users/includes/navigation.php';
+?>
+<?php if (!securePage($_SERVER['PHP_SELF'])){die();} ?>
+<div id="page-wrapper">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-12" align="center">
+        <h1>Checking for updates...</h1>
+        <h3>
+
+<?php
 require_once 'includes/user_spice_ver.php';
-echo $user_spice_ver ."<br>";
-$current_ver = '5.0.0';
-echo $current_ver;
-$findOut = version_compare($user_spice_ver,  $current_ver);
-echo "<br>";
-
-if ($findOut == '-1'){
-  echo "Updates are available.";
+define('REMOTE_VERSION', 'http://userspice.com/version/version.txt');
+$remoteVersion=trim(file_get_contents(REMOTE_VERSION));
+echo "You are running version ".$user_spice_ver."<br><br>";
+echo "The latest version is ".$remoteVersion."<br><br>";
+if(version_compare($remoteVersion, $user_spice_ver) ==  1){
+	echo "Updates are available at <a href='https://www.userspice.com/updates'>UserSpice.com/updates</a><br>";
+} else {
+	echo "You are running the latest version!";
 }
+?>
+</h3>
+</div> <!-- /.col -->
+</div> <!-- /.row -->
+</div> <!-- /.container -->
+</div> <!-- /.wrapper -->
 
-if ($findOut == '0'){
-  echo "You are running the latest version.";
-}
 
-if ($findOut == '1'){
-  echo "Somehow you are running a newer version than we have! You must be from the future!";
-}
+<!-- footers -->
+<?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; // the final html footer copyright row + the external js calls ?>
+
+<!-- Place any per-page javascript here -->
+
+<?php require_once $abs_us_root.$us_url_root.'users/includes/html_footer.php'; // currently just the closing /body and /html ?>
