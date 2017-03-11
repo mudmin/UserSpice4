@@ -640,12 +640,12 @@ if(file_exists($abs_us_root.$us_url_root.'usersc/includes/admin_panels.php')){
 
 	<div class="form-group">
 		<label for="gid">Google Client ID</label>
-		<input type="text" class="form-control" name="gid" id="gid" value="<?=$settings->gid?>">
+		<input type="password" class="form-control" name="gid" id="gid" value="<?=$settings->gid?>">
 	</div>
 
 	<div class="form-group">
 		<label for="gsecret">Google Client Secret</label>
-		<input type="text" class="form-control" name="gsecret" id="gsecret" value="<?=$settings->gsecret?>">
+		<input type="password" class="form-control" name="gsecret" id="gsecret" value="<?=$settings->gsecret?>">
 	</div>
 
 	<div class="form-group">
@@ -660,12 +660,12 @@ if(file_exists($abs_us_root.$us_url_root.'usersc/includes/admin_panels.php')){
 
 	<div class="form-group">
 		<label for="fbid">Facebook App ID</label>
-		<input type="text" class="form-control" name="fbid" id="fbid" value="<?=$settings->fbid?>">
+		<input type="password" class="form-control" name="fbid" id="fbid" value="<?=$settings->fbid?>">
 	</div>
 
 	<div class="form-group">
 		<label for="fbsecret">Facebook Secret</label>
-		<input type="text" class="form-control" name="fbsecret" id="fbsecret" value="<?=$settings->fbsecret?>">
+		<input type="password" class="form-control" name="fbsecret" id="fbsecret" value="<?=$settings->fbsecret?>">
 	</div>
 
 	<div class="form-group">

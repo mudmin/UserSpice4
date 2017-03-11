@@ -155,7 +155,7 @@ if(!empty($_POST)){
   <input required size='50' class='form-control' type='text' name='smtp_port' value='<?=$results->smtp_port?>' />
 
 <label>Email Login/Username:</label>
-  <input required size='50' class='form-control' type='text' name='email_login' value='<?=$results->email_login?>' />
+  <input required size='50' class='form-control' type='password' name='email_login' value='<?=$results->email_login?>' />
 
 <label>Email Password:</label>
   <input required size='50' class='form-control' type='password' name='email_pass' value='<?=$results->email_pass?>' />

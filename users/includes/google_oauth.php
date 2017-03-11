@@ -30,8 +30,8 @@ if($settings->glogin==1 && !$user->isLoggedIn()){
 				$_SESSION['token'] = $gClient->getAccessToken();
 				header('Location: ' . filter_var($redirectUrl, FILTER_SANITIZE_URL));
 			}
-			// $gClient->setAccessType('online');
-			// $gClient->setApprovalPrompt('auto') ;
+			$gClient->setAccessType('online');
+			$gClient->setApprovalPrompt('auto') ;
 			if (isset($_SESSION['token'])) {
 				$gClient->setAccessToken($_SESSION['token']);
 			}
