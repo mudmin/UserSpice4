@@ -114,6 +114,30 @@ if(!empty($_POST)) {
       }
     }
 
+    if(!empty($_POST['password'])) {
+      $validation->check($_POST,array(
+        'password' => array(
+          'display' => 'New Password',
+          'required' => true,
+          'min' => $settings->min_pw,
+					'max' => $settings->max_pw,
+        ),
+        'confirm' => array(
+          'display' => 'Confirm New Password',
+          'required' => true,
+          'matches' => 'password',
+        ),
+      ));
+
+    if (empty($errors)) {
+      //process
+      $new_password_hash = password_hash(Input::get('password'),PASSWORD_BCRYPT,array('cost' => 12));
+      $user->update(array('password' => $new_password_hash,),$userId);
+      $successes[]='Password updated.';
+    }
+    }
+
+
     //Block User
     if ($userdetails->permissions != $_POST['active']){
       $active = Input::get("active");
@@ -216,6 +240,15 @@ $useravatar = '<img src="'.$grav.'" class="img-responsive img-thumbnail" alt="">
 
 	<label>Last Name:</label>
 	<input  class='form-control' type='text' name='lname' value='<?=$userdetails->lname?>' />
+  <div class="form-group">
+    <label>New Password (<?=$settings->min_pw?> char min, <?=$settings->max_pw?> max.)</label>
+    <input class='form-control' type='password' name='password' />
+  </div>
+
+  <div class="form-group">
+    <label>Confirm Password</label>
+    <input class='form-control' type='password' name='confirm' />
+  </div>
 
 	</div>
 	</div>
