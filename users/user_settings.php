@@ -188,8 +188,7 @@ if(!empty($_POST)) {
         'password' => array(
           'display' => 'New Password',
           'required' => true,
-          'min' => $settings->min_pw,
-					'max' => $settings->max_pw,
+          'min' => 6,
         ),
         'confirm' => array(
           'display' => 'Confirm New Password',
@@ -205,7 +204,8 @@ if(!empty($_POST)) {
 			foreach ($validation->errors() as $error) {
 				$errors[] = $error;
 			}
-
+			$errors[]='Your password does not match our records.';
+      }
 		if (empty($errors)) {
 			//process
 			$new_password_hash = password_hash(Input::get('password'),PASSWORD_BCRYPT,array('cost' => 12));
@@ -267,7 +267,7 @@ if(!empty($_POST)) {
 	</div>
 
 	<div class="form-group">
-		<label>New Password (<?=$settings->min_pw?> char min, <?=$settings->max_pw?> max.)</label>
+		<label>New Password (6 character minimum)</label>
 		<input class='form-control' type='password' name='password' />
 	</div>
 
@@ -283,7 +283,7 @@ if(!empty($_POST)) {
 
 </form>
 <?php
-if(isset($user->data()->oauth_provider) && $user->data()->oauth_provider != null){
+if($user->data()->oauth_provider != null){
 	echo "<strong>NOTE:</strong> If you originally signed up with your Google/Facebook account, you will need to use the forgot password link to change your password...unless you're really good at guessing.";
 }
 ?>

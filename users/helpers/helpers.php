@@ -63,24 +63,16 @@ function money($ugly){
 }
 
 function name_from_id($id){
-	$db = DB::getInstance();
-	$query = $db->query("SELECT username FROM users WHERE id = ? LIMIT 1",array($id));
-	$count=$query->count();
-	if ($count > 0) {
-		$results=$query->first();
-		return ucfirst($results->username);
-	} else {
-		return "-";
-	}
+	$nfi = DB::getInstance()->get('users', array('id', '=', $id));
+	return $nfi->first()->username;
 }
 
 function display_errors($errors = array()){
 	$html = '<ul class="bg-danger">';
 	foreach($errors as $error){
 		if(is_array($error)){
-			echo "<br>";
 			$html .= '<li class="text-danger">'.$error[0].'</li>';
-			$html .= '<script>$jQuery("#'.$error[0].'").parent().closest("div").addClass("has-error");</script>';
+			$html .= '<script>jQuery("#'.$error[1].'").parent().closest("div").addClass("has-error");</script>';
 		}else{
 			$html .= '<li class="text-danger">'.$error.'</li>';
 		}
