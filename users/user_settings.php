@@ -23,6 +23,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 if (!securePage($_SERVER['PHP_SELF'])){die();}?>
  
 <?php
+//dealing with if the user is logged in
+if($user->isLoggedIn() && !checkMenu(2,$user->data()->id)){
+	if (($settings->site_offline==1) && (!in_array($user->data()->id, $master_account)) && ($currentPage != 'login.php') && ($currentPage != 'maintenance.php')){
+		$user->logout();
+		Redirect::to($us_url_root.'users/maintenance.php');
+	}
+}
+
+
 $emailQ = $db->query("SELECT * FROM email");
 $emailR = $emailQ->first();
 // dump($emailR);
