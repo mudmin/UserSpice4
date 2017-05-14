@@ -23,7 +23,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <?php require_once $abs_us_root.$us_url_root.'users/includes/navigation.php'; ?>
 
 <?php if (!securePage($_SERVER['PHP_SELF'])){die();}?>
+
 <?php
+//dealing with if the user is logged in
+if($user->isLoggedIn() || !$user->isLoggedIn() && !checkMenu(2,$user->data()->id)){
+	if (($settings->site_offline==1) && (!in_array($user->data()->id, $master_account)) && ($currentPage != 'login.php') && ($currentPage != 'maintenance.php')){
+		$user->logout();
+		Redirect::to($us_url_root.'users/maintenance.php');
+	}
+}
+
 $grav = get_gravatar(strtolower(trim($user->data()->email)));
 $get_info_id = $user->data()->id;
 // $groupname = ucfirst($loggedInUser->title);
