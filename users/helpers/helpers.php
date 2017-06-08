@@ -80,7 +80,7 @@ function display_errors($errors = array()){
 		if(is_array($error)){
 			echo "<br>";
 			$html .= '<li class="text-danger">'.$error[0].'</li>';
-			$html .= '<script>$jQuery("#'.$error[0].'").parent().closest("div").addClass("has-error");</script>';
+			$html .= '<script>jQuery("#'.$error[0].'").parent().closest("div").addClass("has-error");</script>';
 		}else{
 			$html .= '<li class="text-danger">'.$error.'</li>';
 		}

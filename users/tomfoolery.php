@@ -108,21 +108,5 @@ if(!empty($_POST['clear'])){
 
 
 		<?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; // the final html footer copyright row + the external js calls ?>
-		<script>
-
-		function oceSuccess(data) {
-			var r = JSON.parse(data);
-			jQuery('#msg').html(r.msg);
-		}
-		</script>
-		<?php if(checkMenu(2,$user->data()->id)): ?>
-			<script>
-			var oceOpts = {
-				url:'<?=$us_url_root?>parsers/editVR.php',
-				selectOptions : {'1':'Approved','2':'Rejected','4':'Complete'},
-				select2Options : {'0':'No','1':'Yes'}
-			}
-			jQuery('.oce').oneClickEdit(oceOpts, oceSuccess);
-			</script>
-		<?php endif; ?>
+		
 		<?php require_once $abs_us_root.$us_url_root.'users/includes/html_footer.php'; // currently just the closing /body and /html ?>

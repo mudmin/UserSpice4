@@ -18,11 +18,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <?php require_once 'init.php'; ?>
 <?php require_once $abs_us_root.$us_url_root.'users/includes/header.php'; ?>
 <?php require_once $abs_us_root.$us_url_root.'users/includes/navigation.php'; ?>
- 
+
 <?php
 if (!securePage($_SERVER['PHP_SELF'])){die();}?>
- 
+
 <?php
+//dealing with if the user is logged in
+if($user->isLoggedIn() && !checkMenu(2,$user->data()->id)){
+	if (($settings->site_offline==1) && (!in_array($user->data()->id, $master_account)) && ($currentPage != 'login.php') && ($currentPage != 'maintenance.php')){
+		$user->logout();
+		Redirect::to($us_url_root.'users/maintenance.php');
+	}
+}
+
+
 $emailQ = $db->query("SELECT * FROM email");
 $emailR = $emailQ->first();
 // dump($emailR);
@@ -207,9 +216,9 @@ if(!empty($_POST)) {
                     <strong>Want to change your profile picture? </strong><br> Visit <a href="https://en.gravatar.com/">https://en.gravatar.com/</a> and setup an account with the email address <?=$email?>.  It works across millions of sites. It's fast and easy!<br>
                     <span class="bg-danger"><?=display_errors($errors);?></span>
                     <span><?=display_successes($successes);?></span>
- 
+
                     <form name='updateAccount' action='user_settings.php' method='post'>
- 
+
                         <div class="form-group">
                             <label>Username</label>
                             <?php if (($settings->change_un == 0) || (($settings->change_un == 2) && ($user->data()->un_changed == 1)) ) {
@@ -219,42 +228,42 @@ if(!empty($_POST)) {
                             }
                             ?>
                         </div>
- 
+
                         <div class="form-group">
                             <label>First Name</label>
                             <input  class='form-control' type='text' name='fname' value='<?=$fname?>' />
                         </div>
- 
+
                         <div class="form-group">
                             <label>Last Name</label>
                             <input  class='form-control' type='text' name='lname' value='<?=$lname?>' />
                         </div>
- 
+
                         <div class="form-group">
                             <label>Email</label>
                             <input class='form-control' type='text' name='email' value='<?=$email?>' />
                         </div>
- 
+
                         <div class="form-group">
                             <label>Old Password (required to change password)</label>
                             <input class='form-control' type='password' name='old' />
                         </div>
- 
+
                         <div class="form-group">
                             <label>New Password (<?=$settings->min_pw?> char min, <?=$settings->max_pw?> max.)</label>
                             <input class='form-control' type='password' name='password' />
                         </div>
- 
+
                         <div class="form-group">
                             <label>Confirm Password</label>
                             <input class='form-control' type='password' name='confirm' />
                         </div>
- 
+
                         <input type="hidden" name="csrf" value="<?=Token::generate();?>" />
- 
+
                         <p><input class='btn btn-primary' type='submit' value='Update' class='submit' /></p>
                         <p><a class="btn btn-info" href="account.php">Cancel</a></p>
- 
+
                     </form>
                     <?php
                     if(isset($user->data()->oauth_provider) && $user->data()->oauth_provider != null){
@@ -264,16 +273,16 @@ if(!empty($_POST)) {
                 </div>
             </div>
         </div>
- 
- 
+
+
     </div> <!-- /container -->
- 
+
 </div> <!-- /#page-wrapper -->
- 
- 
+
+
 <!-- footers -->
 <?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; // the final html footer copyright row + the external js calls ?>
- 
+
 <!-- Place any per-page javascript here -->
- 
+
 <?php require_once $abs_us_root.$us_url_root.'users/includes/html_footer.php'; // currently just the closing /body and /html ?>
