@@ -61,7 +61,7 @@ if($user->isLoggedIn() && !checkMenu(2,$user->data()->id)){
 }
 
 //deal with guests
-if(!$user->isLoggedIn() && !checkMenu(2,$user->data()->id)){
+if(!$user->isLoggedIn()){
 	if (($settings->site_offline==1) && ($currentPage != 'login.php') && ($currentPage != 'maintenance.php')){
 		//:: redirect to maint.page
 		Redirect::to($us_url_root.'users/maintenance.php');
