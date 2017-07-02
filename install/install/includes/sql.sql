@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 20, 2017 at 06:36 PM
+-- Generation Time: Jul 02, 2017 at 08:53 PM
 -- Server version: 10.1.9-MariaDB
 -- PHP Version: 5.6.15
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `message`
+-- Database: `427`
 --
 
 -- --------------------------------------------------------
@@ -169,7 +169,8 @@ INSERT INTO `pages` (`id`, `page`, `private`) VALUES
 (39, 'users/tomfoolery.php', 1),
 (40, 'users/create_message.php', 1),
 (41, 'users/messages.php', 1),
-(42, 'users/message.php', 1);
+(42, 'users/message.php', 1),
+(44, 'users/admin_backup.php', 1);
 
 -- --------------------------------------------------------
 
@@ -229,7 +230,8 @@ INSERT INTO `permission_page_matches` (`id`, `permission_id`, `page_id`) VALUES
 (27, 1, 42),
 (28, 1, 27),
 (29, 1, 41),
-(30, 1, 40);
+(30, 1, 40),
+(31, 2, 44);
 
 -- --------------------------------------------------------
 
@@ -300,15 +302,18 @@ CREATE TABLE `settings` (
   `snooping` int(1) NOT NULL,
   `echouser` int(11) NOT NULL,
   `wys` int(1) NOT NULL,
-  `change_un` int(1) NOT NULL
+  `change_un` int(1) NOT NULL,
+  `backup_dest` varchar(255) NOT NULL,
+  `backup_source` varchar(255) NOT NULL,
+  `backup_table` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `settings`
 --
 
-INSERT INTO `settings` (`id`, `recaptcha`, `force_ssl`, `login_type`, `css_sample`, `us_css1`, `us_css2`, `us_css3`, `css1`, `css2`, `css3`, `site_name`, `language`, `track_guest`, `site_offline`, `force_pr`, `reserved1`, `reserverd2`, `custom1`, `custom2`, `custom3`, `glogin`, `fblogin`, `gid`, `gsecret`, `gredirect`, `ghome`, `fbid`, `fbsecret`, `fbcallback`, `graph_ver`, `finalredir`, `req_cap`, `req_num`, `min_pw`, `max_pw`, `min_un`, `max_un`, `messaging`, `snooping`, `echouser`, `wys`, `change_un`) VALUES
-(1, 0, 0, '', 1, '../users/css/color_schemes/standard.css', '../users/css/sb-admin.css', '../users/css/custom.css', '', '', '', 'UserSpice', 'en', 1, 0, 0, '', '', '', '', '', 0, 0, 'Google ID Here', 'Google Secret Here', 'http://localhost/userspice/users/oauth_success.php', 'http://localhost/userspice/', 'FB ID Here', 'FB Secret Here', 'http://localhost/userspice/users/fb-callback.php', 'v2.2', 'account.php', 1, 1, 6, 20, 2, 40, 0, 1, 0, 1, 0);
+INSERT INTO `settings` (`id`, `recaptcha`, `force_ssl`, `login_type`, `css_sample`, `us_css1`, `us_css2`, `us_css3`, `css1`, `css2`, `css3`, `site_name`, `language`, `track_guest`, `site_offline`, `force_pr`, `reserved1`, `reserverd2`, `custom1`, `custom2`, `custom3`, `glogin`, `fblogin`, `gid`, `gsecret`, `gredirect`, `ghome`, `fbid`, `fbsecret`, `fbcallback`, `graph_ver`, `finalredir`, `req_cap`, `req_num`, `min_pw`, `max_pw`, `min_un`, `max_un`, `messaging`, `snooping`, `echouser`, `wys`, `change_un`, `backup_dest`, `backup_source`, `backup_table`) VALUES
+(1, 0, 0, '', 1, '../users/css/color_schemes/standard.css', '../users/css/sb-admin.css', '../users/css/custom.css', '', '', '', 'UserSpice', 'en', 1, 0, 0, '', '', '', '', '', 0, 0, 'Google ID Here', 'Google Secret Here', 'http://localhost/userspice/users/oauth_success.php', 'http://localhost/userspice/', 'FB ID Here', 'FB Secret Here', 'http://localhost/userspice/users/fb-callback.php', 'v2.2', 'account.php', 1, 1, 6, 20, 2, 40, 0, 1, 0, 1, 0, '', '', '');
 
 -- --------------------------------------------------------
 
@@ -519,7 +524,7 @@ ALTER TABLE `user_permission_matches`
 -- AUTO_INCREMENT for table `audit`
 --
 ALTER TABLE `audit`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `email`
 --
@@ -544,7 +549,7 @@ ALTER TABLE `message_threads`
 -- AUTO_INCREMENT for table `pages`
 --
 ALTER TABLE `pages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 --
 -- AUTO_INCREMENT for table `permissions`
 --
@@ -554,7 +559,7 @@ ALTER TABLE `permissions`
 -- AUTO_INCREMENT for table `permission_page_matches`
 --
 ALTER TABLE `permission_page_matches`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 --
 -- AUTO_INCREMENT for table `profiles`
 --
@@ -564,7 +569,7 @@ ALTER TABLE `profiles`
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `users`
 --

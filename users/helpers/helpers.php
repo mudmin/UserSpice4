@@ -21,6 +21,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 require_once("us_helpers.php");
 require_once("users_online.php");
 require_once("language.php");
+require_once("backup_util.php");
+
+// Readeable file size for backup utility
+function size($path) {
+    $bytes = sprintf('%u', filesize($path));
+
+    if ($bytes > 0) {
+        $unit = intval(log($bytes, 1024));
+        $units = array('B', 'KB', 'MB', 'GB');
+
+        if (array_key_exists($unit, $units) === true) {
+            return sprintf('%d %s', $bytes / pow(1024, $unit), $units[$unit]);
+        }
+    }
+
+    return $bytes;
+}
 
 
 

@@ -24,6 +24,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <?php if (!securePage($_SERVER['PHP_SELF'])){die();} ?>
 <?php
+$pagePermissions = fetchPagePermissions(4);
+dump($currentPage);
+
 // To make this panel super admin only, uncomment out the lines below
 // if($user->data()->id !='1'){
 //   Redirect::to('account.php');
@@ -283,7 +286,7 @@ if(!empty($_POST['social'])){
 <div class="container"> <!-- -fluid -->
 
 <h1 class="text-center">UserSpice Dashboard Version <?=$user_spice_ver?></h1>
-<p class="text-center"><a href="check_updates.php">(Check for Updates)</a></p>
+<p class="text-center"><a href="check_updates.php">(Check for Updates)</a>   <a href="admin_backup.php">(Backup UserSpice)</a></p>
 
 <div class="row"> <!-- row for Users, Permissions, Pages, Email settings panels -->
 	<h2>Admin Panels</h2>

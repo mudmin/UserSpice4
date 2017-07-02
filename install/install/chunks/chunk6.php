@@ -23,6 +23,7 @@ require_once $abs_us_root.$us_url_root.'users/classes/Token.php';
 require_once $abs_us_root.$us_url_root.'users/classes/User.php';
 require_once $abs_us_root.$us_url_root.'users/classes/Validate.php';
 require_once $abs_us_root.$us_url_root.'users/classes/phpmailer/PHPMailerAutoload.php';
+require_once $abs_us_root.$us_url_root.'users/classes/Shuttle_Dumper.php';
 
 $currentPage = currentPage();
 
