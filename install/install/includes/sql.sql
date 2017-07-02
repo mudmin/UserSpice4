@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 02, 2017 at 08:53 PM
+-- Generation Time: Jul 02, 2017 at 09:07 PM
 -- Server version: 10.1.9-MariaDB
 -- PHP Version: 5.6.15
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `427`
+-- Database: `429`
 --
 
 -- --------------------------------------------------------
@@ -170,7 +170,8 @@ INSERT INTO `pages` (`id`, `page`, `private`) VALUES
 (40, 'users/create_message.php', 1),
 (41, 'users/messages.php', 1),
 (42, 'users/message.php', 1),
-(44, 'users/admin_backup.php', 1);
+(44, 'users/admin_backup.php', 1),
+(45, 'users/maintenance.php', 0);
 
 -- --------------------------------------------------------
 
@@ -390,8 +391,7 @@ CREATE TABLE `users_online` (
 --
 
 INSERT INTO `users_online` (`id`, `ip`, `timestamp`, `user_id`, `session`) VALUES
-(1, '::1', '1487611964', 1, ''),
-(2, '::1', '1487611546', 2, '');
+(1, '::1', '1499022424', 1, '');
 
 -- --------------------------------------------------------
 
@@ -549,7 +549,7 @@ ALTER TABLE `message_threads`
 -- AUTO_INCREMENT for table `pages`
 --
 ALTER TABLE `pages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 --
 -- AUTO_INCREMENT for table `permissions`
 --
