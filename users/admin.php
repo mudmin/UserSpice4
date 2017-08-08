@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <?php if (!securePage($_SERVER['PHP_SELF'])){die();} ?>
 <?php
 $pagePermissions = fetchPagePermissions(4);
-dump($currentPage);
+
 
 // To make this panel super admin only, uncomment out the lines below
 // if($user->data()->id !='1'){
