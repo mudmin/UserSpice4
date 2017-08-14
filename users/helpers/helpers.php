@@ -23,7 +23,7 @@ require_once("users_online.php");
 require_once("language.php");
 require_once("backup_util.php");
 
-// Readeable file size for backup utility
+// Readeable file size
 function size($path) {
     $bytes = sprintf('%u', filesize($path));
 
@@ -38,8 +38,6 @@ function size($path) {
 
     return $bytes;
 }
-
-
 
 //escapes strings and sets character set
 function sanitize($string) {

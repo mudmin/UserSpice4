@@ -67,7 +67,7 @@ body {
 .top-nav>.open>a:focus {
     color: #fff;
 	background-color: #000;
-    
+
 }
 
 .top-nav>.open>.dropdown-menu {
@@ -226,6 +226,5 @@ ul.alert-dropdown {
 .panel-yellow > a:hover {
     color: #df8a13;
 }
-.dropdown-menu {width: 205px;}
-.btn {width: 100%;}
+
 .top-nav {color:white;}

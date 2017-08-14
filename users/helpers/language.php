@@ -121,6 +121,14 @@ $lang = array_merge($lang,array(
 	"PAGE_ACCESS_ADDED"			=> "Page access added for %m1% permission level(s)",
 	));
 
+
+	$lang = array_merge($lang,array(
+	    "MESSAGE_ARCHIVE_SUCCESSFUL"        => "You have successfully archived %m1% threads",
+	    "MESSAGE_UNARCHIVE_SUCCESSFUL"      => "You have successfully unarchived %m1% threads",
+	    "MESSAGE_DELETE_SUCCESSFUL"         => "You have successfully deleted %m1% threads",
+			"USER_MESSAGE_EXEMPT"         			=> "User is %m1% exempted from messages.",
+	    ));
+
 //Permissions
 $lang = array_merge($lang,array(
 	"PERMISSION_CHAR_LIMIT"			=> "Permission names must be between %m1% and %m2% characters in length",
@@ -136,44 +144,6 @@ $lang = array_merge($lang,array(
 	"CANNOT_DELETE_ADMIN"			=> "You cannot delete the default 'admin' group",
 	));
 
-	//:: Admin Backup
-$lang = array_merge($lang,array(
-	"AB_SETSAVED"      => "Settings Successfully Saved",
-	"AB_PATHCREATE"    => "Destination path created.",
-	"AB_PATHERROR"     => "Destination path could not be created due to unknown error.",
-	"AB_PATHEXISTED"   => "Destination path already existed. Using the existing folder.",
-	"AB_BACKUPSUCCESS" => "Backup was successful.",
-	"AB_BACKUPFAIL"    => "Backup failed.",
-	"AB_DB_FILES_ZIP"  => "DB &amp; Files Zipped",
-	"AB_FILE_RENAMED"  => "File renamed to:&nbsp;",
-	"AB_NOT_RENAME"    => "Could not rename backup zip file to contain hash value.",
-	"AB_ERROR_CREATE"  => "Error creating zip file",
-	"AB_DB_ZIPPED"     => "Database Zipped",
-	"AB_PATHEXIST"     => "Backup path already exists or could not be created.",
-	"AB_T_FILE_ZIP"    => "Userspice Files Zipped",
-	"AB_TABLES_ZIP"    => "Tables Zipped",
-	"AB_BACKUP_DELETE" => "Backup(s) Deleted !",
-	"AB_PAGENAME"      => "System Backup",
-	"AB_BACKUP_SET"    => "Backup Settings",
-	"AB_BACKUP_DEST"   => "Backup Destination (can be blank)",
-	"AB_BACKUP_DEST_INFO" => "relative to the z_us_root.php file",
-	"AB_BACKUP_SOURCE" => "Backup Source",
-	"AB_DB_ALL_FILES"   => "Database &amp; ALL Files (Experimental)",
-	"AB_DB_TM_FILES"   => "Database &amp; Userspice Files",
-	"AB_DB_FILES"      => "Database Only",
-	"AB_TM_FILES"      => "Userspice Files Only",
-	"AB_SINGLE_TBL"    => "Single Table",
-	"AB_SELECT_TBL"    => "Select Table",
-	"AB_DB_TBLS"       => "DB Tables",
-	"AB_SAVE_SETTINGS" => "&nbsp;Save Settings&nbsp;",
-	"AB_BACKUP_BTN"    => "&nbsp;Backup&nbsp;",
-	"AB_EXIST_BACKUP"  => "Existing Backups&nbsp;",
-	"AB_DATE"          => "Date",
-	"AB_BACKUP_FILE"   => "Backup File",
-	"AB_FILE_SIZE"     => "File Size",
-	"AB_ACTIONS"       => "Actions",
-	"AB_DELETE_B"      => "&nbsp;Delete Backup&nbsp;",
-	"AB_BACKUP_NOT"    => "Backup(s) not deleted !",
-	"WENT_WRONG" 	     => "Something went wrong",
-	));
+
+
 ?>

@@ -3,18 +3,23 @@
 UserSpice 4
 An Open Source PHP User Management System
 by the UserSpice Team at http://UserSpice.com
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
+
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
+
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 //bold("<br><br>custom helpers included");
+
 function csv_to_array($filename='', $delimiter=','){
 	/**
  * Convert a comma separated file into an associated array.
@@ -52,14 +57,17 @@ function csv_to_array($filename='', $delimiter=','){
 	//Example
 	//print_r(csv_to_array('example.csv'));
 }
+
 function recurse_copy($src,$dst) {
-		/*
-		FROM http://php.net/manual/en/function.copy.php
-		*/
+	/*
+	FROM http://php.net/manual/en/function.copy.php
+	*/
+	global $settings;
+	$dest = '@'.rtrim($settings->backup_dest, '/');
     $dir = opendir($src);
-    @mkdir($dst);
+    @mkdir($dst,0755,true);
     while(false !== ( $file = readdir($dir)) ) {
-        if (( $file != '.' ) && ( $file != '..' )) {
+        if (( $file != '.' ) && ( $file != '..') && ($file != $dest)) {
             if ( is_dir($src . '/' . $file) ) {
                 recurse_copy($src . '/' . $file,$dst . '/' . $file);
             }
@@ -70,30 +78,44 @@ function recurse_copy($src,$dst) {
     }
     closedir($dir);
 }
+
 function zipData($source, $destination) {
 	/*
 	 * PHP: Recursively Backup Files & Folders to ZIP-File
 	 * (c) 2012-2014: Marvin Menzerath - http://menzerath.eu
 	 * From https://gist.github.com/MarvinMenzerath/4185113
 	*/
+
 	// Make sure the script can handle large folders/files
 	//ini_set('max_execution_time', 600);
 	//ini_set('memory_limit','1024M');
 	// Start the backup!
 	//zipData('/path/to/folder', '/path/to/backup.zip');
 	global $successes,$errors;
+
 	if (file_exists($source)) {
 		$zip = new ZipArchive();
 		if ($zip->open($destination, ZIPARCHIVE::CREATE)) {
 			$source = realpath($source);
 			if (is_dir($source)) {
-				/*
-				Following 4 lines are from https://gist.github.com/toddsby/f98d82314259ec5483d8
-				*/
+
+				//:: from 4.2.9a
+				//:: lets exclude files prepended with @
+				class BackupDirFilter extends RecursiveFilterIterator {
+				    public function accept() {
+
+				        return '@' !== substr($this->current()->getFilename(), 0, 1);
+
+				    }
+				}
+
+				//:: from 4.2.9a
 				$iterator = new RecursiveDirectoryIterator($source);
 				// skip dot files while iterating
 				$iterator->setFlags(RecursiveDirectoryIterator::SKIP_DOTS);
-				$files = new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::SELF_FIRST);
+				$filter = new BackupDirFilter($iterator);
+				//$files = new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::SELF_FIRST);
+				$files = new RecursiveIteratorIterator($filter, RecursiveIteratorIterator::SELF_FIRST);
 
 				//$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($source), RecursiveIteratorIterator::SELF_FIRST);
 				foreach ($files as $file) {
@@ -120,8 +142,10 @@ function zipData($source, $destination) {
 		}
 		return $zip->close();
 	}
+
 	return false;
 }
+
 function rrmdir($src) {
 	/*
 	From http://php.net/manual/en/function.rmdir.php
@@ -146,6 +170,7 @@ function rrmdir($src) {
 	rmdir($src);
 	return true;
 }
+
 function delete_dir($dir)
 {
 	/*
@@ -168,13 +193,16 @@ function delete_dir($dir)
 			echo "WARNING: Cannot delete $dir (unknown file type)\n";
 	}
 }
+
 function backupObjects($backupItems,$backupPath){
 	/*
 	Inputs:
 	$backupItems (the array of all file and folder objects to be backed up)
 	$backupPath (the directory to which files will be copied)
 	*/
+
 	global $errors,$successes;
+
 	/*
 	Cycle through items to backup
 	If it is a file, then use copy()
@@ -206,12 +234,14 @@ function backupObjects($backupItems,$backupPath){
 	$successes[] = 'Backup completed successfully.';
 	return true;
 }
+
 function backupZip($backupPath,$delBackupPath=false){
 	global $errors,$successes;
 
 	/*
 	Add $backupPath to a zipfile named end(explode('/',$backupPath)).'.zip'
 	*/
+
 	$zipCreated = false;
 	if (extension_loaded('zip')){
 		/*
@@ -243,6 +273,7 @@ function backupZip($backupPath,$delBackupPath=false){
 	}
 	return $targetZipFile;
 }
+
 function backupUsTables($backupPath) {
 
 	global $errors, $successes;
@@ -271,6 +302,7 @@ function backupUsTables($backupPath) {
 		}
 
 }
+
 function backupUsTable($backupPath) {
 
 	global $errors, $successes, $backupPath;
@@ -306,6 +338,7 @@ function backupUsTable($backupPath) {
 		}
 
 }
+
 function extractZip($restoreFile,$restoreDest){
 	global $errors,$successes;
 	/*
@@ -323,12 +356,15 @@ function extractZip($restoreFile,$restoreDest){
 			return false;
 	}
 }
+
 function importSqlFile($sqlFile){
 	global $errors, $successes;
 	/*
 	From: http://stackoverflow.com/questions/19751354/how-to-import-sql-file-in-mysql-database-using-php
 	*/
+
 	$db = DB::getInstance();
+
 	// Temporary variable, used to store current query
 	$templine = '';
 	// Read in entire file
@@ -338,6 +374,7 @@ function importSqlFile($sqlFile){
 	{
 		// Skip it if it's a comment
 		if (substr($line, 0, 2) == '--' || $line == '') continue;
+
 		// Add this line to the current segment
 		$templine .= $line;
 

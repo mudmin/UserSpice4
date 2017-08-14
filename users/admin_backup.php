@@ -38,16 +38,56 @@ $tablev = $table_view->results();
 
 $errors = $successes = [];
 
+//:: Admin Backup
+$lang = array_merge($lang,array(
+	"AB_SETSAVED"      => "Settings Successfully Saved",
+	"AB_PATHCREATE"    => "Destination path created.",
+	"AB_PATHERROR"     => "Destination path could not be created due to unknown error.",
+	"AB_PATHEXISTED"   => "Destination path already existed. Using the existing folder.",
+	"AB_BACKUPSUCCESS" => "Backup was successful.",
+	"AB_BACKUPFAIL"    => "Backup failed.",
+	"AB_DB_FILES_ZIP"  => "DB &amp; Files Zipped",
+	"AB_FILE_RENAMED"  => "File renamed to:&nbsp;",
+	"AB_NOT_RENAME"    => "Could not rename backup zip file to contain hash value.",
+	"AB_ERROR_CREATE"  => "Error creating zip file",
+	"AB_DB_ZIPPED"     => "Database Zipped",
+	"AB_PATHEXIST"     => "Backup path already exists or could not be created.",
+	"AB_T_FILE_ZIP"    => "Userspice Files Zipped",
+	"AB_TABLES_ZIP"    => "Tables Zipped",
+	"AB_BACKUP_DELETE" => "Backup(s) Deleted !",
+	"AB_PAGENAME"      => "System Backup",
+	"AB_BACKUP_SET"    => "Backup Settings",
+	"AB_BACKUP_DEST"   => "Backup Destination",
+	"AB_BACKUP_DEST_INFO" => "Relative to the z_us_root.php file. Put a / for root.",
+	"AB_BACKUP_SOURCE" => "Backup Source",
+	"AB_DB_TM_FILES"   => "Database &amp; Userspice Files",
+	"AB_DB_FILES"      => "Database Only",
+	"AB_TM_FILES"      => "Userspice Files Only",
+	"AB_SINGLE_TBL"    => "Single Table",
+	"AB_SELECT_TBL"    => "Select Table",
+	"AB_DB_TBLS"       => "DB Tables",
+	"AB_SAVE_SETTINGS" => "&nbsp;Save Settings&nbsp;",
+	"AB_BACKUP_BTN"    => "&nbsp;Backup&nbsp;",
+	"AB_EXIST_BACKUP"  => "Existing Backups&nbsp;",
+	"AB_DATE"          => "Date",
+	"AB_BACKUP_FILE"   => "Backup File",
+	"AB_FILE_SIZE"     => "File Size",
+	"AB_ACTIONS"       => "Actions",
+	"AB_DELETE_B"      => "&nbsp;Delete Backup&nbsp;",
+	"AB_BACKUP_NOT"    => "Backup(s) not deleted !",
+	"WENT_WRONG" 	   	 => "Something went wrong",
+	"AB_DB_ALL_FILES"  => "Database &amp; ALL Files (Experimental)",
+	"AB_SAVE_WARNING"  => "Please click Save Settings BEFORE clicking Backup."
+	));
+
 if(isset($_GET['sc1'])){
 	$successes[] = lang('AB_SETSAVED');
 }
 if(isset($_GET['del'])){
 	$successes[] = "deleted backup";
 }
-
 //Forms posted
 if(!empty($_POST)) {
-
 	if(!empty($_POST['save'])){
 
 		if($settings->backup_dest != $_POST['backup_dest']) {
@@ -73,7 +113,8 @@ if(!empty($_POST)) {
 	if(!empty($_POST['backup'])){
 
 		//Create backup destination folder: $settings->backup_dest
-		$backup_dest = $settings->backup_dest;
+		//$backup_dest = $settings->backup_dest;
+		$backup_dest = "@".$settings->backup_dest;//::from us v4.2.9a
 		$backupTable = $settings->backup_table;
 
 		if($settings->backup_source != "db_table") {
@@ -129,16 +170,17 @@ if(!empty($_POST)) {
 			mkdir($backupPath.'sql');
 		}
 
-		// Backup All Project Files and DB
+		// Backup All Files & Directories In Root and DB
 		if($backupPathSuccess && $settings->backup_source == 'everything'){
 
 			// Generate list of files in ABS_TR_ROOT.TR_URL_ROOT including files starting with .
+
 			$backupItems = [];
 			$backupItems[] = $abs_us_root.$us_url_root;
 			$backupItems[] = $abs_us_root.$us_url_root.'users';
 			$backupItems[] = $abs_us_root.$us_url_root.'usersc';
 
-				if(backupObjects($backupItems,$backupPath.'files/')){
+			if(backupObjects($backupItems,$backupPath.'files/')){
 
 				$successes[] = lang('AB_BACKUPSUCCESS');
 
@@ -175,6 +217,7 @@ if(!empty($_POST)) {
 			}
 
 		}
+
 
 		// Backup Terminus files & all db tables
 		if($backupPathSuccess && $settings->backup_source == 'db_us_files'){
@@ -344,8 +387,9 @@ if(!empty($_POST)) {
 	if(!empty($_POST['deleteFile'])){
 
 		$deletions = $_POST['delete'];
+		$backup_dest = "@".$settings->backup_dest;//::from 4.2.9a
 		foreach($deletions as $delete) {
-			if(!unlink($abs_us_root.$us_url_root.$settings->backup_dest.$delete)) {
+			if(!unlink($abs_us_root.$us_url_root.$backup_dest.$delete)) {
 				$errors[] = lang('AB_BACKUP_NOT');
 		    }else{
 			    $successes[] = lang('AB_BACKUP_DELETE');
@@ -353,15 +397,13 @@ if(!empty($_POST)) {
 	    }
 	}
 }
+$backup_dest = "@".$settings->backup_dest;//::from 4.2.9a
 // Get array of existing backup zip files
-$allBackupFiles = glob($abs_us_root.$us_url_root.$settings->backup_dest.'backup*.zip');
-
+$allBackupFiles = glob($abs_us_root.$us_url_root.$backup_dest.'backup*.zip');
 $allBackupFilesSize = [];
-
 foreach($allBackupFiles as $backupFile){
 	$allBackupFilesSize[] = size($backupFile);
 }
-
 $pagename = lang('AB_PAGENAME');
 ?>
 <div id="page-wrapper">
@@ -376,7 +418,7 @@ $pagename = lang('AB_PAGENAME');
         <div class="col-xs-12">
           <!-- Content Goes Here. Class width can be adjusted -->
 
-			<h2>Page Permissions </h2>
+			<h2><?=$pagename?> </h2>
 			<?php resultBlock($errors,$successes); ?>
 
 
@@ -390,7 +432,7 @@ $pagename = lang('AB_PAGENAME');
 
 					<div class="col-md-5 col-sm-5 col-xs-12" style="margin-top: 10px;">
 						<input class="form-control" type="text" name="backup_dest" id="backup_dest" placeholder="Backup Destination" value="<?=$settings->backup_dest?>">
-						<span class="text-danger"><?=lang('AB_BACKUP_DEST');?></span>
+						<span class="text-danger"><?=lang('AB_BACKUP_DEST_INFO');?></span>
 					</div>
 
 				</div>
@@ -410,7 +452,7 @@ $pagename = lang('AB_PAGENAME');
 
 							<option value="everything" <?php if($settings->backup_source =='everything') ;?>><?=lang('AB_DB_ALL_FILES');?></option>
 
-							<option value="db_us_files" <?php if($settings->backup_source =='db_us_files') echo 'selected="selected"' ;?>><?=lang('AB_DB_TM_FILES');?></option>
+							<option value="db_us_files" <?php if($settings->backup_source =='db_us_files') echo 'selected="selected"';?>><?=lang('AB_DB_TM_FILES');?></option>
 
 							<option value="db_only" <?php if($settings->backup_source =='db_only') echo 'selected="selected"';?>><?=lang('AB_DB_FILES');?></option>
 
@@ -447,33 +489,10 @@ $pagename = lang('AB_PAGENAME');
 
 				<?php } ?>
 
-
-
-				<div class="control-group">
-
-                    <label class="control-label col-md-3 col-sm-3 col-xs-12"><?=lang('AB_DB_TBLS');?></label>
-
-                    <div class="col-md-9 col-sm-9 col-xs-12">
-
-                    	<input id="tags_1" type="text" class="tags form-control" value="tables" data-tagsinput-init="true" style="display: none;">
-
-                        <div id="tags_1_tagsinput" class="tagsinput" style="width: auto; min-height: 100px; height: 100px;">
-                        <?php foreach($tablev as $v) { ?>
-
-                        	<span class="tag"><?=end($v);?>&nbsp;&nbsp;</span>
-
-                        <?php } ?>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
                 <div class="clearfix"></div>
 
 				<div class="ln_solid"></div>
-
+				<p align="center"><?=lang('AB_SAVE_WARNING');?></p>
 				<button class='btn btn-success' type='submit' name="save" value='Save Settings' onclick="window.location='<?=$_SERVER['PHP_SELF']; ?>';"><i class="fa fa-database"></i><?=lang('AB_SAVE_SETTINGS');?></button>
 
 				<button class='btn btn-success' type='submit' name="backup" value='Backup' onclick="window.location='<?=$_SERVER['PHP_SELF']; ?>';"><i class="fa fa-database"></i><?=lang('AB_BACKUP_BTN');?></button>
@@ -531,7 +550,7 @@ $pagename = lang('AB_PAGENAME');
 								<td class=" " style="width: 100px;"><?=$allBackupFilesSize[$i]?></td>
 
 								<td class="text-center last" style="width: 10%;">
-									<a class="label label-success bg-green" href="<?=$us_url_root.$settings->backup_dest.$filename?>"><i class="fa fa-download"></i></a>
+									<a class="label label-success bg-green" href="<?=$us_url_root.$backup_dest.$filename?>"><i class="fa fa-download"></i></a>
 								</td>
 
 							</tr>
