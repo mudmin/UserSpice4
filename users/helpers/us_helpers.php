@@ -769,6 +769,7 @@ function generateForm($table,$id, $skip=[]){
   function hasPerm($permissions, $id) {
   	$db = DB::getInstance();
   	global $user;
+	global $master_account;
   	//Grant access if master user
   	$access = 0;
 

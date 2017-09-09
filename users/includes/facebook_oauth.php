@@ -48,7 +48,7 @@ $version=$settings->graph_ver;
 $callback=$settings->fbcallback;
 
 if(!isset($_SESSION)){session_start();}
-require_once("src/Facebook/autoload.php");
+require_once($abs_us_root.$us_url_root."users/src/Facebook/autoload.php");
 $fb = new Facebook\Facebook([
   'app_id' => $appID,
   'app_secret' => $secret,
