@@ -30,7 +30,7 @@ $successes = [];
 //Get line from z_us_root.php that starts with $path
 $file = fopen($abs_us_root.$us_url_root."z_us_root.php","r");
 while(!feof($file)){
-	$currentLine=fgets($file);
+	$currentLine=str_replace(" ", "", fgets($file));
 	if (substr($currentLine,0,5)=='$path'){
 		//echo $currentLine;
 		//if here, then it found the line starting with $path so break to preserve $currentLine value
