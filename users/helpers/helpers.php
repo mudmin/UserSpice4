@@ -128,7 +128,7 @@ function email($to,$subject,$body,$attachment=false){
 	$smtp_server=$results->smtp_server;
 	$smtp_port=$results->smtp_port;
 	$smtp_username=$results->email_login;
-	$smtp_password=$results->email_pass;
+	$smtp_password = htmlspecialchars_decode($results->email_pass);
 	$smtp_transport=$results->transport;
 
 	$mail = new PHPMailer;
