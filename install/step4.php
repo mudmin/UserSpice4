@@ -128,7 +128,7 @@ if (!empty($_POST['submit'])) {
   $tz=$_POST['timezone'];
 
   $copyright_syn='$copyright_message = \'';
-  $copyright=$_POST['copyright'];
+  $copyright=addslashes($_POST['copyright']);
 
   $private_syn='$your_private_key = \'';
   $public_syn='$your_public_key = \'';
