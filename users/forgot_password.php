@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <?php require_once $abs_us_root.$us_url_root.'users/includes/navigation.php'; ?>
 <?php if (!securePage($_SERVER['PHP_SELF'])){die();} ?>
 <?php
+if(ipCheckBan()){Redirect::to($us_url_root.'usersc/scripts/banned.php');die();}
 $error_message = null;
 $errors = array();
 $email_sent=FALSE;
@@ -30,7 +31,7 @@ $email_sent=FALSE;
 $token = Input::get('csrf');
 if(Input::exists()){
     if(!Token::check($token)){
-        die('Token doesn\'t match!');
+        include('../usersc/scripts/token_error.php');
     }
 }
 
@@ -53,6 +54,7 @@ if (Input::get('forgotten_password')) {
             $encoded_email=rawurlencode($email);
             $body =  email_body('_email_template_forgot_password.php',$options);
             $email_sent=email($email,$subject,$body);
+            logger($fuser->data()->id,"User","Requested password reset.");
             if(!$email_sent){
                 $errors[] = 'Email NOT sent due to error. Please contact site administrator.';
             }
@@ -66,9 +68,7 @@ if (Input::get('forgotten_password')) {
 }
 ?>
 <?php
-if ($user->isLoggedIn()) {
-Redirect::to('account.php');
-}
+if ($user->isLoggedIn()) $user->logout();
 ?>
 
 <div id="page-wrapper">

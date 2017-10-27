@@ -26,6 +26,24 @@ function ipCheck() {
   return $ip;
 }
 
+function ipCheckBan(){
+  $db = DB::getInstance();
+  $ip = ipCheck();
+  $ban = $db->query("SELECT id FROM us_ip_blacklist WHERE ip = ?",array($ip))->count();
+  if($ban > 0){
+    $unban = $db->query("SELECT id FROM us_ip_whitelist WHERE ip = ?",array($ip))->count();
+    if($unban > 0){
+        logger(0,'User','Blacklisted '.$ip.' attempted visit');
+      return false;
+    }else{
+      return true;
+  }
+}else{
+  logger(0,'User','Blacklisted '.$ip.' attempted visit');
+  return false;
+}
+}
+
 function new_user_online($user_id) {
 	$db = DB::getInstance();
 	$ip = ipCheck();

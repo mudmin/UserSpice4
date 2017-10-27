@@ -40,7 +40,7 @@ $pageDetails = fetchPageDetails($pageId); //Fetch information specific to page
 if(Input::exists()){
 	$token = Input::get('csrf');
 	if(!Token::check($token)){
-		die('Token doesn\'t match!');
+		include('../usersc/scripts/token_error.php');
 	}
 	$update = 0;
 
@@ -48,28 +48,55 @@ if(Input::exists()){
 		$private = Input::get('private');
 	}
 
-	//Toggle private page setting
-	if (isset($private) AND $private == 'Yes'){
-		if ($pageDetails->private == 0){
-			if (updatePrivate($pageId, 1)){
-				$successes[] = lang("PAGE_PRIVATE_TOGGLED", array("private"));
+  if(!empty($_POST['re_auth'])){
+    $re_auth = Input::get('re_auth');
+          }
+  	//Toggle private page setting
+   	if (isset($private) AND $private == 'Yes'){
+   		if ($pageDetails->private == 0){
+   			if (updatePrivate($pageId, 1)){
+   				$successes[] = lang("PAGE_PRIVATE_TOGGLED", array("private"));
+          logger($user->data()->id,"Pages Manager","Changed private from public to private for Page #$pageId.");
+   			}else{
+   				$errors[] = lang("SQL_ERROR");
+   			}
+   	  }
+   	}elseif ($pageDetails->private == 1){
+   		if (updatePrivate($pageId, 0)){
+   			$successes[] = lang("PAGE_PRIVATE_TOGGLED", array("public"));
+        logger($user->data()->id,"Pages Manager","Changed private from private to public for Page #$pageId and stripped re_auth.");
+   		}else{
+   		$errors[] = lang("SQL_ERROR");
+   		}
+   	}
+
+
+  //Toggle reauth setting
+  if($pageDetails->private==1 && $pageDetails->page != "users/admin_verify.php" && $pageDetails->page != "usersc/admin_verify.php") {
+	if (isset($re_auth) AND $re_auth == 'Yes'){
+		if ($pageDetails->re_auth == 0){
+			if (updateReAuth($pageId, 1)){
+				$successes[] = lang("PAGE_REAUTH_TOGGLED", array("requires"));
+        logger($user->data()->id,"Pages Manager","Changed re_auth from No to Yes for Page #$pageId.");
 			}else{
 				$errors[] = lang("SQL_ERROR");
 			}
 		}
-	}elseif ($pageDetails->private == 1){
-		if (updatePrivate($pageId, 0)){
-			$successes[] = lang("PAGE_PRIVATE_TOGGLED", array("public"));
+	}elseif ($pageDetails->re_auth == 1){
+		if (updateReAuth($pageId, 0)){
+			$successes[] = lang("PAGE_REAUTH_TOGGLED", array("does not require"));
+      logger($user->data()->id,"Pages Manager","Changed re_auth from Yes to No for Page #$pageId.");
 		}else{
 			$errors[] = lang("SQL_ERROR");
 		}
-	}
+  } }
 
 	//Remove permission level(s) access to page
 	if(!empty($_POST['removePermission'])){
 		$remove = $_POST['removePermission'];
 		if ($deletion_count = removePage($pageId, $remove)){
 			$successes[] = lang("PAGE_ACCESS_REMOVED", array($deletion_count));
+      logger($user->data()->id,"Pages Manager","Deleted $deletion_count permission(s) from $pageDetails->page.");
 		}else{
 			$errors[] = lang("SQL_ERROR");
 		}
@@ -86,12 +113,26 @@ if(Input::exists()){
 		}
 		if ($addition_count > 0 ){
 			$successes[] = lang("PAGE_ACCESS_ADDED", array($addition_count));
+      logger($user->data()->id,"Pages Manager","Added $addition_count permission(s) to $pageDetails->page.");
+		}
+	}
+
+	//Changed title for page
+	if($_POST['changeTitle'] != $pageDetails->title){
+		$newTitle = $_POST['changeTitle'];
+		if ($db->query('UPDATE pages SET title = ? WHERE id = ?', array($newTitle, $pageDetails->id))){
+			$successes[] = lang("PAGE_RETITLED", array($newTitle));
+            logger($user->data()->id,"Pages Manager","Retitled '{$pageDetails->page}' to '$newTitle'.");
+		}else{
+			$errors[] = lang("SQL_ERROR");
 		}
 	}
 	$pageDetails = fetchPageDetails($pageId);
 }
 $pagePermissions = fetchPagePermissions($pageId);
 $permissionData = fetchAllPermissions();
+$countQ = $db->query("SELECT id, permission_id FROM permission_page_matches WHERE page_id = ? ",array($pageId));
+$countCountQ = $countQ->count();
 ?>
 <div id="page-wrapper">
 
@@ -104,13 +145,13 @@ $permissionData = fetchAllPermissions();
         <!-- Main Center Column -->
         <div class="col-xs-12">
           <!-- Content Goes Here. Class width can be adjusted -->
-		  
+
 			<h2>Page Permissions </h2>
 			<?php resultBlock($errors,$successes); ?>
 
 			<form name='adminPage' action='<?=$_SERVER['PHP_SELF'];?>?id=<?=$pageId;?>' method='post'>
 				<input type='hidden' name='process' value='1'>
-				
+
 			<div class="row">
 			<div class="col-md-3">
 				<div class="panel panel-default">
@@ -127,21 +168,27 @@ $permissionData = fetchAllPermissions();
 					</div>
 				</div><!-- /panel -->
 			</div><!-- /.col -->
-			
+
 			<div class="col-md-3">
 				<div class="panel panel-default">
 					<div class="panel-heading"><strong>Public or Private?</strong></div>
 					<div class="panel-body">
 						<div class="form-group">
-						<label>Private:</label>
+						<label>Private:
 						<?php
 						$checked = ($pageDetails->private == 1)? ' checked' : ''; ?>
 						<input type='checkbox' name='private' id='private' value='Yes'<?=$checked;?>>
-						</div>
+						</label></div>
+            <?php if($pageDetails->private==1 && $pageDetails->page != "users/admin_verify.php" && $pageDetails->page != "usersc/admin_verify.php") {?>
+            <label>Require ReAuth:
+						<?php
+						$checked1 = ($pageDetails->re_auth == 1)? ' checked' : ''; ?>
+						<input type='checkbox' name='re_auth' id='re_auth' value='Yes'<?=$checked1;?>></label>
+            <?php } ?>
 					</div>
 				</div><!-- /panel -->
 			</div><!-- /.col -->
-			
+
 			<div class="col-md-3">
 				<div class="panel panel-default">
 					<div class="panel-heading"><strong>Remove Access</strong></div>
@@ -155,13 +202,13 @@ $permissionData = fetchAllPermissions();
 						}
 						foreach ($permissionData as $v1){
 							if(in_array($v1->id,$perm_ids)){ ?>
-							<input type='checkbox' name='removePermission[]' id='removePermission[]' value='<?=$v1->id;?>'> <?=$v1->name;?><br/>
+							<label class="normal"><input type='checkbox' name='removePermission[]' id='removePermission[]' value='<?=$v1->id;?>'> <?=$v1->name;?></label><br/>
 							<?php }} ?>
 						</div>
 					</div>
 				</div><!-- /panel -->
 			</div><!-- /.col -->
-			
+
 			<div class="col-md-3">
 				<div class="panel panel-default">
 					<div class="panel-heading"><strong>Add Access</strong></div>
@@ -171,16 +218,27 @@ $permissionData = fetchAllPermissions();
 						//Display list of permission levels without access
 						foreach ($permissionData as $v1){
 						if(!in_array($v1->id,$perm_ids)){ ?>
-						<input type='checkbox' name='addPermission[]' id='addPermission[]' value='<?=$v1->id;?>'> <?=$v1->name;?><br/>
+						<?php if($settings->page_permission_restriction == 0) {?><label class="normal"><input type='checkbox' name='addPermission[]' id='addPermission[]' value='<?=$v1->id;?>'> <?=$v1->name;?></label><br/><?php } ?>
+						<?php if($settings->page_permission_restriction == 1) {?><label class="normal"><input type="radio" name="addPermission[]" id="addPermission[]" value="<?=$v1->id;?>" <?php if($countCountQ > 0 || $pageDetails->private==0) { ?> disabled<?php } ?>> <?=$v1->name;?></label><br/><?php } ?>
 						<?php }} ?>
 						</div>
 					</div>
 				</div><!-- /panel -->
-			</div><!-- /.col -->			
-			</div><!-- /.row -->				
+			</div><!-- /.col -->
+			</div><!-- /.row -->
+
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-3">
+                    <div class="form-group">
+                        <label for="title">Page Title:</label> <span class="small">(This is the text that's displayed on the browser's titlebar or tab)</small>
+                        <input type="text" class="form-control" name="changeTitle" maxlength="50" value="<?= $pageDetails->title; ?>" />
+                    </div>
+                </div>
+            </div>
 
 			<input type="hidden" name="csrf" value="<?=Token::generate();?>" >
-			<p><input class='btn btn-primary' type='submit' value='Update' class='submit' /></p>
+			<input class='btn btn-primary' type='submit' value='Update' class='submit' />
+			<a class='btn btn-warning' href="admin_pages.php">Cancel</a><br><br>
 			</form>
         </div>
     </div>

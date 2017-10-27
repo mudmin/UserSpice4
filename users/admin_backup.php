@@ -94,16 +94,19 @@ if(!empty($_POST)) {
 			$backup_dest = Input::get('backup_dest');
 			$fields=array('backup_dest'=>$backup_dest);
 			$db->update('settings',1,$fields);
+			logger($user->data()->id,"Setting Change","Changed backup_dest from $settings->backup_dest to $backup_dest.");
 		}
 		if($settings->backup_source != $_POST['backup_source']) {
 			$backup_source = Input::get('backup_source');
 			$fields=array('backup_source'=>$backup_source);
 			$db->update('settings',1,$fields);
+			logger($user->data()->id,"Setting Change","Changed backup_source from $settings->backup_source to $backup_source.");
 		}
 		if($settings->backup_table != $_POST['backup_table']) {
 			$backup_table = Input::get('backup_table');
 			$fields=array('backup_table'=>$backup_table);
 			$db->update('settings',1,$fields);
+			logger($user->data()->id,"Setting Change","Changed backup_table from $settings->backup_table to $backup_table.");
 		}
 
 		Redirect::to('admin_backup.php?sc1=Settings+saved!');
@@ -203,6 +206,7 @@ if(!empty($_POST)) {
 				if(rename($targetZipFile,$backupZipHashFilename)){
 
 					$successes[] = lang('AB_FILE_RENAMED').$backupZipHashFilename;
+					logger($user->data()->id,"Admin Backup","Completed backup for everything.");
 
 				}else{
 
@@ -250,6 +254,7 @@ if(!empty($_POST)) {
 				if(rename($targetZipFile,$backupZipHashFilename)){
 
 					$successes[] = lang('AB_FILE_RENAMED').$backupZipHashFilename;
+					logger($user->data()->id,"Admin Backup","Completed backup for UserSpice Files & DB.");
 
 				}else{
 
@@ -281,6 +286,7 @@ if(!empty($_POST)) {
 				if(rename($targetZipFile,$backupZipHashFilename)){
 
 					$successes[] = lang('AB_FILE_RENAMED').$backupZipHashFilename;
+					logger($user->data()->id,"Admin Backup","Completed backup for Database.");
 
 				}else{
 
@@ -333,6 +339,7 @@ if(!empty($_POST)) {
 				if(rename($targetZipFile,$backupZipHashFilename)){
 
 					$successes[] = lang('AB_FILE_RENAMED').$backupZipHashFilename;
+					logger($user->data()->id,"Admin Backup","Completed backup for UserSpice Files.");
 
 				}else{
 
@@ -365,6 +372,7 @@ if(!empty($_POST)) {
 				if(rename($targetZipFile,$backupZipHashFilename)){
 
 					$successes[] = lang('AB_FILE_RENAMED').$backupZipHashFilename;
+					logger($user->data()->id,"Admin Backup","Completed backup for $settings->backup_table table.");
 
 				}else{
 
@@ -388,13 +396,19 @@ if(!empty($_POST)) {
 
 		$deletions = $_POST['delete'];
 		$backup_dest = "@".$settings->backup_dest;//::from 4.2.9a
+		$count = 0;
 		foreach($deletions as $delete) {
 			if(!unlink($abs_us_root.$us_url_root.$backup_dest.$delete)) {
 				$errors[] = lang('AB_BACKUP_NOT');
 		    }else{
-			    $successes[] = lang('AB_BACKUP_DELETE');
+			   // $successes[] = lang('AB_BACKUP_DELETE'); //This makes a note for every deletion, uncomment this if you want that
+					logger($user->data()->id,"Admin Backup","Deleted backup $delete.");
+
 		    }
+				$count++;
 	    }
+			if($count==1) $successes[] = "$count Backup Deleted";
+			if($count > 1) $successes[] = "$count Backups Deleted";
 	}
 }
 $backup_dest = "@".$settings->backup_dest;//::from 4.2.9a
@@ -518,12 +532,12 @@ $pagename = lang('AB_PAGENAME');
 
 		          	<form name="delete" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
 
-					<table class='table table-responsive table-striped' cellspacing="0" width="100%" >
+					<table id="backups" class='table table-responsive table-striped' cellspacing="0" width="100%" >
 
 						<thead>
 							<tr class="headings">
 								<th>
-									<input type="checkbox" class="flat" name="select-all" id="check-all" style="width: 10px!important;"/>
+									<?php if(sizeof($allBackupFiles) > 1) {?><input type="checkbox" class="checkAllBackups" /><?php } ?>
 								</th><!-- select all boxes -->
 								<th class="column-title" style="width: 150px;"><?=lang('AB_DATE');?></th>
 								<th class="column-title" style="width: 600px;"><?=lang('AB_BACKUP_FILE');?></th>
@@ -575,7 +589,7 @@ $pagename = lang('AB_PAGENAME');
 
       </div><!--/.col-*-->
 
-    </div><!--/.row-->
+    </div><!--/.row--><br />
 
 
 
@@ -586,6 +600,12 @@ $pagename = lang('AB_PAGENAME');
 </div>
 
 <?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php';?>
+<script>
+$(document).ready(function(){
+$('.checkAllBackups').on('click', function(e) {
+				 $('.flat').prop('checked', $(e.target).prop('checked'));
+ }); });
+ </script>
 
 
 <?php require_once $abs_us_root.$us_url_root.'users/includes/html_footer.php';?>

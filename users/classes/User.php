@@ -97,6 +97,21 @@ class User {
 						Cookie::put($this->_cookieName, $hash, Config::get('remember/cookie_expiry'));
 					}
 					$this->_db->query("UPDATE users SET last_login = ?, logins = logins + 1 WHERE id = ?",[date("Y-m-d H:i:s"),$this->data()->id]);
+					$ip = ipCheck();
+					$q = $this->_db->query("SELECT id FROM us_ip_list WHERE ip = ?",array($ip));
+					$c = $q->count();
+					if($c < 1){
+						$this->_db->insert('us_ip_list', array(
+							'user_id' => $this->data()->id,
+							'ip' => $ip,
+						));
+					}else{
+						$f = $q->first();
+						$this->_db->update('us_ip_list',$f->id, array(
+							'user_id' => $this->data()->id,
+							'ip' => $ip,
+						));
+					}
 					return true;
 				}
 			}
@@ -128,6 +143,21 @@ class User {
 						Cookie::put($this->_cookieName, $hash, Config::get('remember/cookie_expiry'));
 					}
 					$this->_db->query("UPDATE users SET last_login = ?, logins = logins + 1 WHERE id = ?",[date("Y-m-d H:i:s"),$this->data()->id]);
+					$ip = ipCheck();
+					$q = $this->_db->query("SELECT id FROM us_ip_list WHERE ip = ?",array($ip));
+					$c = $q->count();
+					if($c < 1){
+						$this->_db->insert('us_ip_list', array(
+							'user_id' => $this->data()->id,
+							'ip' => $ip,
+						));
+					}else{
+						$f = $q->first();
+						$this->_db->update('us_ip_list',$f->id, array(
+							'user_id' => $this->data()->id,
+							'ip' => $ip,
+						));
+					}
 					return true;
 				}
 			}
@@ -149,7 +179,21 @@ class User {
 
 
 				$this->_db->query("UPDATE users SET last_login = ?, logins = logins + 1 WHERE id = ?",[date("Y-m-d H:i:s"),$found->id]);
-
+				$ip = ipCheck();
+				$q = $this->_db->query("SELECT id FROM us_ip_list WHERE ip = ?",array($ip));
+				$c = $q->count();
+				if($c < 1){
+					$this->_db->insert('us_ip_list', array(
+						'user_id' => $this->data()->id,
+						'ip' => $ip,
+					));
+				}else{
+					$f = $q->first();
+					$this->_db->update('us_ip_list',$f->id, array(
+						'user_id' => $this->data()->id,
+						'ip' => $ip,
+					));
+				}
 				//Check to see if a user has Google oAuth
 				$prevQuery = $this->_db->query("SELECT * FROM users WHERE oauth_provider = '".$oauth_provider."' AND oauth_uid = '".$oauth_uid."'") or die("Google oAuth Error");
 

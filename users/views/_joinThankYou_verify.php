@@ -20,9 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ?>
 <div class="row">
 <div class="col-xs-12">
-<div class="jumbotron text-center">
 <h1>Welcome To <?=$settings->site_name?></h1>
 <p>Thanks for registering! Please check your email to verify your account.</p>
-</div>
+<br />
 </div>
 </div>

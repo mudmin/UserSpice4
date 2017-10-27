@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <?php
 $validation = new Validate();
 //PHP Goes Here!
-
+$permission_exempt = array(1,2);
 $errors = [];
 $successes = [];
 
@@ -35,16 +35,18 @@ if(!empty($_POST))
 {
   $token = $_POST['csrf'];
   if(!Token::check($token)){
-    die('Token doesn\'t match!');
+    include('../usersc/scripts/token_error.php');
   }
 
-  //Delete permission levels
-  if(!empty($_POST['delete'])){
-    $deletions = $_POST['delete'];
-    if ($deletion_count = deletePermission($deletions)){
-      $successes[] = lang("PERMISSION_DELETIONS_SUCCESSFUL", array($deletion_count));
-    }
-  }
+/*  if(!empty($_POST['delete'])){
+      $deletions = $_POST['delete'];
+      if ($deletion_count = deletePermission($deletions)){
+        $successes[] = lang("PERMISSION_DELETIONS_SUCCESSFUL", array($deletion_count));
+      }
+      else {
+        $errors[] = lang("SQL_ERROR");
+            }
+    }*/ //LEGACY BA 9162017
 
   //Create new permission level
   if(!empty($_POST['name'])) {
@@ -62,8 +64,8 @@ if(!empty($_POST))
         ));
         if($validation->passed()){
           $db->insert('permissions',$fields);
-          echo "Permission Updated";
-
+          $successes[] = "Permission Updated";
+          logger($user->data()->id,"Permissions Manager","Added Permission Level named $permission.");
   }else{
 
     }
@@ -83,8 +85,8 @@ $count = 0;
     <!-- Page Heading -->
     <div class="row">
       <div class="col-sm-12">
-        <div id="form-errors">
-            <?=$validation->display_errors();?></div>
+        
+            <?php if(!$validation->errors()=='') {?><div class="alert alert-danger"><?=display_errors($validation->errors());?></div><?php } ?>
         <!-- Left Column -->
         <div class="class col-sm-3"></div>
 
@@ -94,21 +96,23 @@ $count = 0;
 
 
 			<?php
-			$errors = [];
-			$successes = [];
 			echo resultBlock($errors,$successes);
 			?>
 			<form name='adminPermissions' action='<?=$_SERVER['PHP_SELF']?>' method='post'>
 			  <h2>Create a new permission group</h2>
 			  <p>
 				<label>Permission Name:</label>
-				<input type='text' name='name' />
+				<input type='text' name='name' />  <input type="hidden" name="csrf" value="<?=Token::generate();?>" >
+
+  			  <input class='btn btn-primary' type='submit' name='Submit' value='Add Permission' /><br><br>
+
+  			</form>
 			  </p>
 
 			  <br>
 			  <table class='table table-hover table-list-search'>
 				<tr>
-				  <th>Delete</th><th>Permission Name</th>
+				  <?php /*<th>Delete</th> //LEGACY BA 9162017 */?><th>Permission Name</th>
 				</tr>
 
 				<?php
@@ -116,7 +120,8 @@ $count = 0;
 				foreach ($permissionData as $v1) {
 				  ?>
 				  <tr>
-					<td><input type='checkbox' name='delete[<?=$permissionData[$count]->id?>]' id='delete[<?=$permissionData[$count]->id?>]' value='<?=$permissionData[$count]->id?>'></td>
+         <?php /*  <td><?php if(!in_array($permissionData[$count]->id,$permission_exempt)){?><input type='checkbox' name='delete[<?=$permissionData[$count]->id?>]' id='delete[<?=$permissionData[$count]->id?>]' value='<?=$permissionData[$count]->id?>'><?php } ?></td>//LEGACY BA 9162017 */?>
+
 					<td><a href='admin_permission.php?id=<?=$permissionData[$count]->id?>'><?=$permissionData[$count]->name?></a></td>
 				  </tr>
 				  <?php
@@ -125,13 +130,6 @@ $count = 0;
 				?>
 
 			  </table>
-
-
-			  <input type="hidden" name="csrf" value="<?=Token::generate();?>" >
-
-			  <input class='btn btn-primary' type='submit' name='Submit' value='Add/Update/Delete' /><br><br>
-
-			</form>
 
           <!-- End of main content section -->
         </div>

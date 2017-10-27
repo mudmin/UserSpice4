@@ -55,6 +55,7 @@ $settings = $settingsQ->first();
 if($user->isLoggedIn() && !checkMenu(2,$user->data()->id)){
 	if (($settings->site_offline==1) && (!in_array($user->data()->id, $master_account)) && ($currentPage != 'login.php') && ($currentPage != 'maintenance.php')){
 		//:: force logout then redirect to maint.page
+		logger($user->data()->id,"Offline","Landed on Maintenance Page."); //Lggger
 		$user->logout();
 		Redirect::to($us_url_root.'users/maintenance.php');
 	}
@@ -64,6 +65,7 @@ if($user->isLoggedIn() && !checkMenu(2,$user->data()->id)){
 if(!$user->isLoggedIn()){
 	if (($settings->site_offline==1) && ($currentPage != 'login.php') && ($currentPage != 'maintenance.php')){
 		//:: redirect to maint.page
+		logger(1,"Offline","Guest Landed on Maintenance Page."); //Logger
 		Redirect::to($us_url_root.'users/maintenance.php');
 	}
 }
@@ -99,6 +101,14 @@ if($settings->track_guest == 1 && $user->isLoggedIn()){
 	new_user_online($user_id);
 
 }
+
+if($user->isLoggedIn() && $currentPage != 'user_settings.php' && $user->data()->force_pr == 1) Redirect::to($us_url_root.'users/user_settings.php?err=You+must+change+your+password!');
+
+$titleQ = $db->query('SELECT title FROM pages WHERE page = ?', array(currentFolder().'/'.$currentPage));
+if ($titleQ->count() > 0) {
+    $pageTitle = $titleQ->first()->title;
+}
+else $pageTitle = '';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -125,7 +135,7 @@ if($settings->track_guest == 1 && $user->isLoggedIn()){
 	}
 	?>
 
-	<title><?=$settings->site_name;?></title>
+	<title><?= $settings->site_name . (($pageTitle != '') ? ' - '.$pageTitle : ''); ?></title>
 
 	<!-- Bootstrap Core CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -141,17 +151,17 @@ if($settings->track_guest == 1 && $user->isLoggedIn()){
 	<link href="<?=$us_url_root?><?=str_replace('../','',$settings->us_css3);?>" rel="stylesheet">
 
 	<!-- Custom Fonts/Animation/Styling-->
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
-<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-<!-- jQuery Fallback -->
-<script type="text/javascript">
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+	<!-- jQuery Fallback -->
+	<script type="text/javascript">
 	if (typeof jQuery == 'undefined') {
 		document.write(unescape("%3Cscript src='<?=$us_url_root?>users/js/jquery.js' type='text/javascript'%3E%3C/script%3E"));
 	}
-</script>
+	</script>
 
-<?php require_once $abs_us_root.$us_url_root.'usersc/includes/bootstrap_corrections.php'; ?>
+	<?php require_once $abs_us_root.$us_url_root.'usersc/includes/bootstrap_corrections.php'; ?>
 
 </head>
 
@@ -165,4 +175,5 @@ if($settings->track_guest == 1 && $user->isLoggedIn()){
 		bold("<br>".$msg);
 	}
 
+	if ($user->isLoggedIn()) { (!reAuth($_SERVER['PHP_SELF'],$user->data()->id)); }
 	?>

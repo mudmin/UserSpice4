@@ -20,8 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ?>
 <div class="row">
 <div class="col-xs-12">
-<div class="jumbotron text-center">
 <h2>Thank You! Your verification email has been sent.</h2>
-</div>
+<br />
 </div>
 </div>

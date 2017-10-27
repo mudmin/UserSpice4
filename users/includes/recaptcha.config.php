@@ -18,8 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-$publickey = $your_public_key; // the Site key you received when you registered
-$privatekey = $your_private_key; // the Private key you received when you registered
+$publickey = $settings->recap_public; // the Site key you received when you registered
+$privatekey = $settings->recap_private; // the Private key you received when you registered
 
 //YOU NEED TO CHANGE THESE KEYS. I THEY ARE DUMMY KEYS THAT I CANNOT GUARANTEE WILL STAY LIVE
 //IF YOU USE THE DUMMY KEYS YOUR reCAPTCHA WILL RANDOMLY STOP WORKING AND THAT WILL BREAK THINGS
@@ -47,7 +47,7 @@ class ReCaptcha
      *
      * @param string $secret shared secret between site and ReCAPTCHA server.
      */
-    function ReCaptcha($secret)
+    function __construct($secret)
     {
         if ($secret == null || $secret == "") {
             die("To use reCAPTCHA you must get an API key from <a href='"

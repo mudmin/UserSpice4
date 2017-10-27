@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <?php
 $settingsQ = $db->query("SELECT * FROM settings");
 $settings = $settingsQ->first();
-
+if($user->isLoggedIn()) Redirect::to('index.php');
 //Decide whether or not to use email activation
 $query = $db->query("SELECT * FROM email");
 $results = $query->first();

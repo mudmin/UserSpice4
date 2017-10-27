@@ -59,15 +59,12 @@ $users = $userQ->results();
 
 		 <div class="row">
 		     <div class="col-md-12">
-
-
-<hr />
  <div class="allutable table-responsive">
 <table class='table table-hover table-list-search'>
 <thead>
 <tr>
   <th><div class="alluinfo">&nbsp;</div></th>
-  <th>Username</th>
+  <th></th>
  </tr>
 </thead>
  <tbody>
@@ -88,7 +85,7 @@ foreach ($users as $v1) {
 		</td>
 
 		  <td>
-			<h4><a href="profile.php?id=<?=$v1->id?>"><?=$ususername?>  </a></h4>
+			<h4><a href="profile.php?id=<?=$v1->id?>" class="nounderline"><?=echouser($v1->id)?>  </a></h4>
 			<p><?=$ususerbio?></p>
 		</td>
 	</tr>

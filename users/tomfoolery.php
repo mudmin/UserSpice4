@@ -35,9 +35,47 @@ if($tomC > 0){
 	$tom = $tomQ->results();
 }
 
+if(!empty($_POST)){
+	if(!empty($_POST['ban'])){
+		foreach($_POST['banIP'] as $k=>$v){
+			$q = $db->query("SELECT ip FROM audit WHERE id = ?",array($v));
+			$c = $q->count();
+			if($c > 0){
+				$f = $q->first();
+				if($f->ip == '::1' || $f->ip == "127.0.0.1"){
+					continue;
+				}else{
+					$query = $db->query("SELECT id FROM us_ip_blacklist WHERE ip = ?",array($f->ip));
+					$count = $query->count();
+					if($count > 0){
+						continue;
+					}else{
+						$luQ = $db->query("SELECT * FROM us_ip_list WHERE ip = ?",array($f->ip));
+						$luC = $luQ->count();
+						if($luC > 0){
+							$luF = $luQ->first();
+							$lu = $luF->user_id;
+						}else{
+							$lu = 0;
+						}
+						$fields = array(
+							'ip'		=> $f->ip,
+							'last_user' => $lu,
+							'reason'		=> 0,
+							);
+
+						$db->insert('us_ip_blacklist',$fields);
+						Redirect::to('tomfoolery.php?err=IP+is+now+banned');
+					}
+				}
+			}
+		}
+	}
+
 if(!empty($_POST['clear'])){
 	$db->query("TRUNCATE TABLE audit");
 	Redirect::to("tomfoolery.php?err=All+events+have+been+deleted");
+}
 }
 
 ?>
@@ -55,8 +93,8 @@ if(!empty($_POST['clear'])){
 					<h2>View Security Events</h2>
 					If someone tries to do something without permission it is logged here.<br>
 					Note that this helps check for both security breaches AND figuring out that you have not given someone proper permissions.<br><br>
-
-					<table class="table table-hover">
+					<form class="" action="tomfoolery.php" method="post">
+					<table id="paginate" class="table table-hover">
 						<thead>
 
 							<tr>
@@ -65,27 +103,52 @@ if(!empty($_POST['clear'])){
 								<th>Page</th>
 								<th>Timestamp</th>
 								<th>IP</th>
+								<th>Ban IP</th>
 								<!-- <th>Read</th> -->
 							</tr>
 
 						</thead>
 						<tbody>
-							<form class="" action="tomfoolery.php" method="post">
+
 
 
 								<input class='btn btn-large btn-primary' type='submit' name="clear" value='Clear All Logs'/>
+								<input class='btn btn-large btn-danger' type='submit' name="ban" value='Ban Selected IPs'/>
+
 								<?php foreach ($tom as $m){ ?>
 
 									<tr>
 										<td><?=$m->id?></td>
-										<td><?php echouser($m->user)?></td>
+										<td><?php
+										if($m->user > 0){
+											echouser($m->user);
+										}else{
+											$q = $db->query("SELECT * FROM us_ip_list WHERE ip = ? ORDER BY id DESC",array($m->ip));
+											$c = $q->count();
+											if($c > 0){
+												$f = $q->first();
+												echo "IP last used by ";
+												echouser($f->user_id);
+											}else{
+												echo "<font color='red'>Unknown IP</font>";
+											}
+										}
+											?></td>
 
 										<td><?php echopage($m->page);?></td>
 
 										<td><?=$m->timestamp?></td>
 
-										<td><?=$m->ip?></td>
-
+										<td><?php
+										if(checkBan($m->ip)){
+											echo "<font color='red'>".$m->ip." (banned)</font>";
+										}else{
+										echo $m->ip;
+										} ?></td>
+										<td>
+										<?php if(!checkBan($m->ip)){ ?>
+											<input type="checkbox" name="banIP[<?=$m->id?>]" value="<?=$m->id?>"></td>
+										<?php } ?>
 										<!-- <td><?php //bin($m->viewed); ?></td> -->
 
 
@@ -108,5 +171,17 @@ if(!empty($_POST['clear'])){
 
 
 		<?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; // the final html footer copyright row + the external js calls ?>
-		
+
+		<script>
+		$(document).ready(function() {
+			$('#paginate').DataTable(
+				{  searching: false,
+					"pageLength": 50
+				}
+			);
+		} );
+		</script>
+		<script src="js/pagination/jquery.dataTables.js" type="text/javascript"></script>
+		<script src="js/pagination/dataTables.js" type="text/javascript"></script>
+
 		<?php require_once $abs_us_root.$us_url_root.'users/includes/html_footer.php'; // currently just the closing /body and /html ?>

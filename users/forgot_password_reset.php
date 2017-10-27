@@ -23,6 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <?php require_once $abs_us_root.$us_url_root.'users/includes/navigation.php'; ?>
 <?php if (!securePage($_SERVER['PHP_SELF'])){die();} ?>
 <?php
+if ($user->isLoggedIn()) $user->logout();
+if(ipCheckBan()){Redirect::to($us_url_root.'usersc/scripts/banned.php');die();}
 $error_message = null;
 $errors = array();
 $reset_password_success=FALSE;
@@ -32,7 +34,7 @@ $password_change_form=FALSE;
 $token = Input::get('csrf');
 if(Input::exists()){
 	if(!Token::check($token)){
-		die('Token doesn\'t match!');
+		include('../usersc/scripts/token_error.php');
 	}
 }
 
@@ -63,8 +65,10 @@ if(Input::get('reset') == 1){ //$_GET['reset'] is set when clicking the link in 
 			  'password' => password_hash(Input::get('password'), PASSWORD_BCRYPT, array('cost' => 12)),
 			  'vericode' => rand(100000,999999),
 				'email_verified' => true,
+				'force_pr' => 0,
 			),$ruser->data()->id);
 			$reset_password_success=TRUE;
+			logger($ruser->data()->id,"User","Reset password.");
 		}else{
 			$reset_password_success=FALSE;
 			$errors = $validation->errors();

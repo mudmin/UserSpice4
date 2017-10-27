@@ -24,6 +24,7 @@ require_once $abs_us_root.$us_url_root.'users/includes/navigation.php';
 
 $settingsQ = $db->query("SELECT * FROM settings");
 $settings = $settingsQ->first();
+if($settings->site_offline==0) Redirect::to('index.php');
 ?>
 <!-- Do what you want here -->
 <div id="page-wrapper">

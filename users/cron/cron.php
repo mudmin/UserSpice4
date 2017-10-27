@@ -1,0 +1,25 @@
+<?php
+require_once '../init.php';
+$db = DB::getInstance();
+$from = Input::get('from');
+$primaryquery = $db->query("SELECT file FROM crons WHERE active = ? ORDER BY sort",array(1));
+$querycount = $primaryquery->count();
+//Log Prep
+if($user->isLoggedIn()) { $user_id = $user->data()->id; } else { $user_id = 1; }
+$logtype = "Cron";
+//Log Prep End
+
+if($querycount > 0)
+{
+	$query = $db->query("SELECT id,file FROM crons WHERE active = ? ORDER BY sort",array(1));
+	foreach ($query->results() as $row) {
+		include_once($row->file);
+		$cronfields = array(
+		'cron_id' => $row->id,
+		'datetime' => date("Y-m-d H:i:s"),
+		'user_id' => $user_id);
+		$db->insert('crons_logs',$cronfields);
+	}
+}
+ if($from != NULL) Redirect::to('/'. $from); 
+?>

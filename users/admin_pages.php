@@ -123,31 +123,42 @@ $dbpages = fetchAllPages();
 					</span>
 				</div>
 				<br>
-				<table class='table table-hover table-list-search'>
-					<th>Id</th><th>Page</th><th>Access</th>
+				<table id="paginate" class='table table-hover table-list-search'>
+					<thead>
+						<th>Id</th><th>Page</th><th>ReAuth</th><th>Access</th>
+					</thead>
 
-					<?php
-					//Display list of pages
-					$count=0;
-					foreach ($dbpages as $page){
-						?>
-						<tr><td><?=$dbpages[$count]->id?></td>
-							<td><a href ='admin_page.php?id=<?=$dbpages[$count]->id?>'><?=$dbpages[$count]->page?></a></td>
-							<td>
-								<a href ='admin_page.php?id=<?=$dbpages[$count]->id?>'>
-									<?php
-									//Show public/private setting of page
-									if($dbpages[$count]->private == 0){
-										echo "<font color='green'>Public</font>";
-									}else {
-										echo "<font color='red'>Private</font>";
-									}
-									?>
-								</a>
-							</td></tr>
-							<?php
-							$count++;
-						}?>
+					<tbody>
+
+
+						<?php
+						//Display list of pages
+						$count=0;
+						foreach ($dbpages as $page){
+							?>
+							<tr><td><?=$dbpages[$count]->id?></td>
+								<td><a href ='admin_page.php?id=<?=$dbpages[$count]->id?>'><?=$dbpages[$count]->page?></a></td>
+								<td>
+									<?php if($dbpages[$count]->re_auth == 1){
+										echo "<i class='glyphicon glyphicon-ok'></i>";
+									} ?>
+								</td>
+								<td>
+									<a href ='admin_page.php?id=<?=$dbpages[$count]->id?>'>
+										<?php
+										//Show public/private setting of page
+										if($dbpages[$count]->private == 0){
+											echo "<font color='green'>Public</font>";
+										}else {
+											echo "<font color='red'>Private</font>";
+										}
+										?>
+									</a>
+								</td></tr>
+								<?php
+								$count++;
+							}?>
+						</tbody>
 					</table>
 
 
@@ -165,5 +176,17 @@ $dbpages = fetchAllPages();
 
 	<!-- Place any per-page javascript here -->
 	<script src="js/search.js" charset="utf-8"></script>
+
+	<script>
+	$(document).ready(function() {
+		$('#paginate').DataTable(
+			{  searching: false,
+				"pageLength": 25
+			}
+		);
+	} );
+	</script>
+	<script src="js/pagination/jquery.dataTables.js" type="text/javascript"></script>
+	<script src="js/pagination/dataTables.js" type="text/javascript"></script>
 
 	<?php require_once $abs_us_root.$us_url_root.'users/includes/html_footer.php'; // currently just the closing /body and /html ?>

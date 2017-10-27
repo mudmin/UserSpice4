@@ -22,10 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <?php require_once $abs_us_root.$us_url_root.'users/includes/navigation.php'; ?>
 
 <?php
-if($user->isLoggedIn()){
-	$user->logout();
-	Redirect::to($us_url_root.'users/verify.php');
-}
+if(ipCheckBan()){Redirect::to($us_url_root.'usersc/scripts/banned.php');die();}
+//if($user->isLoggedIn()) $user->logout();
 
 $verify_success=FALSE;
 
@@ -46,10 +44,11 @@ if(Input::exists('get')){
 	if($validation->passed()){ //if email is valid, do this
 		//get the user info based on the email
 		$verify = new User(Input::get('email'));
-
 		if ($verify->exists() && $verify->data()->vericode == $vericode){ //check if this email account exists in the DB
-			$verify->update(array('email_verified' => 1),$verify->data()->id);
+			if(null==Input::get('new'))	$verify->update(array('email_verified' => 1,'vericode' => rand(100000,999999),'email' => $verify->data()->email_new,'email_new' => NULL),$verify->data()->id);
+			else $verify->update(array('email_verified' => 1,'vericode' => rand(100000,999999)),$verify->data()->id);
 			$verify_success=TRUE;
+			logger($verify->data()->id,"User","Verification completed via vericode.");
 		}
 	}else{
 		$errors = $validation->errors();
@@ -69,7 +68,7 @@ if ($verify_success){
 	require 'views/_verify_error.php';
 }
 
-?>
+?><br />
 </div>
 </div>
 

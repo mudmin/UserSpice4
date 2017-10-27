@@ -20,12 +20,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ?>
 <div class="row">
 <div class="col-xs-12">
-
-<div class="jumbotron container">
 	<h2 class="text-center">Hello <?=$ruser->data()->fname;?>,</h2>
 	<p class="text-center">Please reset your password.</p>
 	<form action="forgot_password_reset.php?reset=1" method="post">
-		<span class="bg-danger"><?=display_errors($errors);?></span>
+		<?php if(!$errors=='') {?><div class="alert alert-danger"><?=display_errors($errors);?></div><?php } ?>
 		<div class="form-group">
 			<label for="password">New Password:</label>
 			<input type="password" name="password" value="" id="password" class="form-control">
@@ -39,6 +37,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		<input type="hidden" name="vericode" value="<?=$vericode;?>">
 		<input type="submit" name="resetPassword" value="Reset" class="btn btn-primary">
 	</form>
-</div>	
+<br />
 </div><!-- /.col -->
 </div><!-- /.row -->

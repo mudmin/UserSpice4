@@ -39,7 +39,7 @@ $id = $thisProfile->id;
 if(!empty($_POST)) {
     $token = $_POST['csrf'];
     if(!Token::check($token)){
-      die('Token doesn\'t match!');
+      include('../usersc/scripts/token_error.php');
     }else {
       if ($thisProfile->bio != $_POST['bio']){
         $newBio = $_POST['bio'];
@@ -70,9 +70,8 @@ if(!empty($_POST)) {
 							<p><img src="<?=$grav; ?>" alt=""class="left-block img-thumbnail" alt="Generic placeholder thumbnail"></p>
 						</div>
 						<div class="col-xs-12 col-md-10">
-						<h1><?=ucfirst($user->data()->username)?>'s Profile</h1>
+						<h1><?=echouser($user->data()->id)?>'s Profile</h1>
 
-        <h2>Bio</h2>
           <form name="update_bio" action="edit_profile.php" method="post">
     <div align="center"><textarea rows="20" cols="80"  id="mytextarea" name="bio" ><?=$thisProfile->bio;?></textarea></div>
           <input type="hidden" name="csrf" value="<?=Token::generate();?>" >

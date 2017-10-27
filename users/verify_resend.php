@@ -22,15 +22,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <?php require_once $abs_us_root.$us_url_root.'users/includes/navigation.php'; ?>
 
 <?php
-if($user->isLoggedIn()){
-    $user->logout();
-    Redirect::to('verify_resend.php');
-}
+if($user->isLoggedIn()) $user->logout();
 
 $token = Input::get('csrf');
 if(Input::exists()){
     if(!Token::check($token)){
-        die('Token doesn\'t match!');
+        include('../usersc/scripts/token_error.php');
     }
 }
 
@@ -62,6 +59,7 @@ if(Input::exists('post')){
             $subject = 'Verify Your Email';
             $body =  email_body('_email_template_verify.php',$options);
             $email_sent=email($email,$subject,$body);
+            logger($fuser->data()->id,"User","Requested a new verification email.");
             if(!$email_sent){
                 $errors[] = 'Email NOT sent due to error. Please contact site administrator.';
             }
