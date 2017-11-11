@@ -34,6 +34,7 @@ if(Input::exists()){
 	if(!Token::check($token)){
 		die('Token doesn\'t match!');
 	}
+
 }
 
 if(Input::get('reset') == 1){ //$_GET['reset'] is set when clicking the link in the password reset email.
@@ -58,10 +59,12 @@ if(Input::get('reset') == 1){ //$_GET['reset'] is set when clicking the link in 
 		),
 		));
 		if($validation->passed()){
-			//update password
+			if($ruser->data()->vericode != $vericode){
+				Redirect::to('forgot_password_reset.php?err=Something+went+wrong.+Please+try+again.');
+			}
 			$ruser->update(array(
 			  'password' => password_hash(Input::get('password'), PASSWORD_BCRYPT, array('cost' => 12)),
-			  'vericode' => rand(100000,999999),
+			  'vericode' => randomstring(15),
 				'email_verified' => true,
 			),$ruser->data()->id);
 			$reset_password_success=TRUE;

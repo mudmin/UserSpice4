@@ -114,7 +114,7 @@ if (!empty($_POST)) {
           'company' => Input::get('company'),
           'email_verified' => 1,
           'active' => 1,
-          'vericode' => 111111,
+          'vericode' => randomstring(15),
         );
         $db->insert('users',$fields);
         $theNewId=$db->lastId();

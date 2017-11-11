@@ -34,7 +34,7 @@ if($settings->recaptcha == 1 || $settings->recaptcha == 2){
 //There is a lot of commented out code for a future release of sign ups with payments
 $form_method = 'POST';
 $form_action = 'join.php';
-$vericode = rand(100000,999999);
+$vericode = 'vericode' => randomstring(15);
 
 $form_valid=FALSE;
 

@@ -27,6 +27,13 @@ function testUS(){
 	echo "<br>";
 }
 
+function randomstring($len){
+$string = "";
+$chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+for($i=0;$i<$len;$i++)
+$string.=substr($chars,rand(0,strlen($chars)),1);
+return $string;
+}
 
 function get_gravatar($email, $s = 120, $d = 'mm', $r = 'pg', $img = false, $atts = array() ) {
 	$url = 'https://www.gravatar.com/avatar/';
