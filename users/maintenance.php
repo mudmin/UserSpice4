@@ -17,13 +17,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-require_once 'init.php';
+require_once '../users/init.php';
 require_once $abs_us_root.$us_url_root.'users/includes/header.php';
 require_once $abs_us_root.$us_url_root.'users/includes/navigation.php';
 //if (!securePage($_SERVER['PHP_SELF'])){die();}
 
 $settingsQ = $db->query("SELECT * FROM settings");
 $settings = $settingsQ->first();
+if($settings->site_offline==0) Redirect::to($us_url_root.'index.php');
 ?>
 <!-- Do what you want here -->
 <div id="page-wrapper">

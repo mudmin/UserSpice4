@@ -15,14 +15,6 @@
                     <h4 class="list-group-item-heading">Step 3</h4>
                     <p class="list-group-item-text"><?=$step3?></p>
                 </a></li>
-                <li><a href="#">
-                    <h4 class="list-group-item-heading">Step 4</h4>
-                    <p class="list-group-item-text"><?=$step4?></p>
-                </a></li>
-                <li ><a href="#">
-                    <h4 class="list-group-item-heading">Step 5</h4>
-                    <p class="list-group-item-text"><?=$step5?></p>
-                </a></li>
               </ul>
           </div>
           <div class="row">

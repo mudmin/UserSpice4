@@ -18,10 +18,20 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 //echo "helpers included";
+
 require_once("us_helpers.php");
 require_once("users_online.php");
 require_once("language.php");
 require_once("backup_util.php");
+require_once("class.treeManager.php");
+require_once("menus.php");
+require_once("forms.php");
+
+define("ABS_US_ROOT",$abs_us_root);
+define("US_URL_ROOT",$us_url_root);
+require_once($abs_us_root.$us_url_root."users/vendor/autoload.php");
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 // Readeable file size
 function size($path) {
@@ -93,7 +103,7 @@ function display_errors($errors = array()){
 	$html = '<ul class="bg-danger">';
 	foreach($errors as $error){
 		if(is_array($error)){
-			echo "<br>";
+			//echo "<br>"; Patch from user SavaageStyle - leaving here in case of rollback
 			$html .= '<li class="text-danger">'.$error[0].'</li>';
 			$html .= '<script>jQuery("#'.$error[0].'").parent().closest("div").addClass("has-error");</script>';
 		}else{
@@ -118,36 +128,36 @@ function display_successes($successes = array()){
 	return $html;
 }
 
-function email($to,$subject,$body,$attachment=false){
+function email($to,$subject,$body,$opts=[],$attachment=false){
+/*you can now pass in
+$opts = array(
+  'email' => 'from_email@aol.com',
+  'name'  => 'Bob Smith'
+);
+*/
 	$db = DB::getInstance();
 	$query = $db->query("SELECT * FROM email");
 	$results = $query->first();
 
-	$from = $results->from_email;
-	$from_name=$results->from_name;
-	$smtp_server=$results->smtp_server;
-	$smtp_port=$results->smtp_port;
-	$smtp_username=$results->email_login;
-	$smtp_password = htmlspecialchars_decode($results->email_pass);
-	$smtp_transport=$results->transport;
-
 	$mail = new PHPMailer;
 
-	// $mail->SMTPDebug = 3;                               // Enable verbose debug output
+	$mail->SMTPDebug = $results->debug_level;               // Enable verbose debug output
+  if($results->isSMTP == 1){$mail->isSMTP();}             // Set mailer to use SMTP
+	$mail->Host = $results->smtp_server;  									// Specify SMTP server
+	$mail->SMTPAuth = $results->useSMTPauth;                // Enable SMTP authentication
+	$mail->Username = $results->email_login;                 // SMTP username
+	$mail->Password = htmlspecialchars_decode($results->email_pass);    // SMTP password
+	$mail->SMTPSecure = $results->transport;                            // Enable TLS encryption, `ssl` also accepted
+	$mail->Port = $results->smtp_port;                                  // TCP port to connect to
 
-	// $mail->isSMTP();                                    // Set mailer to use SMTP
-	$mail->Host = $smtp_server;  													// Specify main and backup SMTP servers
-	$mail->SMTPAuth = true;                               // Enable SMTP authentication
-	$mail->Username = $smtp_username;                 // SMTP username
-	$mail->Password = $smtp_password;                           // SMTP password
-	$mail->SMTPSecure = $smtp_transport;                            // Enable TLS encryption, `ssl` also accepted
-	$mail->Port = $smtp_port;                                    // TCP port to connect to
+	if(isset($opts['email']) && isset($opts['name'])){
+  $mail->setFrom($opts['email'], $opts['name']);
+}else{
+  $mail->setFrom($results->from_email, $results->from_name);
+}
 
-	$mail->setFrom($from, $from_name);
-
-	$mail->addAddress(rawurldecode($to));     // Add a recipient, name is optional
-
-	$mail->isHTML(true);                                  // Set email format to HTML
+	$mail->addAddress(rawurldecode($to));                   // Add a recipient, name is optional
+  if($results->isHTML == 'true'){$mail->isHTML(true); }                  // Set email format to HTML
 
 	$mail->Subject = $subject;
 	$mail->Body    = $body;
@@ -204,18 +214,55 @@ function inputBlock($type,$label,$id,$divAttr=array(),$inputAttr=array(),$helper
 }
 
 //preformatted var_dump function
-function dump($var){
-	echo "<pre>";
-	var_dump($var);
-	echo "</pre>";
+function dump($var,$adminOnly=false,$localhostOnly=false){
+    if($adminOnly && isAdmin() && !$localhostOnly){
+        echo "<pre>";
+        var_dump($var);
+        echo "</pre>";
+    }
+    if($localhostOnly && isLocalhost() && !$adminOnly){
+        echo "<pre>";
+        var_dump($var);
+        echo "</pre>";
+    }
+    if($localhostOnly && isLocalhost() && $adminOnly && isAdmin()){
+        echo "<pre>";
+        var_dump($var);
+        echo "</pre>";
+    }
+    if(!$localhostOnly && !$adminOnly){
+        echo "<pre>";
+        var_dump($var);
+        echo "</pre>";
+    }
 }
 
 //preformatted dump and die function
-function dnd($var){
-	echo "<pre>";
-	var_dump($var);
-	echo "</pre>";
-	die();
+function dnd($var,$adminOnly=false,$localhostOnly=false){
+    if($adminOnly && isAdmin() && !$localhostOnly){
+        echo "<pre>";
+        var_dump($var);
+        echo "</pre>";
+        die();
+    }
+    if($localhostOnly && isLocalhost() && !$adminOnly){
+        echo "<pre>";
+        var_dump($var);
+        echo "</pre>";
+        die();
+    }
+    if($localhostOnly && isLocalhost() && $adminOnly && isAdmin()){
+        echo "<pre>";
+        var_dump($var);
+        echo "</pre>";
+        die();
+    }
+    if(!$localhostOnly && !$adminOnly){
+        echo "<pre>";
+        var_dump($var);
+        echo "</pre>";
+        die();
+    }
 }
 
 function bold($text){

@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	<li>Check your email and click the link that is sent to you.</li>
 	<li>Follow the on screen instructions</li>
 </ol>
-<span class="bg-danger"><?=display_errors($errors);?></span>
+<?php if(!$errors=='') {?><div class="alert alert-danger"><?=display_errors($errors);?></div><?php } ?>
 <form action="forgot_password.php" method="post" class="form ">
 	
 	<div class="form-group">

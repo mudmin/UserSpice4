@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
  ?>
-<?php require_once 'init.php'; ?>
+<?php require_once '../users/init.php'; ?>
 <?php require_once $abs_us_root.$us_url_root.'users/includes/header.php'; ?>
 <?php require_once $abs_us_root.$us_url_root.'users/includes/navigation.php'; ?>
 <div id="page-wrapper">
@@ -26,16 +26,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <?php
 $settingsQ = $db->query("SELECT * FROM settings");
 $settings = $settingsQ->first();
-
+if($user->isLoggedIn()) Redirect::to($us_url_root.'index.php');
 //Decide whether or not to use email activation
 $query = $db->query("SELECT * FROM email");
 $results = $query->first();
 $act = $results->email_act;
 
 if($act == 1) {
-	require 'views/_joinThankYou_verify.php';
+	require $abs_us_root.$us_url_root.'users/views/_joinThankYou_verify.php';
 }else{
-	require 'views/_joinThankYou.php';
+	require $abs_us_root.$us_url_root.'users/views/_joinThankYou.php';
 }
 
 ?>

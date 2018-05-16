@@ -20,8 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ?>
 <div class="row">
 <div class="col-xs-12">
-<div class="jumbotron text-center">
-<h2>Thank You! Your verification email has been sent.</h2>
-</div>
+  <p>Your verification link has been sent to your email address.</p>
+  <p>Click the link in the email to complete verification. Be sure to check your spam folder if the email isn't in your inbox.</p>
+  <p>Verification links are only valid for <?=$settings->join_vericode_expiry?> hours.</p>
+<br />
 </div>
 </div>

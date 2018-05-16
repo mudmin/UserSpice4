@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 ?>
-<?php require_once 'init.php'; ?>
+<?php require_once '../users/init.php'; ?>
 <?php require_once $abs_us_root.$us_url_root.'users/includes/header.php'; ?>
 <?php require_once $abs_us_root.$us_url_root.'users/includes/navigation.php'; ?>
 <?php if (!securePage($_SERVER['PHP_SELF'])){die();} ?>
@@ -113,41 +113,44 @@ $dbpages = fetchAllPages();
 
 				<!-- Content goes here -->
 
+				<hr>
+				<table id="paginate" class='table table-hover table-list-search'>
+					<thead>
+						<th>Id</th><th>Page</th><th>Page Name</th><th>ReAuth</th><th>Access</th>
+					</thead>
+
+					<tbody>
 
 
-				<div class="input-group col-sm-10">
-					<!-- USE TWITTER TYPEAHEAD JSON WITH API TO SEARCH -->
-					<input class="form-control" id="system-search" name="q" placeholder="Search Pages..." required>
-					<span class="input-group-btn">
-						<button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
-					</span>
-				</div>
-				<br>
-				<table class='table table-hover table-list-search'>
-					<th>Id</th><th>Page</th><th>Access</th>
-
-					<?php
-					//Display list of pages
-					$count=0;
-					foreach ($dbpages as $page){
-						?>
-						<tr><td><?=$dbpages[$count]->id?></td>
-							<td><a href ='admin_page.php?id=<?=$dbpages[$count]->id?>'><?=$dbpages[$count]->page?></a></td>
-							<td>
-								<a href ='admin_page.php?id=<?=$dbpages[$count]->id?>'>
-									<?php
-									//Show public/private setting of page
-									if($dbpages[$count]->private == 0){
-										echo "<font color='green'>Public</font>";
-									}else {
-										echo "<font color='red'>Private</font>";
-									}
-									?>
-								</a>
-							</td></tr>
-							<?php
-							$count++;
-						}?>
+						<?php
+						//Display list of pages
+						$count=0;
+						foreach ($dbpages as $page){
+							?>
+							<tr><td><?=$dbpages[$count]->id?></td>
+								<td><a class="nounderline" href ='admin_page.php?id=<?=$dbpages[$count]->id?>'><?=$dbpages[$count]->page?></a></td>
+								<td><a class="nounderline" href ='admin_page.php?id=<?=$dbpages[$count]->id?>'><?=$dbpages[$count]->title?></a></td>
+								<td>
+									<?php if($dbpages[$count]->re_auth == 1){
+										echo "<i class='glyphicon glyphicon-ok'></i>";
+									} ?>
+								</td>
+								<td>
+									<a class="nounderline" href ='admin_page.php?id=<?=$dbpages[$count]->id?>'>
+										<?php
+										//Show public/private setting of page
+										if($dbpages[$count]->private == 0){
+											echo "<font color='green'>Public</font>";
+										}else {
+											echo "<font color='red'>Private</font>";
+										}
+										?>
+									</a>
+								</td></tr>
+								<?php
+								$count++;
+							}?>
+						</tbody>
 					</table>
 
 
@@ -164,6 +167,13 @@ $dbpages = fetchAllPages();
 	<?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; // the final html footer copyright row + the external js calls ?>
 
 	<!-- Place any per-page javascript here -->
-	<script src="js/search.js" charset="utf-8"></script>
+
+	<script>
+	$(document).ready(function() {
+	    $('#paginate').DataTable({"pageLength": 25,"aLengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]], "aaSorting": []});
+	} );
+	</script>
+	<script src="../users/js/pagination/jquery.dataTables.js" type="text/javascript"></script>
+	<script src="../users/js/pagination/dataTables.js" type="text/javascript"></script>
 
 	<?php require_once $abs_us_root.$us_url_root.'users/includes/html_footer.php'; // currently just the closing /body and /html ?>

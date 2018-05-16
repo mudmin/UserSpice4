@@ -24,6 +24,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 $lang = array();
 
+// Signup
+$lang = array_merge($lang,array(
+	"SIGNUP_TEXT"			=> "Register",
+	"SIGNUP_BUTTONTEXT"		=> "Register Me",
+	"SIGNUP_AUDITTEXT"		=> "Registered",
+	));
+
+// Signin
+$lang = array_merge($lang,array(
+	"SIGNIN_FAIL"			=> "** FAILED LOGIN **",
+	"SIGNIN_TITLE"			=> "Please Log In",
+	"SIGNIN_TEXT"			=> "Log In",
+	"SIGNOUT_TEXT"			=> "Log Out",
+	"SIGNIN_BUTTONTEXT"		=> "Login",
+	"SIGNIN_AUDITTEXT"		=> "Logged In",
+	"SIGNOUT_AUDITTEXT"		=> "Logged Out",
+	));
+
+//Navigation
+$lang = array_merge($lang,array(
+	"NAVTOP_HELPTEXT"		=> "Help",
+	));
+
 //Account
 $lang = array_merge($lang,array(
 	"ACCOUNT_USER_ADDED" 		=> "New user added!",
@@ -71,6 +94,8 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_PERMISSION_REMOVED"		=> "Removed access from %m1% permission levels",
 	"ACCOUNT_INVALID_USERNAME"		=> "Invalid username",
 	"CAPTCHA_ERROR"		=> "You failed the Captcha Test, Robot!",
+	"USER_PROTECTION"		=> "User is %m1% protected",
+	"USER_DEV_OPTION"		=> "User is %m1% a dev user",
 	));
 
 //Configuration
@@ -119,6 +144,8 @@ $lang = array_merge($lang,array(
 	"PAGE_PRIVATE_TOGGLED"			=> "This page is now %m1%",
 	"PAGE_ACCESS_REMOVED"			=> "Page access removed for %m1% permission level(s)",
 	"PAGE_ACCESS_ADDED"			=> "Page access added for %m1% permission level(s)",
+	"PAGE_REAUTH_TOGGLED"			=>  "This page %m1% verification",
+	"PAGE_RETITLED"			=>  "This page has been retitled to '%m1%'",
 	));
 
 
@@ -143,6 +170,12 @@ $lang = array_merge($lang,array(
 	"CANNOT_DELETE_NEWUSERS"		=> "You cannot delete the default 'new user' group",
 	"CANNOT_DELETE_ADMIN"			=> "You cannot delete the default 'admin' group",
 	));
+
+	//Admin Page
+	$lang = array_merge($lang,array(
+		"PERMISSION_CHAR_LIMIT"			=> "Permission names must be between %m1% and %m2% characters in length",
+
+		));
 
 
 

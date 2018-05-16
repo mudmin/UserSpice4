@@ -18,18 +18,21 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 ?>
-<?php require_once 'init.php'; ?>
+<?php require_once '../users/init.php'; ?>
 <?php require_once $abs_us_root.$us_url_root.'users/includes/header.php'; ?>
 <?php require_once $abs_us_root.$us_url_root.'users/includes/navigation.php'; ?>
 <?php if (!securePage($_SERVER['PHP_SELF'])){die();} ?>
 <?php
 $validation = new Validate();
 //PHP Goes Here!
-$permissionId = $_GET['id'];
+$permissionId = Input::get('id');
+$permission_exempt = array(1,2);
+$errors = [];
+$successes = [];
 
 //Check if selected permission level exists
 if(!permissionIdExists($permissionId)){
-Redirect::to("admin_permissions.php"); die();
+Redirect::to($us_url_root.'users/admin_permissions.php'); die();
 }
 
 //Fetch information specific to permission level
@@ -38,20 +41,23 @@ $permissionDetails = fetchPermissionDetails($permissionId);
 if(!empty($_POST)){
   $token = $_POST['csrf'];
 	if(!Token::check($token)){
-		die('Token doesn\'t match!');
+		include($abs_us_root.$us_url_root.'usersc/scripts/token_error.php');
 	}
 
   //Delete selected permission level
   if(!empty($_POST['delete'])){
-    $deletions = $_POST['delete'];
-    if ($deletion_count = deletePermission($deletions)){
-      $successes[] = lang("PERMISSION_DELETIONS_SUCCESSFUL", array($deletion_count));
-      Redirect::to('admin_permissions.php');
+            if(!in_array($permissionId,$permission_exempt)){
+      $deletions = $_POST['delete'];
+      if ($deletion_count = deletePermission($deletions)){
+        $successes[] = lang("PERMISSION_DELETIONS_SUCCESSFUL", array($deletion_count));
+        $name = $permissionDetails['name'];
+        logger($user->data()->id,"Permissions Manager","Deleted $name.");
+        Redirect::to($us_url_root.'users/admin_permissions.php?msg=Permission+deleted.');
+      }
+      else {
+        $errors[] = lang("SQL_ERROR");
+            } }
     }
-    else {
-      $errors[] = lang("SQL_ERROR");
-    }
-  }
   else
   {
     //Update permission level name
@@ -70,7 +76,9 @@ if(!empty($_POST)){
     ));
     if($validation->passed()){
       $db->update('permissions',$permissionId,$fields);
-
+      $successes[] = "Updated Permission Name";
+      $name = $permissionDetails['name'];
+      logger($user->data()->id,"Permissions Manager","Changed Permission Name from $name to $permission.");
     }else{
         }
       }
@@ -80,6 +88,7 @@ if(!empty($_POST)){
       $remove = $_POST['removePermission'];
       if ($deletion_count = removePermission($permissionId, $remove)) {
         $successes[] = lang("PERMISSION_REMOVE_USERS", array($deletion_count));
+        logger($user->data()->id,"Permission Manager","Deleted $deletion_count users(s) from Permission #$permissionId.");
       }
       else {
         $errors[] = lang("SQL_ERROR");
@@ -91,6 +100,7 @@ if(!empty($_POST)){
       $add = $_POST['addPermission'];
       if ($addition_count = addPermission($permissionId, $add)) {
         $successes[] = lang("PERMISSION_ADD_USERS", array($addition_count));
+        logger($user->data()->id,"Permission Manager","Added $addition_count users(s) to Permission #$permissionId.");
       }
       else {
         $errors[] = lang("SQL_ERROR");
@@ -102,6 +112,7 @@ if(!empty($_POST)){
       $remove = $_POST['removePage'];
       if ($deletion_count = removePage($remove, $permissionId)) {
         $successes[] = lang("PERMISSION_REMOVE_PAGES", array($deletion_count));
+        logger($user->data()->id,"Permission Manager","Deleted $deletion_count pages(s) from Permission #$permissionId.");
       }
       else {
         $errors[] = lang("SQL_ERROR");
@@ -113,6 +124,7 @@ if(!empty($_POST)){
       $add = $_POST['addPage'];
       if ($addition_count = addPage($add, $permissionId)) {
         $successes[] = lang("PERMISSION_ADD_PAGES", array($addition_count));
+        logger($user->data()->id,"Permission Manager","Added $addition_count pages(s) to Permission #$permissionId.");
       }
       else {
         $errors[] = lang("SQL_ERROR");
@@ -148,20 +160,20 @@ $pageData = fetchAllPages();
     <!-- Page Heading -->
     <div class="row">
       <div class="col-xs-12">
-        <div id="form-errors">
-            <?=$validation->display_errors();?></div>
+
+            <?php if(!$validation->errors()=='') {?><div class="alert alert-danger"><?=display_errors($validation->errors());?></div><?php } ?>
         <!-- Main Center Column -->
 
           <!-- Content Goes Here. Class width can be adjusted -->
           <h1>Configure Details for this Permission Level</h1>
 
 		  <?php
-			$errors = [];
-			$successes = [];
 			echo resultBlock($errors,$successes);
 			?>
 
 			<form name='adminPermission' action='<?=$_SERVER['PHP_SELF']?>?id=<?=$permissionId?>' method='post'>
+							<input class='btn btn-primary' type='submit' value='Update Permission' class='submit' />
+			<a class='btn btn-warning' href="../users/admin_permissions.php">Cancel</a><br><br>
 			<table class='table'>
 			<tr><td>
 			<h3>Permission Information</h3>
@@ -175,8 +187,8 @@ $pageData = fetchAllPages();
 			<input type='text' name='name' value='<?=$permissionDetails['name']?>' />
 			</p>
 			<h3>Delete this Level?</h3>
-			<label>Delete:</label>
-			<input type='checkbox' name='delete[<?=$permissionDetails['id']?>]' id='delete[<?=$permissionDetails['id']?>]' value='<?=$permissionDetails['id']?>'>
+			<label>Delete:
+        <input type='checkbox' name='delete[<?=$permissionDetails['id']?>]' id='delete[<?=$permissionDetails['id']?>]' value='<?=$permissionDetails['id']?>' <?php if(in_array($permissionId,$permission_exempt)){?>disabled<?php } ?> ></label>
 			</p>
 			</div></td><td>
 			<h3>Permission Membership</h3>
@@ -191,7 +203,7 @@ $pageData = fetchAllPages();
 			}
 			foreach ($userData as $v1){
 			  if(in_array($v1->id,$perm_users)){ ?>
-				<br><input type='checkbox' name='removePermission[]' id='removePermission[]' value='<?=$v1->id;?>'> <?=$v1->username;
+				<br><label class="normal"><input type='checkbox' name='removePermission[]' id='removePermission[]' value='<?=$v1->id;?>'> <?=$v1->username;?></label><?php
 			}
 			}
 			?>
@@ -206,7 +218,7 @@ $pageData = fetchAllPages();
 			}
 			foreach ($userData as $v1){
 				if(!in_array($v1->id,$perm_losers)){ ?>
-				<br><input type='checkbox' name='addPermission[]' id='addPermission[]' value='<?=$v1->id?>'> <?=$v1->username;
+				<br><label class="normal"><input type='checkbox' name='addPermission[]' id='addPermission[]' value='<?=$v1->id?>'> <?=$v1->username;?></label><?php
 			}
 			}
 			?>
@@ -217,17 +229,7 @@ $pageData = fetchAllPages();
 			<td>
 			<h3>Permission Access</h3>
 			<div id='regbox'>
-			<p><br><strong>
-			Public Pages:</strong>
-			<?php
-			//List public pages
-			foreach ($pageData as $v1) {
-			  if($v1->private != 1){
-				echo "<br>".$v1->page;
-			  }
-			}
-			?>
-			</p>
+
 			<p><br><strong>
 			Remove Access From This Level:</strong>
 			<?php
@@ -238,7 +240,7 @@ $pageData = fetchAllPages();
 			}
 			foreach ($pageData as $v1){
 			  if(in_array($v1->id,$page_ids)){ ?>
-				<br><input type='checkbox' name='removePage[]' id='removePage[]' value='<?=$v1->id;?>'> <?=$v1->page;?>
+				<br><label class="normal"><input type='checkbox' name='removePage[]' id='removePage[]' value='<?=$v1->id;?>'> <?=$v1->page;?></label>
 			  <?php }
 			}  ?>
 			</p>
@@ -248,12 +250,42 @@ $pageData = fetchAllPages();
 			//Display list of pages with this access level
 
 			foreach ($pageData as $v1){
+				if($settings->page_permission_restriction == 1) {
+					$countQ = $db->query("SELECT id, permission_id FROM permission_page_matches WHERE page_id = ? ",array($v1->id));
+				$countCountQ = $countQ->count();
+			  if(!in_array($v1->id,$page_ids) && $v1->private == 1 && !$countCountQ >=1){ ?>
+				<br><label class="normal"><input type='checkbox' name='addPage[]' id='addPage[]' value='<?=$v1->id;?>'> <?=$v1->page;?></label>
+				<?php } } else {
 			  if(!in_array($v1->id,$page_ids) && $v1->private == 1){ ?>
-				<br><input type='checkbox' name='addPage[]' id='addPage[]' value='<?=$v1->id;?>'> <?=$v1->page;?>
-			  <?php }
+				<br><label class="normal"><input type='checkbox' name='addPage[]' id='addPage[]' value='<?=$v1->id;?>'> <?=$v1->page;?></label>
+				<?php } }
 			}  ?>
 
 
+			</p>
+			<?php if($settings->page_permission_restriction == 1) { ?>
+			<p><br><strong>Private - Cannot Be Assigned:</strong>
+			<?php
+			//Display list of pages with this access level
+
+			foreach ($pageData as $v1){
+					$countQ = $db->query("SELECT id, permission_id FROM permission_page_matches WHERE page_id = ? ",array($v1->id));
+				$countCountQ = $countQ->count();
+			  if(!in_array($v1->id,$page_ids) && $v1->private == 1 && $countCountQ >=1){ ?><br><?=$v1->page;?> (<?php if($countCountQ > 1) {?>Multiple<?php } else { ?><a href="admin_page.php?id=<?=$v1->id?>" style="text-decoration:none;"><?=fetchPermissionDetails($countQ->first()->permission_id)['name']?></a><?php } ?>)
+				<?php } }  ?>
+
+
+			</p> <?php } ?>
+			<p><br><strong>
+			Public Pages:</strong>
+			<?php
+			//List public pages
+			foreach ($pageData as $v1) {
+			  if($v1->private != 1){
+				?><br><a href="admin_page.php?id=<?=$v1->id?>" style="text-decoration:none;"><?=$v1->page?></a>
+			 <?php  }
+			}
+			?>
 			</p>
 			</div>
 			</td>
@@ -264,7 +296,6 @@ $pageData = fetchAllPages();
 
 			<p>
 			<label>&nbsp;</label>
-			<input class='btn btn-primary' type='submit' value='Update Permission' class='submit' />
 			</p>
 			</form>
 

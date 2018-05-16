@@ -17,20 +17,21 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */ ?>
-<?php require_once 'init.php'; ?>
+<?php require_once '../users/init.php'; ?>
 <?php require_once $abs_us_root.$us_url_root.'users/includes/header.php'; ?>
 <?php require_once $abs_us_root.$us_url_root.'users/includes/navigation.php'; ?>
 
 <?php
-if($user->isLoggedIn()){
-    $user->logout();
-    Redirect::to('verify_resend.php');
-}
+$query = $db->query("SELECT * FROM email");
+$results = $query->first();
+$act = $results->email_act;
+if($act!=1) Redirect::to($us_url_root.'index.php?err=Email verification is not enabled. Please contact the System Administrator.');
+if($user->isLoggedIn()) $user->logout();
 
 $token = Input::get('csrf');
 if(Input::exists()){
     if(!Token::check($token)){
-        die('Token doesn\'t match!');
+        include($abs_us_root.$us_url_root.'usersc/scripts/token_error.php');
     }
 }
 
@@ -52,16 +53,21 @@ if(Input::exists('post')){
     if($validation->passed()){ //if email is valid, do this
 
         if($fuser->exists()){
+          $vericode=randomstring(15);
+          $vericode_expiry=date("Y-m-d H:i:s",strtotime("+$settings->join_vericode_expiry hours",strtotime(date("Y-m-d H:i:s"))));
+          $db->update('users',$fuser->data()->id,['vericode' => $vericode,'vericode_expiry' => $vericode_expiry]);
             //send the email
             $options = array(
               'fname' => $fuser->data()->fname,
               'email' => rawurlencode($email),
-              'vericode' => $fuser->data()->vericode,
+              'vericode' => $vericode,
+              'join_vericode_expiry' => $settings->join_vericode_expiry
             );
             $encoded_email=rawurlencode($email);
             $subject = 'Verify Your Email';
             $body =  email_body('_email_template_verify.php',$options);
             $email_sent=email($email,$subject,$body);
+            logger($fuser->data()->id,"User","Requested a new verification email.");
             if(!$email_sent){
                 $errors[] = 'Email NOT sent due to error. Please contact site administrator.';
             }
@@ -81,9 +87,9 @@ if(Input::exists('post')){
 <?php
 
 if ($email_sent){
-    require 'views/_verify_resend_success.php';
+    require $abs_us_root.$us_url_root.'users/views/_verify_resend_success.php';
 }else{
-    require 'views/_verify_resend.php';
+    require $abs_us_root.$us_url_root.'users/views/_verify_resend.php';
 }
 
 ?>

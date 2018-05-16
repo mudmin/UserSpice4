@@ -1,5 +1,5 @@
 <?php
-require_once 'init.php';
+require_once '../users/init.php';
 
 $db=DB::getInstance();
 
@@ -13,7 +13,7 @@ $secret=$settings->fbsecret;
 $version=$settings->graph_ver;
 $whereNext=$settings->finalredir;
 
-require_once("src/Facebook/autoload.php");
+require_once($abs_us_root.$us_url_root."users/src/Facebook/autoload.php");
 $fb = new Facebook\Facebook([
   'app_id' => $appID, // Replace {app-id} with your app id
   'app_secret' => $secret,
@@ -24,7 +24,7 @@ $helper = $fb->getRedirectLoginHelper();
 $_SESSION['FBRLH_state']=$_GET['state'];
 
 try {
-  $accessToken = $helper->getAccessToken();
+  $accessToken = $helper->getAccessToken(NULL,$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$us_url_root.'users/fb-callback.php');
 } catch(Facebook\Exceptions\FacebookResponseException $e) {
   // When Graph returns an error
   echo 'Graph returned an error: ' . $e->getMessage();
@@ -125,23 +125,37 @@ $fields=array('fb_uid'=>$fbuser['id'], 'logins'=>$newLoginCount, 'last_login'=>$
 $db->update('users',$checkExisting->id,$fields);
 $_SESSION["user"] = $checkExisting->id;
 
-Redirect::to('account.php');
+$twoQ = $db->query("select twoKey from users where id = ? and twoEnabled = 1",[$checkExisting->id]);
+if($twoQ->count()>0) {
+  $_SESSION['twofa']=1;
+    $page=encodeURIComponent(Input::get('redirect'));
+    logger($user->data()->id,"Two FA","Two FA being requested.");
+    Redirect::To($us_url_root.'users/twofa.php');
+  }
+
+Redirect::to($us_url_root.'users/account.php');
 }else{
-// //No Existing UserSpice User Found
-// if ($CEQCount<0){
-$fbpassword = password_hash(Token::generate(),PASSWORD_BCRYPT,array('cost' => 12));
-$date = date("Y-m-d H:i:s");
-$fbname = $fbuser['name'];
-$fields=array('email'=>$fbEmail,'username'=>$fbEmail,'fname'=>$fbname,'lname'=>'','permissions'=>1,'logins'=>1,'company'=>'none','join_date'=>$date,'last_login'=>$date,'email_verified'=>1,'password'=>$fbpassword,'fb_uid'=>$fbuser['id']);
+  if($settings->registration==0) {
+    session_destroy();
+    Redirect::to($us_url_root.'users/join.php');
+    die();
+  } else {
+    // //No Existing UserSpice User Found
+    // if ($CEQCount<0){
+    //$fbpassword = password_hash(Token::generate(),PASSWORD_BCRYPT,array('cost' => 12));
+    $date = date("Y-m-d H:i:s");
+    $fbname = $fbuser['name'];
+    $fields=array('email'=>$fbEmail,'username'=>$fbEmail,'fname'=>$fbname,'lname'=>'','permissions'=>1,'logins'=>1,'company'=>'none','join_date'=>$date,'last_login'=>$date,'email_verified'=>1,'password'=>NULL,'fb_uid'=>$fbuser['id']);
 
-$db->insert('users',$fields);
-$lastID = $db->lastId();
+    $db->insert('users',$fields);
+    $lastID = $db->lastId();
 
-$insert2 = $db->query("INSERT INTO user_permission_matches SET user_id = $lastID, permission_id = 1");
-$insert3 = $db->query("INSERT INTO profiles SET user_id = $lastID, bio = 'This is your bio'");
+    $insert2 = $db->query("INSERT INTO user_permission_matches SET user_id = $lastID, permission_id = 1");
+    $insert3 = $db->query("INSERT INTO profiles SET user_id = $lastID, bio = 'This is your bio'");
 
-$_SESSION["user"] = $lastID;
-Redirect::to($whereNext);
+    $_SESSION["user"] = $lastID;
+    Redirect::to($whereNext);
+  }
 }
 
 

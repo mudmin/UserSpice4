@@ -18,23 +18,21 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 ?>
-<?php require_once 'init.php'; ?>
+<?php require_once '../users/init.php'; ?>
 <?php require_once $abs_us_root.$us_url_root.'users/includes/header.php'; ?>
 <?php require_once $abs_us_root.$us_url_root.'users/includes/navigation.php'; ?>
 <?php if (!securePage($_SERVER['PHP_SELF'])){die();} ?>
 <?php
 //PHP Goes Here!
 
-if($user->isLoggedIn()) { $thisUserID = $user->data()->id;} else { $thisUserID = 0; }
+if(isset($_GET['id'])) $userID = Input::get('id');
+else $userID = $user->data()->id;
 
-if(isset($_GET['id']))
-	{
-	$userID = Input::get('id');
-	
-	$userQ = $db->query("SELECT * FROM profiles LEFT JOIN users ON user_id = users.id WHERE user_id = ?",array($userID));
+$userQ = $db->query("SELECT * FROM profiles LEFT JOIN users ON user_id = users.id WHERE user_id = ?",array($userID));
+if ($userQ->count() > 0) {
 	$thatUser = $userQ->first();
 
-	if($thisUserID == $userID)
+	if($user->isLoggedIn() && $user->data()->id == $userID)
 		{
 		$editbio = ' <small><a href="edit_profile.php">Edit Bio</a></small>';
 		}
@@ -42,7 +40,7 @@ if(isset($_GET['id']))
 		{
 		$editbio = '';
 		}
-	
+
 	$ususername = ucfirst($thatUser->username)."'s Profile";
 	$grav = get_gravatar(strtolower(trim($thatUser->email)));
 	$useravatar = '<img src="'.$grav.'" class="img-thumbnail" alt="'.$ususername.'">';
@@ -68,20 +66,20 @@ else
 							<p><?php echo $useravatar;?></p>
 						</div>
 						<div class="col-xs-12 col-md-10">
-						<h1><?php echo $ususername;?></h1>
-							<h2><?php echo $usbio.$editbio;?></h2>
-	
+						<h1><?php echouser($userID);?>'s Profile</h1>
+							<?php echo $usbio.$editbio;?>
+
 					</div>
 					</div>
 				</div>
-				
+
 										<a class="btn btn-success" href="view_all_users.php" role="button">All Users</a>
 
 
-    </div> <!-- /container -->
+    </div> <!-- /container --><br />
 
 </div> <!-- /#page-wrapper -->
- 
+
 <!-- footers -->
 <?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; // the final html footer copyright row + the external js calls ?>
 <!-- Place any per-page javascript here -->

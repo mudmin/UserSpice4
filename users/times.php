@@ -1,4 +1,4 @@
-<?php  //require_once("includes/userspice/us_header.php"); ?>
+<?php  //require_once($abs_us_root.$us_url_root."users/includes/userspice/us_header.php"); ?>
 <!-- stuff can go here -->
 
 <?php
@@ -12,25 +12,23 @@
     $alaska_time = new DateTime("now", $alaska_tz);
     $an_time     = new DateTime("now", $an_tz);
 
-    
-   
-  
-	
+
+
+
+
 	?>
 	<div class="row text-center">
-	
+
 		<div class="col-xs-4">
 			<div><p>Anchorage</p><strong class="text-success"><?php echo $alaska_time->format("H:i");	?></strong></div>
-		</div>		
+		</div>
 
 		<div class="col-xs-4">
 			<div><p>Ottawa</p> <strong class="text-success"><?php	 echo $an_time->format("H:i");	?></strong></div>
-		</div>	
+		</div>
 
 		<div class="col-xs-4">
 			<div><p>London</p> <strong class="text-success"><?php	  echo $london_time->format("H:i");	?></strong></div>
 		</div>
-				
+
 	</div>
-				
-	

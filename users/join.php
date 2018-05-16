@@ -21,20 +21,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ini_set('display_errors', 1);
 ini_set("allow_url_fopen", 1);
 ?>
-<?php require_once 'init.php'; ?>
+<?php require_once '../users/init.php';?>
 <?php require_once $abs_us_root.$us_url_root.'users/includes/header.php'; ?>
-<?php require_once $abs_us_root.$us_url_root.'users/includes/navigation.php'; ?>
+<?php require_once $abs_us_root.$us_url_root.'users/includes/navigation.php';
+use PragmaRX\Google2FA\Google2FA;
+if($settings->twofa == 1){
+$google2fa = new Google2FA();
+}
+?>
+
 <?php if (!securePage($_SERVER['PHP_SELF'])){die();} ?>
 <?php
+if(ipCheckBan()){Redirect::to($us_url_root.'usersc/scripts/banned.php');die();}
+if($user->isLoggedIn()) Redirect::to($us_url_root.'index.php');
 $settingsQ = $db->query("SELECT * FROM settings");
 $settings = $settingsQ->first();
 if($settings->recaptcha == 1 || $settings->recaptcha == 2){
-	require_once("includes/recaptcha.config.php");
+        require_once($abs_us_root.$us_url_root."users/includes/recaptcha.config.php");
 }
 //There is a lot of commented out code for a future release of sign ups with payments
 $form_method = 'POST';
 $form_action = 'join.php';
-$vericode = 'vericode' => randomstring(15);
+$vericode = randomstring(15);
 
 $form_valid=FALSE;
 
@@ -48,154 +56,219 @@ $act = $results->email_act;
 //users as active in the database, otherwise they will become
 //active after verifying their email.
 if($act==1){
-	$pre = 0;
+        $pre = 0;
 } else {
-	$pre = 1;
-}
-
-$token = Input::get('csrf');
-if(Input::exists()){
-	if(!Token::check($token)){
-		die('Token doesn\'t match!');
-	}
+        $pre = 1;
 }
 
 $reCaptchaValid=FALSE;
 
 if(Input::exists()){
+  $token = $_POST['csrf'];
+  if(!Token::check($token)){
+    include($abs_us_root.$us_url_root.'usersc/scripts/token_error.php');
+  }
+        $fname = Input::get('fname');
+        $lname = Input::get('lname');
+        $email = Input::get('email');
+        if($settings->auto_assign_un==1) {
+        $preusername = $fname[0];
+        $preusername .= $lname;
+        $preQ = $db->query("SELECT username FROM users WHERE username = ?",array($preusername));
+        $preQCount = $preQ->count();
+        if($preQCount == 0)
+        {
+                $username = strtolower($preusername);
+        }
+        else
+        {
+                $preusername2 = $fname;
+                $preusername2 .= $lname[0];
+                $preQ2 = $db->query("SELECT username FROM users WHERE username = ?",array($preusername2));
+                $preQCount2 = $preQ2->count();
+                        if($preQCount2 == 0)
+                        {
+                                $username = strtolower($preusername2);
+                        }
+                        else
+                        {
+                                $username = $email;
+                        }
+        } }
+        if($settings->auto_assign_un==0) $username = Input::get('username');
+        $agreement_checkbox = Input::get('agreement_checkbox');
 
-	$username = Input::get('username');
-	$fname = Input::get('fname');
-	$lname = Input::get('lname');
-	$email = Input::get('email');
-	$agreement_checkbox = Input::get('agreement_checkbox');
+        if ($agreement_checkbox=='on'){
+                $agreement_checkbox=TRUE;
+        }else{
+                $agreement_checkbox=FALSE;
+        }
 
-	if ($agreement_checkbox=='on'){
-		$agreement_checkbox=TRUE;
-	}else{
-		$agreement_checkbox=FALSE;
-	}
+        $db = DB::getInstance();
+        $settingsQ = $db->query("SELECT * FROM settings");
+        $settings = $settingsQ->first();
+        $validation = new Validate();
+        if($settings->auto_assign_un==0) {
+        $validation->check($_POST,array(
+          'username' => array(
+                'display' => 'Username',
+                'required' => true,
+                'min' => $settings->min_un,
+                'max' => $settings->max_un,
+                'unique' => 'users',
+          ),
+          'fname' => array(
+                'display' => 'First Name',
+                'required' => true,
+                'min' => 1,
+                'max' => 60,
+          ),
+          'lname' => array(
+                'display' => 'Last Name',
+                'required' => true,
+                'min' => 1,
+                'max' => 60,
+          ),
+          'email' => array(
+                'display' => 'Email',
+                'required' => true,
+                'valid_email' => true,
+                'unique' => 'users',
+          ),
 
-	$db = DB::getInstance();
-	$settingsQ = $db->query("SELECT * FROM settings");
-	$settings = $settingsQ->first();
-	$validation = new Validate();
-	$validation->check($_POST,array(
-	  'username' => array(
-		'display' => 'Username',
-		'required' => true,
-		'min' => $settings->min_un,
-		'max' => $settings->max_un,
-		'unique' => 'users',
-	  ),
-	  'fname' => array(
-		'display' => 'First Name',
-		'required' => true,
-		'min' => 2,
-		'max' => 35,
-	  ),
-	  'lname' => array(
-		'display' => 'Last Name',
-		'required' => true,
-		'min' => 2,
-		'max' => 35,
-	  ),
-	  'email' => array(
-		'display' => 'Email',
-		'required' => true,
-		'valid_email' => true,
-		'unique' => 'users',
-	  ),
+          'password' => array(
+                'display' => 'Password',
+                'required' => true,
+                'min' => $settings->min_pw,
+                'max' => $settings->max_pw,
+          ),
+          'confirm' => array(
+                'display' => 'Confirm Password',
+                'required' => true,
+                'matches' => 'password',
+          ),
+        )); }
+        if($settings->auto_assign_un==1) {
+          $validation->check($_POST,array(
+            'fname' => array(
+                  'display' => 'First Name',
+                  'required' => true,
+                  'min' => 1,
+                  'max' => 60,
+            ),
+            'lname' => array(
+                  'display' => 'Last Name',
+                  'required' => true,
+                  'min' => 1,
+                  'max' => 60,
+            ),
+            'email' => array(
+                  'display' => 'Email',
+                  'required' => true,
+                  'valid_email' => true,
+                  'unique' => 'users',
+            ),
 
-	  'password' => array(
-		'display' => 'Password',
-		'required' => true,
-		'min' => $settings->min_pw,
-		'max' => $settings->max_pw,
-	  ),
-	  'confirm' => array(
-		'display' => 'Confirm Password',
-		'required' => true,
-		'matches' => 'password',
-	  ),
-	));
+            'password' => array(
+                  'display' => 'Password',
+                  'required' => true,
+                  'min' => $settings->min_pw,
+                  'max' => $settings->max_pw,
+            ),
+            'confirm' => array(
+                  'display' => 'Confirm Password',
+                  'required' => true,
+                  'matches' => 'password',
+            ),
+          ));
+        }
 
-	//if the agreement_checkbox is not checked, add error
-	if (!$agreement_checkbox){
-		$validation->addError(["Please read and accept terms and conditions"]);
-	}
+        //if the agreement_checkbox is not checked, add error
+        if (!$agreement_checkbox){
+                $validation->addError(["Please read and accept terms and conditions"]);
+        }
 
-	if($validation->passed() && $agreement_checkbox){
-		//Logic if ReCAPTCHA is turned ON
-	if($settings->recaptcha == 1 || $settings->recaptcha == 2){
-			require_once("includes/recaptcha.config.php");
-			//reCAPTCHA 2.0 check
-			$response = null;
+        if($validation->passed() && $agreement_checkbox){
+                //Logic if ReCAPTCHA is turned ON
+        if($settings->recaptcha == 1 || $settings->recaptcha == 2){
+                        require_once($abs_us_root.$us_url_root."users/includes/recaptcha.config.php");
+                        //reCAPTCHA 2.0 check
+                        $response = null;
 
-			// check secret key
-			$reCaptcha = new ReCaptcha($privatekey);
+                        // check secret key
+                        $reCaptcha = new ReCaptcha($settings->recap_private);
 
-			// if submitted check response
-			if ($_POST["g-recaptcha-response"]) {
-				$response = $reCaptcha->verifyResponse(
-					$_SERVER["REMOTE_ADDR"],
-					$_POST["g-recaptcha-response"]);
-			}
-			if ($response != null && $response->success) {
-				// account creation code goes here
-				$reCaptchaValid=TRUE;
-				$form_valid=TRUE;
-			}else{
-				$reCaptchaValid=FALSE;
-				$form_valid=FALSE;
-				$validation->addError(["Please check the reCaptcha box."]);
-			}
+                        // if submitted check response
+                        if ($_POST["g-recaptcha-response"]) {
+                                $response = $reCaptcha->verifyResponse(
+                                        $_SERVER["REMOTE_ADDR"],
+                                        $_POST["g-recaptcha-response"]);
+                        }
+                        if ($response != null && $response->success) {
+                                // account creation code goes here
+                                $reCaptchaValid=TRUE;
+                                $form_valid=TRUE;
+                        }else{
+                                $reCaptchaValid=FALSE;
+                                $form_valid=FALSE;
+                                $validation->addError(["Please check the reCaptcha box."]);
+                        }
 
-		} //else for recaptcha
+                } //else for recaptcha
 
-		if($reCaptchaValid || $settings->recaptcha == 0){
+                if($reCaptchaValid || $settings->recaptcha == 0){
 
-			//add user to the database
-			$user = new User();
-			$join_date = date("Y-m-d H:i:s");
-			$params = array(
-				'fname' => Input::get('fname'),
-				'email' => $email,
-				'vericode' => $vericode,
-			);
+                        //add user to the database
+                        $user = new User();
+                        $join_date = date("Y-m-d H:i:s");
+                        $params = array(
+                                'fname' => Input::get('fname'),
+                                'email' => $email,
+                                'username' => $username,
+                                'vericode' => $vericode,
+                                'join_vericode_expiry' => $settings->join_vericode_expiry
+                        );
+                        $vericode_expiry=date("Y-m-d H:i:s");
+                        if($act == 1) {
+                                //Verify email address settings
+                                $to = rawurlencode($email);
+                                $subject = 'Welcome to '.$settings->site_name;
+                                $body = email_body('_email_template_verify.php',$params);
+                                email($to,$subject,$body);
+                                $vericode_expiry=date("Y-m-d H:i:s",strtotime("+$settings->join_vericode_expiry hours",strtotime(date("Y-m-d H:i:s"))));
+                        }
+                        try {
+                                // echo "Trying to create user";
+                                $user->create(array(
+                                        'username' => $username,
+                                        'fname' => ucfirst(Input::get('fname')),
+                                        'lname' => ucfirst(Input::get('lname')),
+                                        'email' => Input::get('email'),
+                                        'password' => password_hash(Input::get('password', true), PASSWORD_BCRYPT, array('cost' => 12)),
+                                        'permissions' => 1,
+                                        'account_owner' => 1,
+                                        'join_date' => $join_date,
+                                        'email_verified' => $pre,
+                                        'active' => 1,
+                                        'vericode' => $vericode,
+                                        'vericode_expiry' => $vericode_expiry
+                                ));
+                                        $theNewId=$db->lastId();
 
-			if($act == 1) {
-				//Verify email address settings
-				$to = rawurlencode($email);
-				$subject = 'Welcome to '.$settings->site_name;
-				$body = email_body('_email_template_verify.php',$params);
-				email($to,$subject,$body);
-			}
-			try {
-				// echo "Trying to create user";
-				$user->create(array(
-					'username' => Input::get('username'),
-					'fname' => Input::get('fname'),
-					'lname' => Input::get('lname'),
-					'email' => Input::get('email'),
-					'password' =>
-					password_hash(Input::get('password'), PASSWORD_BCRYPT, array('cost' => 12)),
-					'permissions' => 1,
-					'account_owner' => 1,
-					'stripe_cust_id' => '',
-					'join_date' => $join_date,
-					'company' => Input::get('company'),
-					'email_verified' => $pre,
-					'active' => 1,
-					'vericode' => $vericode,
-				));
-			} catch (Exception $e) {
-				die($e->getMessage());
-			}
-			Redirect::to($us_url_root.'users/joinThankYou.php');
-		}
+                        } catch (Exception $e) {
+                                die($e->getMessage());
+                        }
+                        if($settings->twofa == 1){
+                        $twoKey = $google2fa->generateSecretKey();
+                        $db->update('users',$theNewId,['twoKey' => $twoKey]);
+                        }
+                        include($abs_us_root.$us_url_root.'usersc/scripts/during_user_creation.php');
+                        if($act==1) logger($theNewId,"User","Registration completed and verification email sent.");
+                        if($act==0) logger($theNewId,"User","Registration completed.");
+                        Redirect::to($us_url_root.'users/joinThankYou.php');
+                }
 
-	} //Validation and agreement checbox
+        } //Validation and agreement checbox
 } //Input exists
 
 ?>
@@ -203,13 +276,18 @@ if(Input::exists()){
 <div id="page-wrapper">
 <div class="container">
 <?php
-if($settings->glogin==1 && !$user->isLoggedIn()){
-require_once $abs_us_root.$us_url_root.'users/includes/google_oauth_login.php';
+if($settings->registration==1) {
+  if($settings->glogin==1 && !$user->isLoggedIn()){
+    require_once $abs_us_root.$us_url_root.'users/includes/google_oauth_login.php';
+  }
+  if($settings->fblogin==1 && !$user->isLoggedIn()){
+    require_once $abs_us_root.$us_url_root.'users/includes/facebook_oauth.php';
+  }
+  require $abs_us_root.$us_url_root.'users/views/_join.php';
 }
-if($settings->fblogin==1 && !$user->isLoggedIn()){
-require_once $abs_us_root.$us_url_root.'users/includes/facebook_oauth.php';
+else {
+  require $abs_us_root.$us_url_root.'users/views/_joinDisabled.php';
 }
-require 'views/_join.php';
 ?>
 
 </div>
@@ -220,6 +298,54 @@ require 'views/_join.php';
 
 <?php if($settings->recaptcha == 1 || $settings->recaptcha == 2){ ?>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script>
+    function submitForm() {
+        document.getElementById("payment-form").submit();
+    }
+</script>
 <?php } ?>
+<?php if($settings->auto_assign_un==0) { ?>
+<script type="text/javascript">
+$(document).ready(function(){
+    var x_timer;
+    $("#username").keyup(function (e){
+        clearTimeout(x_timer);
+        var username = $(this).val();
+        if (username.length > 0) {
+            x_timer = setTimeout(function(){
+                check_username_ajax(username);
+            }, 500);
+        }
+        else $('#usernameCheck').text('');
+    });
+
+    function check_username_ajax(username){
+        $("#usernameCheck").html('Checking...');
+        $.post('parsers/existingUsernameCheck.php', {'username': username}, function(response) {
+            if (response == 'error') $('#usernameCheck').html('There was an error while checking the username.');
+            else if (response == 'taken') { $('#usernameCheck').html('<i class="glyphicon glyphicon-remove" style="color: red; font-size: 12px"></i> This username is taken.');
+            $('#next_button').prop('disabled', true); }
+            else if (response == 'valid') { $('#usernameCheck').html('<i class="glyphicon glyphicon-ok" style="color: green; font-size: 12px"></i> This username is not taken.');
+            $('#next_button').prop('disabled', false); }
+            else { $('#usernameCheck').html('');
+            $('#next_button').prop('disabled', false); }
+        });
+    }
+});
+</script>
+<?php } ?>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#password_view_control').hover(function () {
+            $('#password').attr('type', 'text');
+            $('#confirm').attr('type', 'text');
+        }, function () {
+            $('#password').attr('type', 'password');
+            $('#confirm').attr('type', 'password');
+        });
+    });
+</script>
+
+
 
 <?php require_once $abs_us_root.$us_url_root.'users/includes/html_footer.php'; // currently just the closing /body and /html ?>

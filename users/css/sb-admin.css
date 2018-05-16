@@ -228,3 +228,9 @@ ul.alert-dropdown {
 }
 
 .top-nav {color:white;}
+
+.navbar-noborder { border-radius: 0 !important; margin-bottom: 0 !important;}
+
+.normal {
+    font-weight: normal !important;
+}

@@ -35,7 +35,7 @@ if(isset($_GET['msg'])){
 }
 
 if(file_exists($abs_us_root.$us_url_root.'usersc/'.$currentPage)){
-	if(currentFolder()!= 'usersc'){
+	if(currentFolder() == 'users'){
 		$url = $us_url_root.'usersc/'.$currentPage;
 		if(isset($_GET)){
 			$url .= '?'; //add initial ?
@@ -55,6 +55,7 @@ $settings = $settingsQ->first();
 if($user->isLoggedIn() && !checkMenu(2,$user->data()->id)){
 	if (($settings->site_offline==1) && (!in_array($user->data()->id, $master_account)) && ($currentPage != 'login.php') && ($currentPage != 'maintenance.php')){
 		//:: force logout then redirect to maint.page
+		logger($user->data()->id,"Offline","Landed on Maintenance Page."); //Lggger
 		$user->logout();
 		Redirect::to($us_url_root.'users/maintenance.php');
 	}
@@ -64,6 +65,7 @@ if($user->isLoggedIn() && !checkMenu(2,$user->data()->id)){
 if(!$user->isLoggedIn()){
 	if (($settings->site_offline==1) && ($currentPage != 'login.php') && ($currentPage != 'maintenance.php')){
 		//:: redirect to maint.page
+		logger(1,"Offline","Guest Landed on Maintenance Page."); //Logger
 		Redirect::to($us_url_root.'users/maintenance.php');
 	}
 }
@@ -88,6 +90,7 @@ if ($settings->force_ssl==1){
 		exit;
 	}
 }
+require_once $abs_us_root.$us_url_root.'usersc/includes/security_headers.php';
 
 //if track_guest enabled AND there is a user logged in
 if($settings->track_guest == 1 && $user->isLoggedIn()){
@@ -99,6 +102,19 @@ if($settings->track_guest == 1 && $user->isLoggedIn()){
 	new_user_online($user_id);
 
 }
+
+if($user->isLoggedIn() && $currentPage != 'user_settings.php' && $user->data()->force_pr == 1) Redirect::to($us_url_root.'users/user_settings.php?err=You+must+change+your+password!');
+
+if(substr($us_url_root,1).$currentPage == currentFolder().'/'.$currentPage){
+	$find = $currentPage;
+}else{
+	$find = currentFolder().'/'.$currentPage;
+}
+$titleQ = $db->query('SELECT title FROM pages WHERE page = ?', array($find));
+if ($titleQ->count() > 0) {
+    $pageTitle = $titleQ->first()->title;
+}
+else $pageTitle = '';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -125,7 +141,7 @@ if($settings->track_guest == 1 && $user->isLoggedIn()){
 	}
 	?>
 
-	<title><?=$settings->site_name;?></title>
+	<title><?= (($pageTitle != '') ? $pageTitle : ''); ?> <?=$settings->site_name?></title>
 
 	<!-- Bootstrap Core CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -137,22 +153,39 @@ if($settings->track_guest == 1 && $user->isLoggedIn()){
 	<!-- AKA Secondary CSS -->
 	<link href="<?=$us_url_root?><?=str_replace('../','',$settings->us_css2);?>" rel="stylesheet">
 
-	<!-- Your Custom CSS Goes Here!-->
+	<!-- Table Sorting and Such -->
+	<link href="<?=$us_url_root?>users/css/datatables.css" rel="stylesheet">
+
+	<!-- Your Custom CSS Goes Here and will override everything above this!-->
 	<link href="<?=$us_url_root?><?=str_replace('../','',$settings->us_css3);?>" rel="stylesheet">
 
 	<!-- Custom Fonts/Animation/Styling-->
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
-<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-<!-- jQuery Fallback -->
-<script type="text/javascript">
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+	<!-- jQuery Fallback -->
+	<script type="text/javascript">
 	if (typeof jQuery == 'undefined') {
 		document.write(unescape("%3Cscript src='<?=$us_url_root?>users/js/jquery.js' type='text/javascript'%3E%3C/script%3E"));
 	}
+	</script>
+
+	<?php require_once $abs_us_root.$us_url_root.'usersc/includes/bootstrap_corrections.php'; ?>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/1.6.1/fingerprint2.min.js" integrity="sha256-goBybI2a+FUEO9n1gkRyIYOwLPq6fO8z192AxA9O54I=" crossorigin="anonymous"></script>
+<?php if(!isset($_SESSION['fingerprint'])) {?>
+<script>
+new Fingerprint2().get(function(result, components) {
+  var fingerprint = result;
+		$.ajax({
+						type: "POST",
+						url: '<?=$us_url_root?>users/parsers/fingerprint_post.php',
+						data: ({fingerprint:fingerprint}),
+		});
+});
 </script>
-
-<?php require_once $abs_us_root.$us_url_root.'usersc/includes/bootstrap_corrections.php'; ?>
-
+<?php }
+if($settings->session_manager==1) storeUser(); ?>
 </head>
 
 <body class="nav-md">
@@ -165,4 +198,17 @@ if($settings->track_guest == 1 && $user->isLoggedIn()){
 		bold("<br>".$msg);
 	}
 
+	if ($user->isLoggedIn() && $settings->admin_verify==1) { (!reAuth()); }
+	if ($user->isLoggedIn() && isset($_SESSION['twofa']) && $_SESSION['twofa']==1 && $currentPage !== 'twofa.php') Redirect::to($us_url_root.'users/twofa.php');
+	require_once $abs_us_root.$us_url_root.'usersc/includes/timepicker.php';
 	?>
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap-editable/css/bootstrap-editable.css" integrity="sha256-YsJ7Lkc/YB0+ssBKz0c0GTx0RI+BnXcKH5SpnttERaY=" crossorigin="anonymous" />
+	<style>
+	.editableform-loading {
+	    background: url('https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap-editable/img/loading.gif') center center no-repeat !important;
+	}
+	.editable-clear-x {
+	   background: url('https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap-editable/img/clear.png') center center no-repeat !important;
+	}
+	</style>

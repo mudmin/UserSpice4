@@ -19,37 +19,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 ?>
 <?php
-require_once 'init.php';
+require_once '../users/init.php';
 require_once $abs_us_root.$us_url_root.'users/includes/header.php';
-$settingsQ=$db->query("SELECT * FROM settings");
-$settings=$settingsQ->first();
-?>
-
-<?php if (!securePage($_SERVER['PHP_SELF'])){die();} ?>
-<?php
-//PHP Goes Here!
+require_once $abs_us_root.$us_url_root.'users/includes/navigation.php';
 ?>
 <div id="page-wrapper">
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-sm-12">
-				<h3 align="center">	You have successfully logged in...redirecting now. </h3>
-
-				<!-- Content goes here -->
-<?php
-// header( "refresh:0;url=$settings->finalredir" );
-
-header( "refresh:0;url=../index.php" );
-?>
-			</div> <!-- /.col -->
-		</div> <!-- /.row -->
-	</div> <!-- /.container -->
-</div> <!-- /.wrapper -->
-
-
-	<!-- footers -->
-<?php //require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; // the final html footer copyright row + the external js calls ?>
-
-<!-- Place any per-page javascript here -->
-
-<?php //require_once $abs_us_root.$us_url_root.'users/includes/html_footer.php'; // currently just the closing /body and /html ?>
+				<h3 align="center">You have successfully logged in...redirecting now.</h3>
+				<?php require_once $abs_us_root.$us_url_root.'usersc/includes/oauth_success_redirect.php';?>
+				<?=Redirect::to($us_url_root.'users/account.php'); ?>
+			</div>
+		</div>
+	</div>
+</div>
+<?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; ?>
+<?php require_once $abs_us_root.$us_url_root.'users/includes/html_footer.php'; ?>

@@ -18,11 +18,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 ?>
-<?php require_once 'init.php'; ?>
+<?php require_once '../users/init.php'; ?>
 <?php require_once $abs_us_root.$us_url_root.'users/includes/header.php'; ?>
 <?php require_once $abs_us_root.$us_url_root.'users/includes/navigation.php'; ?>
 <?php if (!securePage($_SERVER['PHP_SELF'])){die();} ?>
 <?php
+if(ipCheckBan()){Redirect::to($us_url_root.'usersc/scripts/banned.php');die();}
 $error_message = null;
 $errors = array();
 $email_sent=FALSE;
@@ -30,7 +31,7 @@ $email_sent=FALSE;
 $token = Input::get('csrf');
 if(Input::exists()){
     if(!Token::check($token)){
-        die('Token doesn\'t match!');
+        include($abs_us_root.$us_url_root.'usersc/scripts/token_error.php');
     }
 }
 
@@ -43,16 +44,21 @@ if (Input::get('forgotten_password')) {
 
     if($validation->passed()){
         if($fuser->exists()){
+          $vericode=randomstring(15);
+          $vericode_expiry=date("Y-m-d H:i:s",strtotime("+$settings->reset_vericode_expiry minutes",strtotime(date("Y-m-d H:i:s"))));
+          $db->update('users',$fuser->data()->id,['vericode' => $vericode,'vericode_expiry' => $vericode_expiry]);
             //send the email
             $options = array(
               'fname' => $fuser->data()->fname,
               'email' => rawurlencode($email),
-              'vericode' => $fuser->data()->vericode,
+              'vericode' => $vericode,
+              'reset_vericode_expiry' => $settings->reset_vericode_expiry
             );
             $subject = 'Password Reset';
             $encoded_email=rawurlencode($email);
             $body =  email_body('_email_template_forgot_password.php',$options);
             $email_sent=email($email,$subject,$body);
+            logger($fuser->data()->id,"User","Requested password reset.");
             if(!$email_sent){
                 $errors[] = 'Email NOT sent due to error. Please contact site administrator.';
             }
@@ -66,9 +72,7 @@ if (Input::get('forgotten_password')) {
 }
 ?>
 <?php
-if ($user->isLoggedIn()) {
-Redirect::to('account.php');
-}
+if ($user->isLoggedIn()) $user->logout();
 ?>
 
 <div id="page-wrapper">
@@ -76,9 +80,9 @@ Redirect::to('account.php');
 <?php
 
 if($email_sent){
-    require 'views/_forgot_password_sent.php';
+    require $abs_us_root.$us_url_root.'users/views/_forgot_password_sent.php';
 }else{
-    require 'views/_forgot_password.php';
+    require $abs_us_root.$us_url_root.'users/views/_forgot_password.php';
 }
 
 ?>

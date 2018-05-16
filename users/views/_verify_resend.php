@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ?>
 <div class="row">
 <div class="col-xs-12">
-<div class="jumbotron">
 	<h2>Verify Your Email</h2>
 	<ol>
 		<li>Enter your email address and click Resend</li>
@@ -28,14 +27,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		<li>Done</li>
 	</ol>
 	<form class="" action="verify_resend.php" method="post">
-	<span class="bg-danger"><?=display_errors($errors);?></span>
+	<?php if(!$errors=='') {?><div class="alert alert-danger"><?=display_errors($errors);?></div><?php } ?>
 	<div class="form-group">
 	<label for="email">Enter Your Email</label>
 	<input class="form-control" type="text" id="email" name="email" placeholder="Email">
 	</div>
 	<input type="hidden" name="csrf" value="<?=Token::generate();?>">
 	<input type="submit" value="Resend" class="btn btn-primary">
-	</form>
-</div>
+</form><br />
 </div>
 </div>

@@ -1,4 +1,7 @@
-<?php require_once("install_settings.php"); ?>
+<?php
+ini_set('max_execution_time', 1356);
+ini_set('memory_limit','1024M');
+?><?php require_once("install_settings.php"); ?>
 <html class="no-js" lang="">
    <head>
        <meta charset="utf-8">

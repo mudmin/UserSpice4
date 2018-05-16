@@ -20,9 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ?>
 <div class="row">
 <div class="col-xs-12">
-<div class="jumbotron text-center">
-<h1>Ooops! There was an error verifying your email address. Please click below to try again.</h1>
+<h1>We were unable to verify your account. Please try again.</h1>
 <a href="verify_resend.php" class="btn btn-primary">Resend Verification Email</a>
-</div>
+<br />
 </div>
 </div>

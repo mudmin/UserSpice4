@@ -9,15 +9,18 @@ if(file_exists("install/index.php")){
 require_once 'users/init.php';
 require_once $abs_us_root.$us_url_root.'users/includes/header.php';
 require_once $abs_us_root.$us_url_root.'users/includes/navigation.php';
+if(isset($user) && $user->isLoggedIn()){
+}
 ?>
 
 <div id="page-wrapper">
 <div class="container">
 <div class="row">
 	<div class="col-xs-12">
+
 		<div class="jumbotron">
 			<h1>Welcome to <?php echo $settings->site_name;?></h1>
-			<p class="text-muted">An Open Source PHP User Management Framework. <?php //print_r($_SESSION);?></p>
+			<p class="text-muted">An Open Source PHP User Management Framework. </p>
 			<p>
 			<?php if($user->isLoggedIn()){$uid = $user->data()->id;?>
 				<a class="btn btn-default" href="users/account.php" role="button">User Account &raquo;</a>
@@ -29,8 +32,13 @@ require_once $abs_us_root.$us_url_root.'users/includes/navigation.php';
 		</div>
 	</div>
 </div>
-
 <div class="row">
+<?php
+// To generate a sample notification, uncomment the code below.
+// It will do a notification everytime you refresh index.php.
+// $msg = 'This is a sample notification! <a href="'.$us_url_root.'users/logout.php">Go to Logout Page</a>';
+// $notifications->addNotification($msg, $user->data()->id);
+ ?>
 <div class="col-md-6">
 	<div class="panel panel-default">
 		<div class="panel-heading"><strong>Step 1: Change your password!</strong></div>

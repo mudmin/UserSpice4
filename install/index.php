@@ -15,14 +15,6 @@
                     <h4 class="list-group-item-heading">Step 3</h4>
                     <p class="list-group-item-text"><?=$step3?></p>
                 </a></li>
-                <li><a href="#">
-                    <h4 class="list-group-item-heading">Step 4</h4>
-                    <p class="list-group-item-text"><?=$step4?></p>
-                </a></li>
-                <li ><a href="#">
-                    <h4 class="list-group-item-heading">Step 5</h4>
-                    <p class="list-group-item-text"><?=$step5?></p>
-                </a></li>
               </ul>
           </div>
           <div class="row">
@@ -32,14 +24,8 @@
 
 <p>
   This program will walk you through the entire process of configuring <?=$app_name?>.  Before you proceed, you might want to make sure that you're ready to do the install.</p>
-
-<h3><strong>Before Continuing</h3></strong>
 <p>
-  If you have not already created a new <strong>database</strong>, please do so at this time.  Make sure that you have the Host Name, Username, Password, and Database name handy, as you will need them to complete the install.</p>
-
-<p>
-  If you do not already have a set of <strong>ReCaptcha keys</strong>, you will want to get those at <a href="https://www.google.com/recaptcha/admin">You can get them from Google by clicking here.</a> To speed things up, we have provided a set of test keys if you are not ready to get your own.</p>
-
+  If you have not already created a new <font color="red"><strong>database</strong></font>, please do so at this time.  Make sure that you have the Host Name, Username, Password, and Database name handy, as you will need them to complete the install.</p>
 <h3><strong>System Requirement Check</h3></strong>
 
 <?php

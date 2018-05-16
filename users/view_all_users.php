@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 ?>
-<?php require_once 'init.php'; ?>
+<?php require_once '../users/init.php'; ?>
 <?php require_once $abs_us_root.$us_url_root.'users/includes/header.php'; ?>
 <?php require_once $abs_us_root.$us_url_root.'users/includes/navigation.php'; ?>
 
@@ -59,15 +59,12 @@ $users = $userQ->results();
 
 		 <div class="row">
 		     <div class="col-md-12">
-
-
-<hr />
  <div class="allutable table-responsive">
 <table class='table table-hover table-list-search'>
 <thead>
 <tr>
   <th><div class="alluinfo">&nbsp;</div></th>
-  <th>Username</th>
+  <th></th>
  </tr>
 </thead>
  <tbody>
@@ -88,7 +85,7 @@ foreach ($users as $v1) {
 		</td>
 
 		  <td>
-			<h4><a href="profile.php?id=<?=$v1->id?>"><?=$ususername?>  </a></h4>
+			<h4><a href="profile.php?id=<?=$v1->id?>" class="nounderline"><?=echouser($v1->id)?>  </a></h4>
 			<p><?=$ususerbio?></p>
 		</td>
 	</tr>
@@ -107,6 +104,6 @@ foreach ($users as $v1) {
 <?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; // the final html footer copyright row + the external js calls ?>
 
     <!-- Place any per-page javascript here -->
-<script src="js/search.js" charset="utf-8"></script>
+<script src="../users/js/search.js" charset="utf-8"></script>
 
 <?php require_once $abs_us_root.$us_url_root.'users/includes/html_footer.php'; // currently just the closing /body and /html ?>
