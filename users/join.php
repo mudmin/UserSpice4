@@ -239,7 +239,7 @@ if(Input::exists()){
                         }
                         try {
                                 // echo "Trying to create user";
-                                $user->create(array(
+                         $theNewId = $user->create(array(
                                         'username' => $username,
                                         'fname' => ucfirst(Input::get('fname')),
                                         'lname' => ucfirst(Input::get('lname')),
@@ -253,7 +253,7 @@ if(Input::exists()){
                                         'vericode' => $vericode,
                                         'vericode_expiry' => $vericode_expiry
                                 ));
-                                        $theNewId=$db->lastId();
+
 
                         } catch (Exception $e) {
                                 die($e->getMessage());
@@ -305,7 +305,6 @@ else {
 </script>
 <?php } ?>
 <?php if($settings->auto_assign_un==0) { ?>
-<script type="text/javascript">
 <?php } ?>
 <script type="text/javascript">
     $(document).ready(function(){

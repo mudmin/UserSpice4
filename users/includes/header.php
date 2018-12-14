@@ -172,7 +172,6 @@ else $pageTitle = '';
 
 	<?php require_once $abs_us_root.$us_url_root.'usersc/includes/bootstrap_corrections.php'; ?>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/1.6.1/fingerprint2.min.js" integrity="sha256-goBybI2a+FUEO9n1gkRyIYOwLPq6fO8z192AxA9O54I=" crossorigin="anonymous"></script>
 <?php if(!isset($_SESSION['fingerprint'])) {?>
 <script>
 new Fingerprint2().get(function(result, components) {

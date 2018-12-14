@@ -1806,7 +1806,7 @@ if(!function_exists('storeUser')) {
 					$_SESSION['kUserSessionID']=$db->lastId();
 					return true;
 				}
-			}
+			}  else return true;
 		}
 	}
 }
