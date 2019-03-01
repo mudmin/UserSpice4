@@ -33,13 +33,13 @@ $lang = array_merge($lang,array(
 
 // Signin
 $lang = array_merge($lang,array(
-	"SIGNIN_FAIL"			=> "** FAILED LOGIN **",
+	"SIGNIN_FAIL"				=> "** FAILED LOGIN **",
 	"SIGNIN_TITLE"			=> "Please Log In",
-	"SIGNIN_TEXT"			=> "Log In",
+	"SIGNIN_TEXT"				=> "Log In",
 	"SIGNOUT_TEXT"			=> "Log Out",
-	"SIGNIN_BUTTONTEXT"		=> "Login",
-	"SIGNIN_AUDITTEXT"		=> "Logged In",
-	"SIGNOUT_AUDITTEXT"		=> "Logged Out",
+	"SIGNIN_BUTTONTEXT"	=> "Login",
+	"SIGNIN_AUDITTEXT"	=> "Logged In",
+	"SIGNOUT_AUDITTEXT"	=> "Logged Out",
 	));
 
 //Navigation
@@ -93,6 +93,7 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_PERMISSION_ADDED"		=> "Added access to %m1% permission levels",
 	"ACCOUNT_PERMISSION_REMOVED"		=> "Removed access from %m1% permission levels",
 	"ACCOUNT_INVALID_USERNAME"		=> "Invalid username",
+	"ACCOUNT_FORGOTPASS"		=> "Forgot Password",
 	"CAPTCHA_ERROR"		=> "You failed the Captcha Test, Robot!",
 	"USER_PROTECTION"		=> "User is %m1% protected",
 	"USER_DEV_OPTION"		=> "User is %m1% a dev user",

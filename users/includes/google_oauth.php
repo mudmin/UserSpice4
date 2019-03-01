@@ -77,6 +77,12 @@ if($settings->glogin==1 && !$user->isLoggedIn()){
 					}
 				}
 				$feusr=$gUser->checkUser('google',$userProfile['id'],$userProfile['given_name'],$userProfile['family_name'],$userProfile['email'],$gender,$userProfile['locale'],$link,$userProfile['picture']);
+				//dnd($feusr);
+				if(isset($feusr->isNewAccount) && $feusr->isNewAccount) {
+					echo 1;
+						$theNewId=$feusr->id;
+						include($abs_us_root.$us_url_root.'usersc/scripts/during_user_creation.php');
+				}
 				//Add UserSpice info to session
 				$_SESSION["user"]=$feusr->id;
 				//Add Google info to the session

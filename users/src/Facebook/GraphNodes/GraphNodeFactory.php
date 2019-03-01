@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Facebook, Inc.
+ * Copyright 2017 Facebook, Inc.
  *
  * You are hereby granted a non-exclusive, worldwide, royalty-free license to
  * use, copy, modify, and distribute this software in source code or binary
@@ -304,7 +304,9 @@ class GraphNodeFactory
                 return $this->safelyMakeGraphEdge($data, $subclassName, $parentKey, $parentNodeId);
             }
             // Sometimes Graph is a weirdo and returns a GraphNode under the "data" key
-            $data = $data['data'];
+            $outerData = $data;
+            unset($outerData['data']);
+            $data = $data['data'] + $outerData;
         }
 
         // Create GraphNode

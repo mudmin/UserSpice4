@@ -48,6 +48,55 @@
         "homepage": "https://github.com/Bacon/BaconQrCode"
     },
     {
+        "name": "google/recaptcha",
+        "version": "1.2.1",
+        "version_normalized": "1.2.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/google/recaptcha.git",
+            "reference": "e7add3be59211482ecdb942288f52da64a35f61a"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/google/recaptcha/zipball/e7add3be59211482ecdb942288f52da64a35f61a",
+            "reference": "e7add3be59211482ecdb942288f52da64a35f61a",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.5"
+        },
+        "require-dev": {
+            "friendsofphp/php-cs-fixer": "^2.2.20|^2.12",
+            "php-coveralls/php-coveralls": "^2.1",
+            "phpunit/phpunit": "^4.8.36|^5.7.27|^6.59|^7"
+        },
+        "time": "2018-08-05T09:31:53+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.2.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "ReCaptcha\\": "src/ReCaptcha"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "description": "Client library for reCAPTCHA, a free service that protects websites from spam and abuse.",
+        "homepage": "https://www.google.com/recaptcha/",
+        "keywords": [
+            "Abuse",
+            "captcha",
+            "recaptcha",
+            "spam"
+        ]
+    },
+    {
         "name": "paragonie/constant_time_encoding",
         "version": "v2.2.2",
         "version_normalized": "2.2.2.0",
@@ -113,17 +162,17 @@
     },
     {
         "name": "paragonie/random_compat",
-        "version": "v2.0.12",
-        "version_normalized": "2.0.12.0",
+        "version": "v2.0.17",
+        "version_normalized": "2.0.17.0",
         "source": {
             "type": "git",
             "url": "https://github.com/paragonie/random_compat.git",
-            "reference": "258c89a6b97de7dfaf5b8c7607d0478e236b04fb"
+            "reference": "29af24f25bab834fcbb38ad2a69fa93b867e070d"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/paragonie/random_compat/zipball/258c89a6b97de7dfaf5b8c7607d0478e236b04fb",
-            "reference": "258c89a6b97de7dfaf5b8c7607d0478e236b04fb",
+            "url": "https://api.github.com/repos/paragonie/random_compat/zipball/29af24f25bab834fcbb38ad2a69fa93b867e070d",
+            "reference": "29af24f25bab834fcbb38ad2a69fa93b867e070d",
             "shasum": ""
         },
         "require": {
@@ -135,7 +184,7 @@
         "suggest": {
             "ext-libsodium": "Provides a modern crypto API that can be used to generate random bytes."
         },
-        "time": "2018-04-04T21:24:14+00:00",
+        "time": "2018-07-04T16:31:37+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -157,6 +206,7 @@
         "description": "PHP 5.x polyfill for random_bytes() and random_int() from PHP 7",
         "keywords": [
             "csprng",
+            "polyfill",
             "pseudorandom",
             "random"
         ]
@@ -231,22 +281,22 @@
     },
     {
         "name": "pragmarx/google2fa",
-        "version": "v3.0.1",
-        "version_normalized": "3.0.1.0",
+        "version": "v3.0.3",
+        "version_normalized": "3.0.3.0",
         "source": {
             "type": "git",
             "url": "https://github.com/antonioribeiro/google2fa.git",
-            "reference": "40b3ce025bed0f9cd0c1c8ab7fc8265344c73de0"
+            "reference": "6949226739e4424f40031e6f1c96b1fd64047335"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/antonioribeiro/google2fa/zipball/40b3ce025bed0f9cd0c1c8ab7fc8265344c73de0",
-            "reference": "40b3ce025bed0f9cd0c1c8ab7fc8265344c73de0",
+            "url": "https://api.github.com/repos/antonioribeiro/google2fa/zipball/6949226739e4424f40031e6f1c96b1fd64047335",
+            "reference": "6949226739e4424f40031e6f1c96b1fd64047335",
             "shasum": ""
         },
         "require": {
             "paragonie/constant_time_encoding": "~1.0|~2.0",
-            "paragonie/random_compat": "~1.4|~2.0",
+            "paragonie/random_compat": ">=1",
             "php": ">=5.4",
             "symfony/polyfill-php56": "~1.2"
         },
@@ -257,7 +307,7 @@
         "suggest": {
             "bacon/bacon-qr-code": "Required to generate inline QR Codes."
         },
-        "time": "2018-03-15T23:14:19+00:00",
+        "time": "2018-08-29T13:28:06+00:00",
         "type": "library",
         "extra": {
             "component": "package",

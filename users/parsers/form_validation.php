@@ -60,4 +60,4 @@ $response = ['success'=>true,'option'=>$requested,'value'=>$value];
 echo json_encode($response);
 die;
 }
-}
+} //end of admin check

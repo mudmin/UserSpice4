@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Facebook, Inc.
+ * Copyright 2017 Facebook, Inc.
  *
  * You are hereby granted a non-exclusive, worldwide, royalty-free license to
  * use, copy, modify, and distribute this software in source code or binary
@@ -222,8 +222,8 @@ class FacebookRedirectLoginHelper
         $this->resetCsrf();
 
         $redirectUrl = $redirectUrl ?: $this->urlDetectionHandler->getCurrentUrl();
-        // At minimum we need to remove the state param
-        $redirectUrl = FacebookUrlManipulator::removeParamsFromUrl($redirectUrl, ['state']);
+        // At minimum we need to remove the 'code', 'enforce_https' and 'state' params
+        $redirectUrl = FacebookUrlManipulator::removeParamsFromUrl($redirectUrl, ['code', 'enforce_https', 'state']);
 
         return $this->oAuth2Client->getAccessTokenFromCode($code, $redirectUrl);
     }

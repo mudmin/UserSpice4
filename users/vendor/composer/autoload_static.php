@@ -17,6 +17,10 @@ class ComposerStaticInit09fae17662c0d8fcca874043515d9423
             'Symfony\\Polyfill\\Util\\' => 22,
             'Symfony\\Polyfill\\Php56\\' => 23,
         ),
+        'R' => 
+        array (
+            'ReCaptcha\\' => 10,
+        ),
         'P' => 
         array (
             'PragmaRX\\Google2FA\\Tests\\' => 25,
@@ -34,6 +38,10 @@ class ComposerStaticInit09fae17662c0d8fcca874043515d9423
         'Symfony\\Polyfill\\Php56\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php56',
+        ),
+        'ReCaptcha\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/google/recaptcha/src/ReCaptcha',
         ),
         'PragmaRX\\Google2FA\\Tests\\' => 
         array (

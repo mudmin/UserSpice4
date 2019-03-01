@@ -19,20 +19,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-?>
-<?php require_once $abs_us_root.$us_url_root.'users/helpers/helpers.php'; ?>
-<?php require_once $abs_us_root.$us_url_root.'users/includes/user_spice_ver.php'; ?>
-
-<?php
 //check for a custom page
 $currentPage = currentPage();
-if(isset($_GET['err'])){
-	$err = Input::get('err');
-}
 
-if(isset($_GET['msg'])){
-	$msg = Input::get('msg');
-}
 
 if(file_exists($abs_us_root.$us_url_root.'usersc/'.$currentPage)){
 	if(currentFolder() == 'users'){
@@ -103,14 +92,10 @@ if($settings->track_guest == 1 && $user->isLoggedIn()){
 
 }
 
-if($user->isLoggedIn() && $currentPage != 'user_settings.php' && $user->data()->force_pr == 1) Redirect::to($us_url_root.'users/user_settings.php?err=You+must+change+your+password!');
+if($user->isLoggedIn() && $currentPage != 'user_settings.php' && $user->data()->force_pr == 1 && !isset($_SESSION['twofa']) && $_SESSION['twofa']!=1 && $currentPage !== 'twofa.php') Redirect::to($us_url_root.'users/user_settings.php?err=You+must+change+your+password!');
 
-if(substr($us_url_root,1).$currentPage == currentFolder().'/'.$currentPage){
-	$find = $currentPage;
-}else{
-	$find = currentFolder().'/'.$currentPage;
-}
-$titleQ = $db->query('SELECT title FROM pages WHERE page = ?', array($find));
+$page=currentFile();
+$titleQ = $db->query('SELECT title FROM pages WHERE page = ?', array($page));
 if ($titleQ->count() > 0) {
     $pageTitle = $titleQ->first()->title;
 }
@@ -160,7 +145,7 @@ else $pageTitle = '';
 	<link href="<?=$us_url_root?><?=str_replace('../','',$settings->us_css3);?>" rel="stylesheet">
 
 	<!-- Custom Fonts/Animation/Styling-->
-	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+	<link rel="stylesheet" href="<?=$us_url_root?>users/fonts/css/font-awesome.min.css">
 
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
 	<!-- jQuery Fallback -->
@@ -172,6 +157,7 @@ else $pageTitle = '';
 
 	<?php require_once $abs_us_root.$us_url_root.'usersc/includes/bootstrap_corrections.php'; ?>
 
+<script src="<?=$us_url_root?>users/js/tomfoolery.js"></script>
 <?php if(!isset($_SESSION['fingerprint'])) {?>
 <script>
 new Fingerprint2().get(function(result, components) {
@@ -189,13 +175,6 @@ if($settings->session_manager==1) storeUser(); ?>
 
 <body class="nav-md">
 	<?php
-	if(isset($_GET['err'])){
-		err("<br>".$err);
-	}
-
-	if(isset($_GET['msg'])){
-		bold("<br>".$msg);
-	}
 
 	if ($user->isLoggedIn() && $settings->admin_verify==1) { (!reAuth()); }
 	if ($user->isLoggedIn() && isset($_SESSION['twofa']) && $_SESSION['twofa']==1 && $currentPage !== 'twofa.php') Redirect::to($us_url_root.'users/twofa.php');
@@ -211,3 +190,5 @@ if($settings->session_manager==1) storeUser(); ?>
 	   background: url('https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap-editable/img/clear.png') center center no-repeat !important;
 	}
 	</style>
+
+<?php if(isset($settings->oauth_tos_accepted) && $user->isLoggedIn() && !$user->data()->oauth_tos_accepted && $currentPage != 'oauth_success.php') Redirect::to($us_url_root.'users/oauth_success.php?action=tos'); ?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Facebook, Inc.
+ * Copyright 2017 Facebook, Inc.
  *
  * You are hereby granted a non-exclusive, worldwide, royalty-free license to
  * use, copy, modify, and distribute this software in source code or binary
@@ -98,7 +98,7 @@ class FacebookCurlHttpClient implements FacebookHttpClientInterface
             CURLOPT_URL => $url,
             CURLOPT_CONNECTTIMEOUT => 10,
             CURLOPT_TIMEOUT => $timeOut,
-            CURLOPT_RETURNTRANSFER => true, // Follow 301 redirects
+            CURLOPT_RETURNTRANSFER => true, // Return response as string
             CURLOPT_HEADER => true, // Enable header processing
             CURLOPT_SSL_VERIFYHOST => 2,
             CURLOPT_SSL_VERIFYPEER => true,

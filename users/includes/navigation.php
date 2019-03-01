@@ -53,12 +53,12 @@ if ($user->isLoggedIn()) {
 				<?php if($user->isLoggedIn()){ //anyone is logged in?>
 					<li><a href="<?=$us_url_root?>users/account.php"><i class="fa fa-fw fa-user"></i> <?php echo echousername($user->data()->id);?></a></li> <!-- Common for Hamburger and Regular menus link -->
 					<?php if($settings->notifications==1) {?>
-            <?php /*<li><a href="portal/'.PAGE_PATH.'#" id="notificationsTrigger" data-toggle="modal" data-target="#notificationsModal"><i class="glyphicon glyphicon-bell"></i> <span id="notifCount" class="badge" style="margin-top: -5px"><?= (($notifications->getUnreadCount() > 0) ? $notifications->getUnreadCount() : ''); ?></span></a></li>*/?>
+            <?php /*<li><a href="portal/'.PAGE_PATH.'#" id="notificationsTrigger" data-toggle="modal" data-target="#notificationsModal"><i class="fa fa-bell"></i> <span id="notifCount" class="badge" style="margin-top: -5px"><?= (($notifications->getUnreadCount() > 0) ? $notifications->getUnreadCount() : ''); ?></span></a></li>*/?>
 
-			<li><a href="#" onclick="displayNotifications('new')" id="notificationsTrigger" data-toggle="modal" data-target="#notificationsModal"  ><i class="glyphicon glyphicon-bell"></i> <span id="notifCount" class="badge" style="margin-top: -5px"><?= (int)$notifications->getUnreadCount(); ?></span></a></li>
+			<li><a href="#" onclick="displayNotifications('new')" id="notificationsTrigger" data-toggle="modal" data-target="#notificationsModal"  ><i class="fa fa-bell"></i> <span id="notifCount" class="badge" style="margin-top: -5px"><?= (int)$notifications->getUnreadCount(); ?></span></a></li>
           <?php } ?>
 					<?php if($settings->messaging == 1){ ?>
-						<li><a href="<?=$us_url_root?>users/messages.php"><i class="glyphicon glyphicon-envelope"></i> <span id="msgCount" class="badge" style="margin-top: -5px"><?php if($msgC > 0){ echo $msgC;}?></span></a></li>
+						<li><a href="<?=$us_url_root?>users/messages.php"><i class="fa fa-envelope"></i> <span id="msgCount" class="badge" style="margin-top: -5px"><?php if($msgC > 0){ echo $msgC;}?></span></a></li>
 					<?php } ?>
 
 <?php require_once $abs_us_root.$us_url_root.'usersc/includes/navigation_right_side.php'; ?>
@@ -66,11 +66,11 @@ if ($user->isLoggedIn()) {
 					 <!-- Hamburger menu link -->
 					<?php if (checkMenu(2,$user->data()->id)){  //Links for permission level 2 (default admin) ?>
 						<li class="hidden-sm hidden-md hidden-lg"><a href="<?=$us_url_root?>users/admin.php"><i class="fa fa-fw fa-cogs"></i> Admin Dashboard</a></li> <!-- Hamburger menu link -->
-						<li class="hidden-sm hidden-md hidden-lg"><a href="<?=$us_url_root?>users/admin_users.php"><i class="glyphicon glyphicon-user"></i> User Management</a></li> <!-- Hamburger menu link -->
-						<li class="hidden-sm hidden-md hidden-lg"><a href="<?=$us_url_root?>users/admin_permissions.php"><i class="glyphicon glyphicon-lock"></i> User Permissions</a></li> <!-- Hamburger menu link -->
-						<li class="hidden-sm hidden-md hidden-lg"><a href="<?=$us_url_root?>users/admin_pages.php"><i class="glyphicon glyphicon-wrench"></i> System Pages</a></li> <!-- Hamburger menu link -->
-						<li class="hidden-sm hidden-md hidden-lg"><a href="<?=$us_url_root?>users/admin_messages.php"><i class="glyphicon glyphicon-envelope"></i> Messages Admin</a></li> <!-- Hamburger menu link -->
-						<li class="hidden-sm hidden-md hidden-lg"><a href="<?=$us_url_root?>users/admin_logs.php"><i class="glyphicon glyphicon-search"></i> System Logs</a></li> <!-- Hamburger menu link -->
+						<li class="hidden-sm hidden-md hidden-lg"><a href="<?=$us_url_root?>users/admin.php?view=users"><i class="fa fa-user"></i> User Management</a></li> <!-- Hamburger menu link -->
+						<li class="hidden-sm hidden-md hidden-lg"><a href="<?=$us_url_root?>users/admin.php?view=permissions"><i class="fa fa-lock"></i> User Permissions</a></li> <!-- Hamburger menu link -->
+						<li class="hidden-sm hidden-md hidden-lg"><a href="<?=$us_url_root?>users/admin.php?view=pages"><i class="fa fa-wrench"></i> System Pages</a></li> <!-- Hamburger menu link -->
+						<li class="hidden-sm hidden-md hidden-lg"><a href="<?=$us_url_root?>users/admin.php?view=messages"><i class="fa fa-envelope"></i> Messages Admin</a></li> <!-- Hamburger menu link -->
+						<li class="hidden-sm hidden-md hidden-lg"><a href="<?=$us_url_root?>users/admin.php?view=logs"><i class="fa fa-search"></i> System Logs</a></li> <!-- Hamburger menu link -->
 					<?php } // is user an admin ?>
 					<li class="dropdown hidden-xs"><a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="fa fa-fw fa-cog"></i><b class="caret"></b></a> <!-- regular user menu -->
 						<ul class="dropdown-menu"> <!-- open tag for User dropdown menu -->
@@ -83,11 +83,11 @@ if ($user->isLoggedIn()) {
 							<?php if (checkMenu(2,$user->data()->id)){  //Links for permission level 2 (default admin) ?>
 								<li class="divider"></li>
 								<li><a href="<?=$us_url_root?>users/admin.php"><i class="fa fa-fw fa-cogs"></i> Admin Dashboard</a></li> <!-- regular Admin menu link -->
-								<li><a href="<?=$us_url_root?>users/admin_users.php"><i class="glyphicon glyphicon-user"></i> User Management</a></li>
-								<li><a href="<?=$us_url_root?>users/admin_permissions.php"><i class="glyphicon glyphicon-lock"></i> Page Permissions</a></li>
-								<li><a href="<?=$us_url_root?>users/admin_pages.php"><i class="glyphicon glyphicon-wrench"></i> Page Management</a></li>
-								<li><a href="<?=$us_url_root?>users/admin_messages.php"><i class="glyphicon glyphicon-envelope"></i> Message System</a></li>
-								<li><a href="<?=$us_url_root?>users/admin_logs.php"><i class="glyphicon glyphicon-search"></i> System Logs</a></li>
+								<li><a href="<?=$us_url_root?>users/admin.php?view=users"><i class="fa fa-user"></i> User Management</a></li>
+								<li><a href="<?=$us_url_root?>users/admin.php?view=permissions"><i class="fa fa-lock"></i> Page Permissions</a></li>
+								<li><a href="<?=$us_url_root?>users/admin.php?view=pages"><i class="fa fa-wrench"></i> Page Management</a></li>
+								<li><a href="<?=$us_url_root?>users/admin.php?view=messages"><i class="fa fa-envelope"></i> Message System</a></li>
+								<li><a href="<?=$us_url_root?>users/admin.php?view=logs"><i class="fa fa-search"></i> System Logs</a></li>
 							<?php } // is user an admin ?>
 							<li class="divider"></li>
 							<li><a href="<?=$us_url_root?>users/logout.php"><i class="fa fa-fw fa-sign-out"></i> Logout</a></li> <!-- regular Logout menu link -->

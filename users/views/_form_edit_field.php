@@ -25,7 +25,7 @@
 			<label for="">Order</label>
 			<input  class="form-control" type="number" name="ord" value="<?=$f->ord?>" min="0" step="1" required>
 		</div>
-
+		
 		<div class="form-group">
 			<label for="">Required?</label>
 			<select class="form-control" name="required" required>
@@ -112,4 +112,4 @@
 				return false;
 			});
 		});
-	</script>
+		</script>

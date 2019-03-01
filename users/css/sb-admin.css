@@ -8,15 +8,10 @@
 
 
 body {
-    margin-top: 50px;
     background-color: #222;
 }
 
-@media(min-width:768px) {
-    body {
-        margin-top: 50px;
-    }
-}
+
 
 #wrapper {
     padding-left: 0;
@@ -24,6 +19,7 @@ body {
 
 #page-wrapper {
     width: 100%;
+    padding-top: 90px;
     background-color: #fff;
 }
 
@@ -35,10 +31,6 @@ body {
 @media(min-width:768px) {
     #wrapper {
         padding-left: 225px;
-    }
-
-    #page-wrapper {
-        padding-top: 30px;
     }
 }
 

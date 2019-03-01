@@ -17,7 +17,7 @@ if($formsC > 0){
 			<tr>
 				<td><?=$f->form?></td>
 				<td>displayForm('<?=$f->form?>');</td>
-				<td><a href="edit_form.php?edit=<?=$f->id?>" class="btn btn-primary">Edit</a></td>
+				<td><a href="admin.php?view=forms_edit&edit=<?=$f->id?>" class="btn btn-primary">Edit</a></td>
 			</tr>
 		<?php }} ?>
 	</tbody>

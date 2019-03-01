@@ -310,6 +310,7 @@ function formField($o, $v = []){
               }
               ?>
             </tbody>
+          </table>
             <?php
           }
 
@@ -339,6 +340,8 @@ function formField($o, $v = []){
           }
 
           function preProcessForm($opts = []){
+            global $abs_us_root;
+            global $us_url_root;
             $response = array(
               'form_valid'=>false,
               'validation'=>false,
@@ -487,9 +490,9 @@ function formField($o, $v = []){
                 $db->query("CREATE TABLE IF NOT EXISTS $form ( $columns2 )");
                 $db->insert('us_forms',['form'=>$name]);
                 $id = $db->lastId();
-                Redirect::to($us_url_root.'users/edit_form.php?edit='.$id.'&err=Form+created!');
+                Redirect::to($us_url_root.'users/admin.php?view=forms_edit&edit='.$id.'&err=Form+created!');
               }else{ //failed name check
-                Redirect::to($us_url_root.'users/admin_forms.php.?err='.$check['msg']);
+                Redirect::to($us_url_root.'users/admin.php?view=forms&err='.$check['msg']);
                 exit;
               }
             }
@@ -575,9 +578,9 @@ function formField($o, $v = []){
                     exit;
                   }
                 }
-                Redirect::to($us_url_root.'users/edit_form.php?autogen=1&edit='.$id);
+                Redirect::to($us_url_root.'users/admin.php?view=forms_edit&autogen=1&edit='.$id);
               }else{ //name check failed
-                Redirect::to($us_url_root.'users/admin_forms.php.?err='.$check['msg']);
+                Redirect::to($us_url_root.'users/admin.php?view=forms&err='.$check['msg']);
                 exit;
               }
 
@@ -673,9 +676,9 @@ function formField($o, $v = []){
                 foreach($copy as $c){
                   $db->insert($new,$c);
                 }
-                Redirect::to($us_url_root.'users/edit_form.php?edit='.$id.'&err=Form+duplicated!');
+                Redirect::to($us_url_root.'users/admin.php?view=forms_edit&edit='.$id.'&err=Form+duplicated!');
               }else{//name check failed
-                Redirect::to($us_url_root.'users/admin_forms.php.?err='.$check['msg']);
+                Redirect::to($us_url_root.'users/admin.php?view=forms&err='.$check['msg']);
                 exit;
               }
             }
@@ -765,9 +768,12 @@ function formField($o, $v = []){
               }
             }
 
-            function deleteForm($name){
+            function deleteForm($name,$opts = []){
               $db = DB::getInstance();
               $db->query("DELETE FROM us_forms WHERE form = ?",(array($name)));
               $formatted = formatName($name);
               $db->query("DROP TABLE IF EXISTS `$formatted`");
+              if($opts['deleteTable'] == "YES"){
+                $db->query("DROP TABLE IF EXISTS `$name`");
+              }
             }

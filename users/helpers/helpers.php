@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 //echo "helpers included";
 
+//NOTE: Plugin data is called at the bottom of this file
 require_once("us_helpers.php");
 require_once("users_online.php");
 require_once("language.php");
@@ -26,12 +27,31 @@ require_once("backup_util.php");
 require_once("class.treeManager.php");
 require_once("menus.php");
 require_once("forms.php");
+require_once("tables.php");
 
 define("ABS_US_ROOT",$abs_us_root);
 define("US_URL_ROOT",$us_url_root);
 require_once($abs_us_root.$us_url_root."users/vendor/autoload.php");
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+require_once("permissions.php");
+require_once("users.php");
+
+$usfeatures = parse_ini_file($abs_us_root.$us_url_root."users/features.ini.php",true);
+// var_dump($usfeatures);
+
+if($usfeatures['messaging'] == 1) {require_once("messaging.php");}
+if($usfeatures['dbmenu'] == 1) {require_once("dbmenu.php");}
+if($usfeatures['forms_legacy'] == 1) {require_once("forms_legacy.php");}
+if($usfeatures['reauth'] == 1) {require_once("reauth.php");}
+if($usfeatures['notifications'] == 1) {require_once("notifications.php");}
+if($usfeatures['fingerprinting'] == 1) {require_once("fingerprinting.php");}
+if($usfeatures['sessions'] == 1) {require_once("sessions.php");}
+if($usfeatures['saas'] == 1) {require_once("saas.php");}
+
+
+require_once $abs_us_root.$us_url_root.'usersc/includes/custom_functions.php';
+require_once $abs_us_root.$us_url_root.'usersc/includes/analytics.php';
 
 // Readeable file size
 function size($path) {
@@ -54,11 +74,44 @@ function sanitize($string) {
 	return htmlentities($string, ENT_QUOTES, 'UTF-8');
 }
 
+//returns the name of the current page
 function currentPage() {
 	$uri = $_SERVER['PHP_SELF'];
 	$path = explode('/', $uri);
 	$currentPage = end($path);
 	return $currentPage;
+}
+
+//returns the id of the current page
+function currentPageId($uri) {
+  $abs_us_root=$_SERVER['DOCUMENT_ROOT'];
+  $self_path=explode("/", $_SERVER['PHP_SELF']);
+  $self_path_length=count($self_path);
+  $file_found=FALSE;
+
+  for($i = 1; $i < $self_path_length; $i++){
+  	array_splice($self_path, $self_path_length-$i, $i);
+  	$us_url_root=implode("/",$self_path)."/";
+
+  	if (file_exists($abs_us_root.$us_url_root.'z_us_root.php')){
+  		$file_found=TRUE;
+  		break;
+  	}else{
+  		$file_found=FALSE;
+  	}
+  }
+
+  $urlRootLength=strlen($us_url_root);
+  $path=substr($uri,$urlRootLength,strlen($uri)-$urlRootLength);
+    $db = DB::getInstance();
+    $query = $db->query("SELECT id FROM pages WHERE page = ?",array($path));
+    $count = $query->count();
+    if($count>0){
+        $result = $query->first();
+        return $result->id;    //Return the id of the page we're on
+    } else {
+        return 0; //Fail nicely
+    }
 }
 
 function currentFolder() {
@@ -203,7 +256,7 @@ function inputBlock($type,$label,$id,$divAttr=array(),$inputAttr=array(),$helper
 	$html = '<div'.$divAttrStr.'>';
 	$html .= '<label for="'.$id.'">'.$label.'</label>';
 	if($helper != ''){
-		$html .= '<button class="help-trigger"><span class="glyphicon glyphicon-question-sign"></span></button>';
+		$html .= '<button class="help-trigger"><span class="fa fa-question"></span></button>';
 	}
 	$html .= '<input type="'.$type.'" id="'.$id.'" name="'.$id.'"'.$inputAttrStr.'>';
   if($helper != ''){
@@ -266,7 +319,7 @@ function dnd($var,$adminOnly=false,$localhostOnly=false){
 }
 
 function bold($text){
-	echo "<text padding='1em' align='center'><h4><span style='background:white'>";
+	echo "<span><ext padding='1em' align='center'><h4><span style='background:white'>";
 	echo $text;
 	echo "</h4></span></text>";
 }
@@ -283,4 +336,53 @@ function redirect($location){
 
 function output_message($message) {
 return $message;
+}
+
+
+//PLUGIN Hooks
+$usplugins = parse_ini_file($abs_us_root.$us_url_root."usersc/plugins/plugins.ini.php",true);
+foreach($usplugins as $k=>$v){
+  if($v == 1){
+  if(file_exists($abs_us_root.$us_url_root."usersc/plugins/".$k."/functions.php")){
+    include($abs_us_root.$us_url_root."usersc/plugins/".$k."/functions.php");
+    }
+  }
+}
+
+function write_php_ini($array, $file)
+{
+    $res = array();
+    foreach($array as $key => $val)
+    {
+        if(is_array($val))
+        {
+            $res[] = "[$key]";
+            foreach($val as $skey => $sval) $res[] = "$skey = ".(is_numeric($sval) ? $sval : '"'.$sval.'"');
+        }
+        else $res[] = "$key = ".(is_numeric($val) ? $val : '"'.$val.'"');
+    }
+    safefilerewrite($file, implode("\r\n", $res));
+}
+
+function safefilerewrite($fileName, $dataToSave)
+{
+$security1 = ';<?php';
+$security2 = ';die();';
+
+  if ($fp = fopen($fileName, 'w'))
+    {
+        $startTime = microtime(TRUE);
+        do
+        {            $canWrite = flock($fp, LOCK_EX);
+           // If lock not obtained sleep for 0 - 100 milliseconds, to avoid collision and CPU load
+           if(!$canWrite) usleep(round(rand(0, 100)*1000));
+        } while ((!$canWrite)and((microtime(TRUE)-$startTime) < 5));
+
+        //file was locked so now we can store information
+        if ($canWrite)
+        {            fwrite($fp, $security1.PHP_EOL.$security2.PHP_EOL.$dataToSave);
+            flock($fp, LOCK_UN);
+        }
+        fclose($fp);
+    }
 }

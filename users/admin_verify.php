@@ -41,10 +41,12 @@ if(empty($_POST)) {
       Redirect::to('../index.php');
   }
 }
+  $null=$settings->admin_verify_timeout-1;
   if(isset($_SESSION['last_confirm']) && $_SESSION['last_confirm']!='' && !is_null($_SESSION['last_confirm'])) $last_confirm=$_SESSION['last_confirm'];
-  else $last_confirm=date("Y-m-d H:i:s",strtotime("-3 hours",strtotime(date("Y-m-d H:i:s"))));
+  else $last_confirm=date("Y-m-d H:i:s",strtotime('-'.$null.' day',strtotime(date("Y-m-d H:i:s"))));
+  $current=date("Y-m-d H:i:s");
   $ctFormatted = date("Y-m-d H:i:s", strtotime($current));
-  $dbPlus = date("Y-m-d H:i:s", strtotime('+2 hours', strtotime($last_confirm)));
+  $dbPlus = date("Y-m-d H:i:s", strtotime('+'.$settings->admin_verify_timeout.' minutes', strtotime($last_confirm)));
   if (strtotime($ctFormatted) < strtotime($dbPlus)){
     Redirect::to(htmlspecialchars_decode($actual_link));
   }
@@ -87,14 +89,14 @@ if (!empty($_POST)) {
     <div class="row">
 <?=resultBlock($errors,$successes);?>
 <? if ($actual_link !='') { ?>
-        <div class="col-xs-12 col-md-6">
+        <div class="col-sm-12 col-md-6">
         <h1>Restricted Access</h1>
         <p><font color='slate'>Please enter your <strong>password</strong> or <strong>PIN</strong> code below to continue</font></p>
       </div>
 
      </div>
     <div class="row">
-    <form class="verify-admin" action="admin_verify.php" method="POST" id="payment-form">
+    <form class="verify-admin" action="admin_verify.php" method="POST">
     <div class="col-md-5">
     <div class="input-group"><input class="form-control" type="password" name="password" id="password" required autofocus>
         <span class="input-group-btn">

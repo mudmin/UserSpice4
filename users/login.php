@@ -1,4 +1,5 @@
 <?php
+// This is a user-facing page
 /*
 UserSpice 4
 An Open Source PHP User Management System
@@ -17,24 +18,20 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-// error_reporting(E_ALL);
-// ini_set('display_errors', 1);
 ini_set("allow_url_fopen", 1);
 if(isset($_SESSION)){session_destroy();}
-?>
-<?php require_once '../users/init.php';?>
-<?php require_once $abs_us_root.$us_url_root.'users/includes/header.php'; ?>
-<?php require_once $abs_us_root.$us_url_root.'users/includes/navigation.php';
+require_once '../users/init.php';
+require_once $abs_us_root.$us_url_root.'users/includes/template/prep.php';
+
 if($settings->twofa == 1){
   $google2fa = new PragmaRX\Google2FA\Google2FA();
 }
 ?>
 <?php
 if(ipCheckBan()){Redirect::to($us_url_root.'usersc/scripts/banned.php');die();}
-$settingsQ = $db->query("SELECT * FROM settings");
-$settings = $settingsQ->first();
-$error_message = '';
-if (@$_REQUEST['err']) $error_message = $_REQUEST['err']; // allow redirects to display a message
+$errors = [];
+$successes = [];
+if (@$_REQUEST['err']) $errors[] = $_REQUEST['err']; // allow redirects to display a message
 $reCaptchaValid=FALSE;
 if($user->isLoggedIn()) Redirect::to($us_url_root.'index.php');
 
@@ -45,24 +42,27 @@ if (Input::exists()) {
   }
   //Check to see if recaptcha is enabled
   if($settings->recaptcha == 1){
-    require_once $abs_us_root.$us_url_root.'users/includes/recaptcha.config.php';
+    //require_once $abs_us_root.$us_url_root.'users/includes/recaptcha.config.php';
 
     //reCAPTCHA 2.0 check
     $response = null;
 
     // check secret key
-    $reCaptcha = new ReCaptcha($settings->recap_private);
+    $reCaptcha = new \ReCaptcha\ReCaptcha($settings->recap_private);
 
     // if submitted check response
     if ($_POST["g-recaptcha-response"]) {
-      $response = $reCaptcha->verifyResponse($_SERVER["REMOTE_ADDR"],$_POST["g-recaptcha-response"]);
+      $response = $reCaptcha->verify($_POST["g-recaptcha-response"],$_SERVER["REMOTE_ADDR"]);
     }
-    if ($response != null && $response->success) {
+    if ($response != null && $response->isSuccess()) {
       $reCaptchaValid=TRUE;
-
     }else{
       $reCaptchaValid=FALSE;
-      $error_message .= 'Please check the reCaptcha.';
+      $errors[] = 'reCaptcha check failed, please contact the Administrator';
+      $reCapErrors = $response->getErrorCodes();
+      foreach($reCapErrors as $error) {
+        logger(1,"Recapatcha","Error with reCaptcha: ".$error);
+      }
     }
   }else{
     $reCaptchaValid=TRUE;
@@ -93,6 +93,14 @@ if (Input::exists()) {
             } else {
               # if user was attempting to get to a page before login, go there
               $_SESSION['last_confirm']=date("Y-m-d H:i:s");
+
+              //check for need to reAck terms of service
+              if($settings->show_tos == 1){
+                if($user->data()->oauth_tos_accepted == 0){
+                  Redirect::to($us_url_root.'usersc/includes/user_agreement_acknowledge.php');
+                }
+              }
+
               if (!empty($dest)) {
                 $redirect=htmlspecialchars_decode(Input::get('redirect'));
                 if(!empty($redirect) || $redirect!=='') Redirect::to($redirect);
@@ -112,28 +120,20 @@ if (Input::exists()) {
               }
             }
           } else {
-            $error_message .= '<strong>Login failed</strong>. Please check your username and password and try again.';
+            $errors[] = '<strong>Login failed</strong>. Please check your username and password and try again.';
           }
-        } else{
-          $error_message .= '<ul>';
-          foreach ($validation->errors() as $error) {
-            $error_message .= '<li>' . $error[0] . '</li>';
-          }
-          $error_message .= '</ul>';
         }
       }
     }
     if (empty($dest = sanitizedDest('dest'))) {
       $dest = '';
     }
-
     ?>
-
     <div id="page-wrapper">
       <div class="container">
+        <?=resultBlock($errors,$successes);?>
         <div class="row">
-          <div class="col-xs-12">
-            <?php if(!$error_message=='') {?><div class="alert alert-danger"><?=$error_message;?></div><?php } ?>
+          <div class="col-sm-12">
             <?php
 
             if($settings->glogin==1 && !$user->isLoggedIn()){
@@ -148,19 +148,14 @@ if (Input::exists()) {
               <input type="hidden" name="dest" value="<?= $dest ?>" />
 
               <div class="form-group">
-                <label for="username" >Username OR Email</label>
-                <input  class="form-control" type="text" name="username" id="username" placeholder="Username/Email" required autofocus>
+                <label for="username">Username OR Email</label>
+                <input  class="form-control" type="text" name="username" id="username" placeholder="Username/Email" required autofocus autocomplete="username">
               </div>
 
               <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" class="form-control"  name="password" id="password"  placeholder="Password" required autocomplete="off">
+                <input type="password" class="form-control"  name="password" id="password"  placeholder="Password" required autocomplete="current-password">
               </div>
-              <?php
-              if($settings->recaptcha == 1){
-                ?>
-                <div class="g-recaptcha" data-sitekey="<?=$settings->recap_public; ?>" data-bind="next_button" data-callback="submitForm"></div>
-              <?php } ?>
 
               <div class="form-group">
                 <label for="remember">
@@ -170,21 +165,27 @@ if (Input::exists()) {
                 <input type="hidden" name="csrf" value="<?=Token::generate(); ?>">
                 <input type="hidden" name="redirect" value="<?=Input::get('redirect')?>" />
                 <button class="submit  btn  btn-primary" id="next_button" type="submit"><i class="fa fa-sign-in"></i> <?=lang("SIGNIN_BUTTONTEXT","");?></button>
-
+                <?php
+                if($settings->recaptcha == 1){
+                  ?>
+                  <div class="g-recaptcha" data-sitekey="<?=$settings->recap_public; ?>" data-bind="next_button" data-callback="submitForm"></div>
+                <?php } ?>
               </form>
             </div>
           </div>
           <div class="row">
-            <div class="col-xs-6"><br>
-              <a class="pull-left" href='../users/forgot_password.php'><i class="fa fa-wrench"></i> Forgot Password</a><br><br>
+            <div class="col-sm-6"><br>
+              <a class="pull-left" href='../users/forgot_password.php'><i class="fa fa-wrench"></i> <?=lang("ACCOUNT_FORGOTPASS","");?></a><br><br>
             </div>
             <?php if($settings->registration==1) {?>
-              <div class="col-xs-6"><br>
+              <div class="col-sm-6"><br>
                 <a class="pull-right" href='../users/join.php'><i class="fa fa-plus-square"></i> <?=lang("SIGNUP_TEXT","");?></a><br><br>
               </div><?php } ?>
             </div>
           </div>
         </div>
+
+        <?php require_once $abs_us_root.$us_url_root.'usersc/templates/'.$settings->template.'/container_close.php'; //custom template container ?>
 
         <!-- footers -->
         <?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; // the final html footer copyright row + the external js calls ?>
@@ -197,6 +198,6 @@ if (Input::exists()) {
           function submitForm() {
             document.getElementById("login-form").submit();
           }
-        </script>
-      <?php } ?>
-      <?php require_once $abs_us_root.$us_url_root.'users/includes/html_footer.php'; // currently just the closing /body and /html ?>
+          </script>
+        <?php } ?>
+        <?php require_once $abs_us_root.$us_url_root.'usersc/templates/'.$settings->template.'/footer.php'; //custom template footer?>

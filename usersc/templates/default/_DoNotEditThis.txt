@@ -1,0 +1,4 @@
+This template is not really a template.
+It points back to the standard resources used
+by the UserSpice backend/dashboard.  If you want
+to edit a template, pick another one :)

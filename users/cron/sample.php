@@ -1,5 +1,4 @@
 <?php
-
 ini_set('max_execution_time', 1356);
 ini_set('memory_limit','1024M');
 require_once '../init.php';
@@ -19,7 +18,7 @@ $errors = $successes = [];
 //your code goes here...
 //do whatever you want to do and it will be run automatically when the cron job is triggered.
 $user_id = 1; //just for testing purposes. Most cron jobs won't have a logged in user.
-die("This is just a sample"); //you can delete this. 
+die("This is just a sample"); //you can delete this.
 
 
 

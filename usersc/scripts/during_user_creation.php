@@ -23,10 +23,12 @@
 // Get creative!
 
 // The script below will automatically login a user who just registered if email activation is not turned on
-$e = $db->query("SELECT email_act FROM email")->first();
-if($e->email_act != 1){
-  $user = new User();
-  $login = $user->loginEmail(Input::get('email'), trim(Input::get('password')), 'off');
-  if(!$login){Redirect::to('login.php?err=There+was+a+problem+logging+you+in+automatically.');}
+//PLEASE NOTE: This will also run during the user creation process that happens when the admin creates a user which is good, except you could
+//find yourself logged in as the user you just created.  :)
+// $e = $db->query("SELECT email_act FROM email")->first();
+// if($e->email_act != 1 && !$user->isLoggedIn()){
+//   $user = new User();
+  // $login = $user->loginEmail(Input::get('email'), trim(Input::get('password')), 'off');
+  // if(!$login){Redirect::to('login.php?err=There+was+a+problem+logging+you+in+automatically.');}
   //where the user goes just after login is in usersc/scripts/custom_login_script.php
-}
+// }

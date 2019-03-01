@@ -34,6 +34,6 @@ if($c > 0){
   </table>
   <?php
 }else{
-  echo "Form not found.<br>";
+  echo "Form is either empty or missing.<br>";
 }
 ?>

@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 require_once '../init.php';
 $db = DB::getInstance();
+if(isset($user) && $user->isLoggedIn()){
 $html = '';
 
 if (isset($user) && $user->isLoggedIn()) {
@@ -148,3 +149,6 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQ
     echo json_encode($html);
     exit;
 }
+}else{
+  die();
+}//end of logged in user check

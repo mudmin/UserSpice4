@@ -1,4 +1,5 @@
 <?php
+// This is a user-facing page
 /*
 UserSpice 4
 An Open Source PHP User Management System
@@ -16,17 +17,12 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-Special thanks to user Brandin for the mods!
 */
 ?>
-<?php
-require_once '../users/init.php';
-require_once $abs_us_root.$us_url_root.'users/includes/header.php';
-require_once $abs_us_root.$us_url_root.'users/includes/navigation.php';
-?>
+<?php require_once '../users/init.php';
+require_once $abs_us_root.$us_url_root.'users/includes/template/prep.php';
 
-<?php if (!securePage($_SERVER['PHP_SELF'])){die();}
+if (!securePage($_SERVER['PHP_SELF'])){die();}
 if($settings->messaging != 1){
   Redirect::to($us_url_root.'users/account.php?err=Messaging+is+disabled');
 }
@@ -63,7 +59,7 @@ if($settings->messaging != 1){
   color: #777777;
 }
 
-.panel .slidedown .glyphicon, .chat .glyphicon
+.panel .slidedown .fa, .chat .fa
 {
   margin-right: 5px;
 }
@@ -229,146 +225,142 @@ if(!empty($_POST)){
 }
 $csrf = Token::generate();
 ?>
-<div id="page-wrapper">
-  <div class="container-fluid">
-    <?=resultBlock($errors,$successes);?>
-    <?php if(!$validation->errors()=='') {?><div class="alert alert-danger"><?=display_errors($validation->errors());?></div><?php } ?>
+<?=resultBlock($errors,$successes);?>
+<?php if(!$validation->errors()=='') {?><div class="alert alert-danger"><?=display_errors($validation->errors());?></div><?php } ?>
+<div class="row">
+
+  <?php if(!$validation->errors()=='') {?><div class="alert alert-danger"><?=display_errors($validation->errors());?></div><?php } ?>
+  <div class="col-sm-10 col-sm-offset-1">
     <div class="row">
-
-      <?php if(!$validation->errors()=='') {?><div class="alert alert-danger"><?=display_errors($validation->errors());?></div><?php } ?>
-      <div class="col-sm-10 col-sm-offset-1">
-        <div class="row">
-          <div class="col-sm-10">
-            <h2><a href="../users/messages.php"><i class="glyphicon glyphicon-chevron-left"></i></a> <?=$thread ->msg_subject?></h2>
-          </div>
-          <div class="col-sm-2">
-            <?php
-            if($myUnread == 0 && $checkTo > 0){
-              ?>
-              <form class="" action="message.php?id=<?php echo $id?>" method="post">
-                <input type="hidden" name="csrf" value="<?=$csrf?>" />
-                <input type="submit" class="btn btn-danger" name="markUnread" value="Mark as Unread">
-              </form>
-              <?php
-            }
-            ?>
-          </div>
-        </div>
-
-        <ul class="chat">
+      <div class="col-sm-10">
+        <h2><a href="../users/messages.php"><i class="fa fa-chevron-left"></i></a> <?=$thread ->msg_subject?></h2>
+      </div>
+      <div class="col-sm-2">
+        <?php
+        if($myUnread == 0 && $checkTo > 0){
+          ?>
+          <form class="" action="message.php?id=<?php echo $id?>" method="post">
+            <input type="hidden" name="csrf" value="<?=$csrf?>" />
+            <input type="submit" class="btn btn-danger" name="markUnread" value="Mark as Unread">
+          </form>
           <?php
-          //dnd($messages);$grav = get_gravatar(strtolower(trim($user->data()->email)));
-          foreach ($messages as $m){
-            $findUser = $db->query("SELECT email FROM users WHERE id = $m->msg_from");
-            if($findUser->count()==1) $foundUser = $findUser->first()->email;
-            if($findUser->count()==0) $foundUser = "null@null.com";
-            $grav = get_gravatar(strtolower(trim($foundUser)));
-            $lastmessage = strtotime($m->sent_on);
-            $difference = ceil((time() - $lastmessage) / (60 * 60 * 24));
-            // if($difference==0) { $last_update = "Today, "; $last_update .= date("g:i A",$lastmessage); }
-            if($difference >= 0 && $difference < 7) {
-              $today = date("j");
-              $last_message = date("j",$lastmessage);
-              if($today==$last_message) { $last_update = "Today, "; $last_update .= date("g:i A",$lastmessage); }
-              else {
-                $last_update = date("l g:i A",$lastmessage); } }
-                elseif($difference >= 7) { $last_update = date("M j, Y g:i A",$lastmessage); }
-                if($m->msg_to == $user->data()->id){
-                  ?>
-                  <li class="left clearfix"><span class="chat-img pull-left" style="padding-right:10px">
-                    <img src="<?=$grav ?>" width="75" class="img-thumbnail" alt="Generic placeholder thumbnail"></p>
-                    <!-- <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle" /> -->
-                  </span>
-                  <div class="chat-body clearfix">
-                    <div class="header">
-                      <strong class="primary-font"><?php echouser($m->msg_from);?></strong> <small class="pull-right text-muted">
-                        <span class="glyphicon glyphicon-time"></span><?=$last_update?></small>
-                      </div>
-                      <p>
-                        <?php $msg = html_entity_decode($m->msg_body);
-                        echo $msg; ?>
-                      </p>
-                    </div>
-                  </li>
+        }
+        ?>
+      </div>
+    </div>
 
-                <?php }else{ ?>
-
-                  <li class="left clearfix"><span class="chat-img pull-left" style="padding-right:10px">
-                    <img src="<?=$grav; ?>" width="75" class="img-thumbnail" alt="Generic placeholder thumbnail"></p>
-                  </span>
-                  <div class="chat-body clearfix">
-                    <div class="header">
-                      <small class="pull-right text-muted"><span class="glyphicon glyphicon-time"></span><?=$last_update?></small>
-                      <strong class="pull-left primary-font"><?php echouser($m->msg_from);?></strong>
-                    </div>
-                    <p>
-                      <br>
-                      <?php $msg = html_entity_decode($m->msg_body);
-                      echo $msg; ?>
-                    </p>
-                    <?php if($m->msgfrom = $user->data()->id) {?><p class="pull-right"><?php if($m->msg_read==1) {?><i class="glyphicon glyphicon-check"></i> Read<?php } else { ?><i class="glyphicon glyphicon-unchecked"></i> Delivered<?php } ?></p><?php } ?>
+    <ul class="chat">
+      <?php
+      //dnd($messages);$grav = get_gravatar(strtolower(trim($user->data()->email)));
+      foreach ($messages as $m){
+        $findUser = $db->query("SELECT email FROM users WHERE id = $m->msg_from");
+        if($findUser->count()==1) $foundUser = $findUser->first()->email;
+        if($findUser->count()==0) $foundUser = "null@null.com";
+        $grav = get_gravatar(strtolower(trim($foundUser)));
+        $lastmessage = strtotime($m->sent_on);
+        $difference = ceil((time() - $lastmessage) / (60 * 60 * 24));
+        // if($difference==0) { $last_update = "Today, "; $last_update .= date("g:i A",$lastmessage); }
+        if($difference >= 0 && $difference < 7) {
+          $today = date("j");
+          $last_message = date("j",$lastmessage);
+          if($today==$last_message) { $last_update = "Today, "; $last_update .= date("g:i A",$lastmessage); }
+          else {
+            $last_update = date("l g:i A",$lastmessage); } }
+            elseif($difference >= 7) { $last_update = date("M j, Y g:i A",$lastmessage); }
+            if($m->msg_to == $user->data()->id){
+              ?>
+              <li class="left clearfix"><span class="chat-img pull-left" style="padding-right:10px">
+                <img src="<?=$grav ?>" width="75" class="img-thumbnail" alt="Generic placeholder thumbnail"></p>
+                <!-- <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle" /> -->
+              </span>
+              <div class="chat-body clearfix">
+                <div class="header">
+                  <strong class="primary-font"><?php echouser($m->msg_from);?></strong> <small class="pull-right text-muted">
+                    <span class="fa fa-clock-o"></span><?=$last_update?></small>
                   </div>
-                </li>
+                  <p>
+                    <?php $msg = html_entity_decode($m->msg_body);
+                    echo $msg; ?>
+                  </p>
+                </div>
+              </li>
 
+            <?php }else{ ?>
 
-
-              <?php } //end if/else statement ?>
-
-
-            <?php } //end foreach ?>
-
-            <ul>
-              <!-- <h3>From: <?php //echouser($m->msg_from);?></h3> -->
-
-              <h3>Quick Reply <a href="#" data-toggle="modal" data-target="#reply"><i class="glyphicon glyphicon-new-window"></i></a></h3>
-              <form name="reply_form" action="message.php?id=<?=$id?>" method="post">
-                <div align="center">
-                  <input type="text" class="form-control" placeholder="Click here or press Alt + R to focus on this box OR press Shift + R to open the expanded reply pane!" name="msg_body" id="msg_body" <?php if(($perm < 2 && $settings->msg_blocked_users==0) || ($thread->hidden_from==1 || $thread->hidden_to==1)) {?>disabled<?php } ?>/>
-                  <?php /* textarea rows="10" cols="80"  id="mytextarea" name="msg_body"></textarea> */ ?></div>
-                  <input type="hidden" name="csrf" value="<?=$csrf?>" />
-                </p>
+              <li class="left clearfix"><span class="chat-img pull-left" style="padding-right:10px">
+                <img src="<?=$grav; ?>" width="75" class="img-thumbnail" alt="Generic placeholder thumbnail"></p>
+              </span>
+              <div class="chat-body clearfix">
+                <div class="header">
+                  <small class="pull-right text-muted"><span class="fa fa-clock-o"></span><?=$last_update?></small>
+                  <strong class="pull-left primary-font"><?php echouser($m->msg_from);?></strong>
+                </div>
                 <p>
-                  <input type="submit" class="btn btn-primary" name="reply" value="Reply">
-                </form>
-              </div> <!-- /.col -->
+                  <br>
+                  <?php $msg = html_entity_decode($m->msg_body);
+                  echo $msg; ?>
+                </p>
+                <?php if($m->msgfrom = $user->data()->id) {?><p class="pull-right"><?php if($m->msg_read==1) {?><i class="fa fa-check"></i> Read<?php } else { ?><i class="fa fa-times"></i> Delivered<?php } ?></p><?php } ?>
+              </div>
+            </li>
 
-              <?php if(($settings->msg_blocked_users==1 || ($perm==2 && $settings->msg_blocked_users==0)) && (!$thread->hidden_from==1 && !$thread->hidden_to==1)) {?>
-                <div id="reply" class="modal fade" role="dialog">
-                  <div class="modal-dialog">
 
-                    <!-- Modal content-->
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Reply</h4>
+
+          <?php } //end if/else statement ?>
+
+
+        <?php } //end foreach ?>
+
+        <ul>
+          <!-- <h3>From: <?php //echouser($m->msg_from);?></h3> -->
+
+          <h3>Quick Reply <a href="#" data-toggle="modal" data-target="#reply"><i class="fa fa-window-restore"></i></a></h3>
+          <form name="reply_form" action="message.php?id=<?=$id?>" method="post">
+            <div align="center">
+              <input type="text" class="form-control" placeholder="Click here or press Alt + R to focus on this box OR press Shift + R to open the expanded reply pane!" name="msg_body" id="msg_body" <?php if(($perm < 2 && $settings->msg_blocked_users==0) || ($thread->hidden_from==1 || $thread->hidden_to==1)) {?>disabled<?php } ?>/>
+              <?php /* textarea rows="10" cols="80"  id="mytextarea" name="msg_body"></textarea> */ ?></div>
+              <input type="hidden" name="csrf" value="<?=$csrf?>" />
+            </p>
+            <p>
+              <input type="submit" class="btn btn-primary" name="reply" value="Reply">
+            </form>
+          </div> <!-- /.col -->
+
+          <?php if(($settings->msg_blocked_users==1 || ($perm==2 && $settings->msg_blocked_users==0)) && (!$thread->hidden_from==1 && !$thread->hidden_to==1)) {?>
+            <div id="reply" class="modal fade" role="dialog">
+              <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Reply</h4>
+                  </div>
+                  <div class="modal-body">
+                    <form name="reply_form" action="message.php?id=<?=$id?>" method="post">
+                      <div align="center">
+                        <textarea rows="10" cols="80"  id="mytextarea" name="msg_body"></textarea></div>
+                        <input type="hidden" name="csrf" value="<?=$csrf?>" />
+                      </p>
+                      <p>
+                        <br />
                       </div>
-                      <div class="modal-body">
-                        <form name="reply_form" action="message.php?id=<?=$id?>" method="post">
-                          <div align="center">
-                            <textarea rows="10" cols="80"  id="mytextarea" name="msg_body"></textarea></div>
-                            <input type="hidden" name="csrf" value="<?=$csrf?>" />
-                          </p>
-                          <p>
-                            <br />
-                          </div>
-                          <div class="modal-footer">
-                            <div class="btn-group">       <input type="hidden" name="csrf" value="<?=$csrf?>" />
-                              <input class='btn btn-primary' type='submit' name="reply" value='Reply' class='submit' /></div>
-                            </form>
-                            <div class="btn-group"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>
-                          </div>
-                        </div>
+                      <div class="modal-footer">
+                        <div class="btn-group">       <input type="hidden" name="csrf" value="<?=$csrf?>" />
+                          <input class='btn btn-primary' type='submit' name="reply" value='Reply' class='submit' /></div>
+                        </form>
+                        <div class="btn-group"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>
                       </div>
                     </div>
-                  </div><?php } ?>
-                </div> <!-- /.row -->
-              </div> <!-- /.container -->
-            </div> <!-- /.wrapper -->
+                  </div>
+                </div>
+              </div><?php } ?>
+            </div> <!-- /.row -->
 
-
+            <?php require_once $abs_us_root.$us_url_root.'usersc/templates/'.$settings->template.'/container_close.php'; //custom template container ?>
             <!-- footers -->
             <?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; // the final html footer copyright row + the external js calls ?>
-            <script src='https:////cdn.tinymce.com/4/tinymce.min.js'></script>
+            <script src='https://cdn.tinymce.com/4/tinymce.min.js'></script>
             <script src="../users/js/jwerty.js"></script>
             <script>
             tinymce.init({
@@ -385,7 +377,7 @@ $csrf = Token::generate();
               $('.modal').modal('hide');
               $('#msg_body').focus();
             });
-            </script>
-            <!-- Place any per-page javascript here -->
+          </script>
+          <!-- Place any per-page javascript here -->
 
-            <?php require_once $abs_us_root.$us_url_root.'users/includes/html_footer.php'; // currently just the closing /body and /html ?>
+          <?php require_once $abs_us_root.$us_url_root.'usersc/templates/'.$settings->template.'/footer.php'; //custom template footer?>

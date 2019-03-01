@@ -19,8 +19,8 @@
       <option value="tinyint">1 digit number</option>
     </select>
   </div>
-    <table class="table" id="opts">
-      <thead>
+  <table class="table" id="opts">
+    <thead>
       <tr>
         <th>DB Value</th>
         <th>Visible Value</th>
@@ -57,30 +57,30 @@
     <input  class="form-control" type="text" name="table_descrip" value="" required>
   </div>
 
-<div class="form-group">
-  <label for="">Required?</label>
-  <select class="form-control" name="required" required>
-    <option value="0">No</option>
-    <option value="1">Yes</option>
-  </select>
-</div>
+  <div class="form-group">
+    <label for="">Required?</label>
+    <select class="form-control" name="required" required>
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </select>
+  </div>
 
-<div class="form-group">
-  <label for="">Class</label>
-  <input  class="form-control" type="text" name="field_class" value="form-control" >
-</div>
+  <div class="form-group">
+    <label for="">Class</label>
+    <input  class="form-control" type="text" name="field_class" value="form-control" >
+  </div>
 
-<div class="form-group">
-  <label for="">Raw HTML inside input tag</label>
-  <textarea class="form-control"  name="input_html" rows="4" cols="120"></textarea>
-</div>
+  <div class="form-group">
+    <label for="">Raw HTML inside input tag</label>
+    <textarea class="form-control"  name="input_html" rows="4" cols="120"></textarea>
+  </div>
 
-<div class="form-group">
-  <label for="">Order</label>
-  <input  class="form-control" type="number" min="0" step ="1" name="ord" value="<?=$lastOrder?>" >
-</div>
+  <div class="form-group">
+    <label for="">Order</label>
+    <input  class="form-control" type="number" min="0" step ="1" name="ord" value="<?=$lastOrder?>" >
+  </div>
 
-<input type="submit" name="create_field" value="Create Field" class="btn btn-primary">
+  <input type="submit" name="create_field" value="Create Field" class="btn btn-primary">
 </form>
 <script>
 $(document).ready(function () {

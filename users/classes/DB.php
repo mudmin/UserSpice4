@@ -33,12 +33,22 @@ class DB {
 					Config::get('mysql/password'),
 					$opts);
 			}else{
+				if(!is_array($config)){
 				$this->_pdo = new PDO('mysql:host=' .
 					Config::get($config[0].'/host') .';dbname='.
 					Config::get($config[0].'/db') . ';charset=utf8',
 					Config::get($config[0].'/username'),
 					Config::get($config[0].'/password'),
 					$opts);
+				}else{
+					dump($config[0]);
+					$this->_pdo = new PDO('mysql:host=' .
+					$config[0].';dbname='.
+					$config[1]. ';charset=utf8',
+					$config[2],
+					$config[3],
+						$opts);
+				}
 			}
 		} catch(PDOException $e){
 			die($e->getMessage());

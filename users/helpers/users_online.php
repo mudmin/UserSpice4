@@ -15,7 +15,7 @@ function ipCheckBan(){
   $ban = $db->query("SELECT id FROM us_ip_blacklist WHERE ip = ?",array($ip))->count();
   if($ban > 0){
     $unban = $db->query("SELECT id FROM us_ip_whitelist WHERE ip = ?",array($ip))->count();
-    if($unban > 0){
+    if($unban==0){
         logger(0,'IP Logging','Blacklisted '.$ip.' attempted visit');
       return false;
     }else{

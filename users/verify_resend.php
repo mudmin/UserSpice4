@@ -1,4 +1,5 @@
 <?php
+// This is a user-facing page
 /*
 UserSpice 4
 An Open Source PHP User Management System
@@ -16,12 +17,10 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/ ?>
-<?php require_once '../users/init.php'; ?>
-<?php require_once $abs_us_root.$us_url_root.'users/includes/header.php'; ?>
-<?php require_once $abs_us_root.$us_url_root.'users/includes/navigation.php'; ?>
+*/
+require_once '../users/init.php';
+require_once $abs_us_root.$us_url_root.'users/includes/template/prep.php';
 
-<?php
 $query = $db->query("SELECT * FROM email");
 $results = $query->first();
 $act = $results->email_act;

@@ -5,7 +5,8 @@ require_once '../init.php';
 $db = DB::getInstance();
 $ip = ipCheck();
 logger(1,"CronRequest","Cron request from $ip.");
-$settings = $db->query("SELECT cron_ip FROM settings")->first();
+$settingsQ = $db->query("Select * FROM settings");
+$settings = $settingsQ->first();
 if($settings->cron_ip != ''){
 if($ip != $settings->cron_ip && $ip != '127.0.0.1'){
 	logger(1,"CronRequest","Cron request DENIED from $ip.");
@@ -13,8 +14,7 @@ if($ip != $settings->cron_ip && $ip != '127.0.0.1'){
 	}
 }
 $errors = $successes = [];
-$settingsQ = $db->query("Select * FROM settings");
-$settings = $settingsQ->first();
+
 $from = Input::get('from');
 if($from=='') $from='users/cron_manager.php';
 $checkQuery = $db->query("SELECT id,name FROM crons WHERE file = ? AND active = 1",array("backup.php"));

@@ -246,21 +246,6 @@ if(!function_exists('removePermission')) {
 }
 
 //Retrieve a list of all .php files in root files folder
-if(!function_exists('getPathPhpFiles')) {
-	function getPathPhpFiles($absRoot,$urlRoot,$fullPath) {
-		$directory = $absRoot.$urlRoot.$fullPath;
-		//bold ($directory);
-		$pages = glob($directory . "*.php");
-
-		foreach ($pages as $page){
-			$fixed = str_replace($absRoot.$urlRoot,'',$page);
-			$row[$fixed] = $fixed;
-		}
-		return $row;
-	}
-}
-
-//Retrieve a list of all .php files in root files folder
 if(!function_exists('getPageFiles')) {
 	function getPageFiles() {
 		$directory = "../";
@@ -445,7 +430,6 @@ if(!function_exists('deleteUsers')) {
 		foreach($users as $id){
 			$query1 = $db->query("DELETE FROM users WHERE id = ?",array($id));
 			$query2 = $db->query("DELETE FROM user_permission_matches WHERE user_id = ?",array($id));
-			$query3 = $db->query("DELETE FROM profiles WHERE user_id = ?",array($id));
 			$i++;
 		}
 		return $i;
@@ -475,145 +459,6 @@ if(!function_exists('sanitizedDest')) {
 	}
 }
 
-//Check if a user has access to a page
-if(!function_exists('securePage')) {
-	function securePage($uri){
-		//Separate document name from uri
-		//$tokens = explode('/', $uri);
-		//$page = end($tokens);
-
-		$abs_us_root=$_SERVER['DOCUMENT_ROOT'];
-
-		$self_path=explode("/", $_SERVER['PHP_SELF']);
-		$self_path_length=count($self_path);
-		$file_found=FALSE;
-
-		for($i = 1; $i < $self_path_length; $i++){
-			array_splice($self_path, $self_path_length-$i, $i);
-			$us_url_root=implode("/",$self_path)."/";
-
-			if (file_exists($abs_us_root.$us_url_root.'z_us_root.php')){
-				$file_found=TRUE;
-				break;
-			}else{
-				$file_found=FALSE;
-			}
-		}
-
-		$urlRootLength=strlen($us_url_root);
-		$page=substr($uri,$urlRootLength,strlen($uri)-$urlRootLength);
-		$dest=encodeURIComponent("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]");
-
-		//bold($page);
-
-		$db = DB::getInstance();
-		//if you want the ip check on every page
-		// $ip = ipCheck();
-		// $ban = $db->query("SELECT id FROM us_ip_blacklist WHERE ip = ?",array($ip))->count();
-	  // if($ban > 0){
-	  //   $unban = $db->query("SELECT id FROM us_ip_whitelist WHERE ip = ?",array($ip))->count();
-	  //   if($unban < 1){
-	  //     Redirect::to($us_url_root.'usersc/scripts/banned.php');die();
-	  //   }
-		// }
-
-		$id = null;
-		$private = null;
-		// dnd($page);
-		global $user;
-		// dnd($user);
-		if(isset($user) && $user->data() != null){
-			if($user->data()->permissions==0){
-				Redirect::to($us_url_root.'usersc/scripts/banned.php');
-				die();
-			}
-		}
-		//retrieve page details
-		$query = $db->query("SELECT id, page, private FROM pages WHERE page = ?",[$page]);
-		$count = $query->count();
-		if ($count==0){
-			if(hasPerm([2])){
-				$setting = $db->query("SELECT page_default_private FROM settings")->first();
-				$fields = array(
-					'page'		=> $page,
-					'private'	=> $setting->page_default_private,
-				);
-				$new = $db->insert('pages',$fields);
-				$last = $db->lastId();
-				//dnd($page);
-				if(strpos($page,'usersc/')!==false) {
-					//dnd(str_replace('usersc/','users/',$page));
-					$q=$db->query("SELECT * FROM pages WHERE page = ?",[str_replace('usersc/','users/',$page)]);
-					if($q->count()==1) {
-						$result=$q->first();
-						$db->update('pages',$last,['title' => $result->title,'private' => $result->private,'re_auth' => $result->re_auth]);
-						if(!$db->error()) logger($user->data()->id,"securePage","Updated $page based on users match.");
-						else logger($user->data()->id,"securePage","Failed to update $page based on match, Error: ".$db->errorString());
-						$permissions=fetchPagePermissions($result->id);
-						foreach($permissions as $permission) {
-							$db->insert('permission_page_matches',['page_id' => $last,'permission_id' => $permission->permission_id]);
-							if(!$db->error()) logger($user->data()->id,"securePage","Auto-Added Permission #".$permission->permission_id." to $page.");
-							else logger($user->data()->id,"securePage","Failed ot add Permission ID#".$permission->permission_id." to $page, Error: ".$db->errorString());
-						}
-						Redirect::to($us_url_root.$page.'?msg=Page inserted and auto-mapped.');
-					}
-				}
-				Redirect::to($us_url_root.'users/admin_page.php?err=Please+confirm+permission+settings.&new=yes&id='.$last.'&dest='.$dest);
-			}else{
-			bold('<br><br>You must go into the Admin Panel and click the Manage Pages button to add this page to the database. Doing so will make this error go away.');
-			die();
-		}
-	}
-		$results = $query->first();
-
-		$pageDetails = array( 'id' =>$results->id, 'page' => $results->page, 'private' =>$results->private);
-
-		$pageID = $results->id;
-		$ip = ipCheck();
-		//If page does not exist in DB, allow access
-		if (empty($pageDetails)){
-			return true;
-		}elseif ($pageDetails['private'] == 0){//If page is public, allow access
-			return true;
-		}elseif(!$user->isLoggedIn()){ //If user is not logged in, deny access
-			$fields = array(
-				'user'	=> 0,
-				'page'	=> $pageID,
-				'ip'		=> $ip,
-			);
-			$db->insert('audit',$fields);
-			require_once $abs_us_root.$us_url_root.'usersc/scripts/not_logged_in.php';
-			Redirect::to($us_url_root.'users/login.php?dest='.$page.'&redirect='.$dest);
-			return false;
-		}else {
-			//Retrieve list of permission levels with access to page
-
-			$query = $db->query("SELECT permission_id FROM permission_page_matches WHERE page_id = ?",[$pageID]);
-
-			$permission = $query->results();
-			$pagePermissions[] = $permission;
-
-			//Check if user's permission levels allow access to page
-			if (checkPermission($pagePermissions)){
-				return true;
-			}elseif  (in_array($user->data()->id, $master_account)){ //Grant access if master user
-				return true;
-			}else {
-				if (!$homepage = Config::get('homepage'))
-				$homepage = 'index.php';
-				$fields = array(
-					'user'	=> $user->data()->id,
-					'page'	=> $pageID,
-					'ip'		=> $ip,
-				);
-				$db->insert('audit',$fields);
-				require_once $abs_us_root.$us_url_root.'usersc/scripts/did_not_have_permission.php';
-				Redirect::to($homepage);
-				return false;
-			}
-		}
-	}
-}
 
 //Does user have permission
 //This is the old school UserSpice Permission System
@@ -789,8 +634,6 @@ if(!function_exists('deletePermission')) {
 			}
 		}
 		return $i;
-
-		//Redirect::to($us_url_root.'users/admin_permissions.php');
 	}
 }
 
@@ -980,7 +823,7 @@ if(!function_exists('updateFields2')) {
 }
 
 if(!function_exists('hasPerm')) {
-	function hasPerm($permissions, $id=null) {
+	function hasPerm($permissions, $id=null,$deny_master_account=false) {
 		if(is_null($id)) {
 			global $user;
 			if($user->isLoggedIn()) $id=$user->data()->id;
@@ -1007,7 +850,7 @@ if(!function_exists('hasPerm')) {
 		if ($access == 1){
 			return true;
 		}
-		if (in_array($user->data()->id, $master_account)){
+		if (in_array($user->data()->id, $master_account) && !$deny_master_account){
 			return true;
 		}else{
 			return false;
@@ -1071,17 +914,9 @@ if(!function_exists('clean')) {
 	//Cleaning function
 	function clean($string) {
 		$string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
-		$string = preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
+		$string = preg_replace('/[^A-Za-z0-9]/', '', $string); // Removes special chars.
 
 		return preg_replace('/-+/', '-', $string); // Replaces multiple hyphens with single one.
-	}
-}
-
-if(!function_exists('updateReAuth')) {
-	function updateReAuth($id, $re_auth) {
-		$db = DB::getInstance();
-		$result = $db->query("UPDATE pages SET re_auth = ? WHERE id = ?",array($re_auth,$id));
-		return $result;
 	}
 }
 
@@ -1093,87 +928,10 @@ if(!function_exists('stripPagePermissions')) {
 	}
 }
 
-if(!function_exists('reAuth')) {
-	function reAuth(){
-		$abs_us_root=$_SERVER['DOCUMENT_ROOT'];
-		$self_path=explode("/", $_SERVER['PHP_SELF']);
-		$self_path_length=count($self_path);
-		$file_found=FALSE;
-
-		for($i = 1; $i < $self_path_length; $i++){
-			array_splice($self_path, $self_path_length-$i, $i);
-			$us_url_root=implode("/",$self_path)."/";
-
-			if (file_exists($abs_us_root.$us_url_root.'z_us_root.php')){
-				$file_found=TRUE;
-				break;
-			}else{
-				$file_found=FALSE;
-			}
-		}
-
-		$urlRootLength=strlen($us_url_root);
-		$page=substr($_SERVER['PHP_SELF'],$urlRootLength,strlen($_SERVER['PHP_SELF'])-$urlRootLength);
-		$db = DB::getInstance();
-		$id = null;
-		$query = $db->query("SELECT id, page, re_auth FROM pages WHERE page = ?",[$page]);
-		$count = $query->count();
-		if ($count > 0){
-			$results = $query->first();
-			$pageDetails = array( 'id' =>$results->id, 'page' => $results->page, 're_auth' => $results->re_auth);
-			$pageID = $results->id;
-			if($_SERVER["REMOTE_ADDR"]=="127.0.0.1" || $_SERVER["REMOTE_ADDR"]=="::1" || $_SERVER["REMOTE_ADDR"]=="localhost"){
-				$local = True;
-			}else{
-				$local = False;
-			}
-			if (empty($pageDetails)){
-				return true;
-			}elseif ($pageDetails['re_auth'] == 0){//If page is public, allow access
-				return true;
-			} elseif ($page=='users/admin_verify' || $page=='usersc/admin_verify') {
-				return true;
-			} elseif ($page=='users/admin_pin.php' || $page=='usersc/admin_pin.php') {
-				return true;
-				} elseif ($local) {
-					return true;
-			} else{ //Authorization is required.  Insert your authorization code below.
-				if(!isset($_SESSION['cloak_to'])) verifyadmin($page);
-			}
-		}
-	}
-}
-
 if(!function_exists('encodeURIComponent')) {
 	function encodeURIComponent($str) {
 	    $revert = array('%21'=>'!', '%2A'=>'*', '%27'=>"'", '%28'=>'(', '%29'=>')');
 	    return strtr(rawurlencode($str), $revert);
-	}
-}
-
-if(!function_exists('verifyadmin')) {
-	function verifyadmin($page) {
-		global $user;
-		global $us_url_root;
-		$actual_link = encodeURIComponent("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]");
-		$db = DB::getInstance();
-		$settings=$db->query("SELECT * FROM settings WHERE id=1")->first();
-		$null=$settings->admin_verify_timeout-1;
-		if(isset($_SESSION['last_confirm']) && $_SESSION['last_confirm']!='' && !is_null($_SESSION['last_confirm'])) $last_confirm=$_SESSION['last_confirm'];
-		else $last_confirm=date("Y-m-d H:i:s",strtotime('-'.$null.' day',strtotime(date("Y-m-d H:i:s"))));
-		$current=date("Y-m-d H:i:s");
-		$ctFormatted = date("Y-m-d H:i:s", strtotime($current));
-		$dbPlus = date("Y-m-d H:i:s", strtotime('+'.$settings->admin_verify_timeout.' minutes', strtotime($last_confirm)));
-		if (strtotime($ctFormatted) > strtotime($dbPlus)){
-			$q = $db->query("SELECT pin FROM users WHERE id = ?",[$user->data()->id]);
-			if(is_null($q->first()->pin)) Redirect::to($us_url_root.'users/admin_pin.php?actual_link='.$actual_link.'&page='.$page);
-			else Redirect::to($us_url_root.'users/admin_verify.php?actual_link='.$actual_link.'&page='.$page);
-		}
-		else
-		{
-			$db = DB::getInstance();
-			$_SESSION['last_confirm']=$current;
-		}
 	}
 }
 
@@ -1402,11 +1160,13 @@ if(!function_exists('messageUser')) {
 if(!function_exists('logger')) {
 	function logger($user_id,$logtype,$lognote) {
 		$db = DB::getInstance();
+
 		$fields = array(
 			  'user_id' => $user_id,
 			  'logdate' => date("Y-m-d H:i:s"),
 			  'logtype' => $logtype,
 			  'lognote' => $lognote,
+				'ip'			=> $_SERVER['REMOTE_ADDR'],
 			);
 		$db->insert('logs',$fields);
 		$lastId = $db->lastId();
@@ -1613,107 +1373,6 @@ if(!function_exists('lognote')) {
 	}
 }
 
-if(!function_exists('fetchUserFingerprints')) {
-	function fetchUserFingerprints() {
-		global $user;
-		$db = DB::getInstance();
-		$q = $db->query("SELECT *,CASE WHEN fp.kFingerprintAssetID IS NULL THEN false ELSE true END AssetsAvailable FROM us_fingerprints f LEFT JOIN us_fingerprint_assets fp ON fp.fkFingerprintID=f.kFingerprintID WHERE f.fkUserID = ? AND f.Fingerprint_Expiry > NOW() AND fp.IP_Address = ?",[$user->data()->id,ipCheck()]);
-		if($q->count()>0) return $q->results();
-		else return false;
-	}
-}
-
-if(!function_exists('expireFingerprints')) {
-	function expireFingerprints($fingerprints) {
-		global $user;
-		$db = DB::getInstance();
-		$i=0;
-		foreach($fingerprints as $fingerprint) {
-			if(is_numeric($fingerprint)) {
-				$db->query("UPDATE us_fingerprints SET Fingerprint_Expiry=NOW() WHERE kFingerprintID = ? AND fkUserId = ?",[$fingerprint,$user->data()->id]);
-				if(!$db->error()) {
-					$i++;
-					logger($user->data()->id,"Two FA","Expired Fingerprint ID#$fingerprint");
-				} else {
-					$error=$db->errorString();
-					logger($user->data()->id,"Two FA","Error expiring Fingerprint ID#$fingerprint: $error");
-				}
-			}
-		}
-		if($i>0) return $i;
-		else return false;
-	}
-}
-
-if(!function_exists('getOS')) {
-	function getOS() {
-
-	    global $user_agent;
-
-	    $os_platform  = "Unknown OS Platform";
-
-	    $os_array     = array(
-	                          '/windows nt 10/i'      =>  'Windows 10',
-	                          '/windows nt 6.3/i'     =>  'Windows 8.1',
-	                          '/windows nt 6.2/i'     =>  'Windows 8',
-	                          '/windows nt 6.1/i'     =>  'Windows 7',
-	                          '/windows nt 6.0/i'     =>  'Windows Vista',
-	                          '/windows nt 5.2/i'     =>  'Windows Server 2003/XP x64',
-	                          '/windows nt 5.1/i'     =>  'Windows XP',
-	                          '/windows xp/i'         =>  'Windows XP',
-	                          '/windows nt 5.0/i'     =>  'Windows 2000',
-	                          '/windows me/i'         =>  'Windows ME',
-	                          '/win98/i'              =>  'Windows 98',
-	                          '/win95/i'              =>  'Windows 95',
-	                          '/win16/i'              =>  'Windows 3.11',
-	                          '/macintosh|mac os x/i' =>  'Mac OS X',
-	                          '/mac_powerpc/i'        =>  'Mac OS 9',
-	                          '/linux/i'              =>  'Linux',
-	                          '/ubuntu/i'             =>  'Ubuntu',
-	                          '/iphone/i'             =>  'iPhone',
-	                          '/ipod/i'               =>  'iPod',
-	                          '/ipad/i'               =>  'iPad',
-	                          '/android/i'            =>  'Android',
-	                          '/blackberry/i'         =>  'BlackBerry',
-	                          '/webos/i'              =>  'Mobile'
-	                    );
-
-	    foreach ($os_array as $regex => $value)
-	        if (preg_match($regex, $user_agent))
-	            $os_platform = $value;
-
-	    return $os_platform;
-	}
-}
-
-if(!function_exists('getBrowser')) {
-	function getBrowser() {
-
-	    global $user_agent;
-
-	    $browser        = "Unknown Browser";
-
-	    $browser_array = array(
-	                            '/msie/i'      => 'Internet Explorer',
-	                            '/firefox/i'   => 'Firefox',
-	                            '/safari/i'    => 'Safari',
-	                            '/chrome/i'    => 'Chrome',
-	                            '/edge/i'      => 'Edge',
-	                            '/opera/i'     => 'Opera',
-	                            '/netscape/i'  => 'Netscape',
-	                            '/maxthon/i'   => 'Maxthon',
-	                            '/konqueror/i' => 'Konqueror',
-	                            '/mobile/i'    => 'Handheld Browser'
-	                     );
-
-	    foreach ($browser_array as $regex => $value)
-	        if (preg_match($regex, $user_agent))
-	            $browser = $value;
-
-	    return $browser;
-	}
-}
-
 if(!function_exists('isAdmin')) {
 	function isAdmin() {
 		global $user;
@@ -1759,55 +1418,6 @@ if(!function_exists('currentPageStrict')) {
 		$urlRootLength=strlen($us_url_root);
 		$page=substr($uri,$urlRootLength,strlen($uri)-$urlRootLength);
 		return $page;
-	}
-}
-
-if(!function_exists('storeUser')) {
-	function storeUser($api=false) {
-		global $user;
-		global $us_url_root;
-		if(!$user->isLoggedIn()) return false;
-		$db=DB::getInstance();
-		if(isset($_SESSION['kUserSessionID']) && isset($_SESSION['fingerprint']) && $_SESSION['fingerprint']!='') $q=$db->query("SELECT * FROM us_user_sessions WHERE kUserSessionID = ? AND fkUserID = ? AND UserFingerprint = ?",[$_SESSION['kUserSessionID'],$user->data()->id,$_SESSION['fingerprint']]);
-		if(isset($q) && $q->count()==1) {
-			$result=$q->first();
-			if($result->UserSessionEnded==0) {
-				if(!$api) {
-					$db->update('us_user_sessions',['kUserSessionID' => $result->kUserSessionID],['UserSessionLastUsed' => date("Y-m-d H:i:s"),'UserSessionLastPage' => currentPageStrict()]);
-					if($db->error()) {
-						logger($user->data()->id,"User Tracker","Failed to re-track User Session, Error: ".$db->errorString());
-						return false;
-					} else return true;
-				} else return true;
-			} else {
-				if($api) return false;
-					$user->logout();
-					Redirect::to($us_url_root.'users/?msg=Your session was ended remotely');
-			}
-		} else {
-			if(isset($_SESSION['fingerprint']) && $_SESSION['fingerprint']!='') {
-				$fields = [
-					'fkUserID' => $user->data()->id,
-					'UserFingerprint' => $_SESSION['fingerprint'],
-					'UserSessionIP' => ipCheck(),
-					'UserSessionOS' => getOS(),
-					'UserSessionBrowser' => getBrowser(),
-					'UserSessionStarted' => date("Y-m-d H:i:s"),
-					'UserSessionLastUsed' => date("Y-m-d H:i:s"),
-					'UserSessionLastPage' => currentPageStrict(),
-					'UserSessionEnded' => 0,
-					'UserSessionEnded_Time' => NULL,
-				];
-				$db->insert('us_user_sessions',$fields);
-				if($db->error()) {
-					logger($user->data()->id,"User Tracker","Failed to track User Session, Error: ".$db->errorString());
-					return false;
-				} else {
-					$_SESSION['kUserSessionID']=$db->lastId();
-					return true;
-				}
-			}  else return true;
-		}
 	}
 }
 
@@ -1889,6 +1499,130 @@ if(!function_exists('passwordResetKillSessions')) {
 				logger($user->data()->id,"User Tracker","Password Reset Session Kill failed for UID $uid, Error: ".$error);
 			}
 			return $error;
+		}
+	}
+}
+
+if(!function_exists('username_helper')) {
+	function username_helper($fname,$lname,$email) {
+		$db = DB::getInstance();
+		$settings=$db->query("SELECT * FROM settings")->first();
+			$preusername = $fname[0];
+			$preusername .= $lname;
+			$preusername=strtolower(clean($preusername));
+			$preQ = $db->query("SELECT username FROM users WHERE username = ?",array($preusername));
+			if(!$db->error()) {
+				$preQCount=$preQ->count();
+			} else {
+				return false;
+			}
+			if($preQCount == 0) {
+				return $preusername;
+			}
+			$preusername = $fname;
+			$preusername .= $lname[0];
+			$preusername=strtolower(clean($preusername));
+			$preQ = $db->query("SELECT username FROM users WHERE username = ?",array($preusername));
+			if(!$db->error()) {
+				$preQCount=$preQ->count();
+			} else {
+				return false;
+			}
+			if($preQCount == 0) {
+				return $preusername;
+			}
+			return $email;
+	}
+}
+
+if(!function_exists('oxfordList')){
+	function oxfordList($data,$opts=[]){
+		$msg = '';
+		if(is_array($data)){
+			if($opts == []){
+				echo implode(", ", $data);
+			}else{
+				$final = $opts['final'];
+				$c= count($data);
+				for($i = 0; $i<=$c; $i++){
+					if(isset($data[$i])){
+						if($i == $c-1){
+							$msg .= " ".$final." ";
+						}
+
+						$msg .= $data[$i];
+						if($i < $c-1){
+							$msg .= ",";
+						}
+
+					}
+				}
+			}
+		}
+		return $msg;
+	}
+}
+
+if(!function_exists('currentFile')) {
+	function currentFile() {
+		$abs_us_root=$_SERVER['DOCUMENT_ROOT'];
+
+		$self_path=explode("/", $_SERVER['PHP_SELF']);
+		$self_path_length=count($self_path);
+		$file_found=FALSE;
+
+		for($i = 1; $i < $self_path_length; $i++){
+			array_splice($self_path, $self_path_length-$i, $i);
+			$us_url_root=implode("/",$self_path)."/";
+
+			if (file_exists($abs_us_root.$us_url_root.'z_us_root.php')){
+				$file_found=TRUE;
+				break;
+			}else{
+				$file_found=FALSE;
+			}
+		}
+
+		$urlRootLength=strlen($us_url_root);
+		return substr($_SERVER['PHP_SELF'],$urlRootLength,strlen($_SERVER['PHP_SELF'])-$urlRootLength);
+	}
+}
+
+if(!function_exists('importSQL')) {
+	function importSQL($file) {
+		global $db;
+		$lines = file($file);
+		// Loop through each line
+		foreach ($lines as $line)
+		{
+			// Skip it if it's a comment
+			if (substr($line, 0, 2) == '--' || $line == '')
+			continue;
+
+			// Add this line to the current segment
+			$templine .= $line;
+			// If it has a semicolon at the end, it's the end of the query
+			if (substr(trim($line), -1, 1) == ';')
+			{
+				// Perform the query
+				$db->query($templine);
+				// Reset temp variable to empty
+				$templine = '';
+			}
+		}
+	}
+}
+
+if(!function_exists('pluginActive')) {
+	function pluginActive($plugin) {
+		global $db,$user,$us_url_root;
+		$check = $db->query("SELECT id FROM us_plugins WHERE plugin = ? and status = ?",array($plugin,"active"))->count();
+		if($check != 1) {
+			logger($user->data()->id,"Errors","Attempted to access disabled $plugin");
+			Redirect::to($us_url_root.'users/admin.php?view=plugins&err=Plugin+is+disabled');
+			return false;
+		}else{
+			return true;
 		}
 	}
 }

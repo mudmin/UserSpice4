@@ -1,4 +1,5 @@
 <?php
+// This is a user-facing page
 /*
 UserSpice 4
 An Open Source PHP User Management System
@@ -17,15 +18,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
- ?>
-<?php require_once '../users/init.php'; ?>
-<?php require_once $abs_us_root.$us_url_root.'users/includes/header.php'; ?>
-<?php require_once $abs_us_root.$us_url_root.'users/includes/navigation.php'; ?>
-<div id="page-wrapper">
-<div class="container">
-<?php
-$settingsQ = $db->query("SELECT * FROM settings");
-$settings = $settingsQ->first();
+require_once '../users/init.php';
+require_once $abs_us_root.$us_url_root.'users/includes/template/prep.php';
+
 if($user->isLoggedIn()) Redirect::to($us_url_root.'index.php');
 //Decide whether or not to use email activation
 $query = $db->query("SELECT * FROM email");

@@ -89,7 +89,7 @@ $count = $adminNotificationsQ->count();
 <div id="page-wrapper">
 	<div class="container">
     <div class="row">
-        <div class="col-xs-12 col-md-6">
+        <div class="col-sm-12 col-md-6">
             <h1>Notifications Manager</h1>
         </div>
     </div>
@@ -100,7 +100,7 @@ $count = $adminNotificationsQ->count();
 <?=resultBlock($errors,$successes);?>
 <?php if(!$validation->errors()=='') {?><div class="alert alert-danger"><?=display_errors($validation->errors());?></div><?php } ?>
       <?php if($count > 0) {?><label><input type="checkbox" class="checkAllMsg" />
-      [ check/uncheck all ]</label><?php } ?>                         <div class="btn-group pull-right"><button type="button" class="btn btn-info" data-toggle="modal" data-target="#composemass"><i class="glyphicon glyphicon-plus"></i> New Mass Notification</button></div>
+      [ check/uncheck all ]</label><?php } ?>                         <div class="btn-group pull-right"><button type="button" class="btn btn-info" data-toggle="modal" data-target="#composemass"><i class="fa fa-plus"></i> New Mass Notification</button></div>
       <br><br>
           <form name="threads" action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
         <table id="paginate" class="table table-striped">
@@ -121,7 +121,7 @@ $count = $adminNotificationsQ->count();
                   </td>
                   <td><input type="checkbox" class="maincheck" name="checkbox[<?=$m->id?>]" value="<?=$m->id?>"/> <?=echouser($m->user_id)?>, <?=time2str($m->date_created)?><br /><?=html_entity_decode($m->message)?>
                     <br />
-                    <?php if($m->is_read==1 && $m->is_archived==0) {?><i class="glyphicon glyphicon-check"></i> Read<?php } if($m->is_read==0 && $m->is_archived==0) { ?> <i class="glyphicon glyphicon-unchecked"></i> Delivered<?php } if($m->is_archived==1) { ?><i class="glyphicon glyphicon-remove"></i> Deleted<?php } ?>
+                    <?php if($m->is_read==1 && $m->is_archived==0) {?><i class="fa fa-check"></i> Read<?php } if($m->is_read==0 && $m->is_archived==0) { ?> <i class="fa fa-times"></i> Delivered<?php } if($m->is_archived==1) { ?><i class="fa fa-times"></i> Deleted<?php } ?>
                   </td>
                 </tr>
             <?php  } } else {?>

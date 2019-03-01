@@ -1,0 +1,41 @@
+<?php
+//This needs to be updated when tables are added to the db.
+$tables = array(
+'audit',
+'crons',
+'crons_logs',
+'email',
+'groups_menus',
+'keys',
+'logs',
+'logs_exempt',
+'menus',
+"messages",
+'message_threads',
+'notifications',
+'pages',
+'permissions',
+'page_permissions',
+'permission_page_matches',
+'settings',
+'updates',
+'users',
+'users_online',
+'users_session',
+'user_permission_matches',
+'us_announcements',
+'us_fingerprints',
+'us_fingerprints_assets',
+'us_forms',
+'us_form_validation',
+'us_form_views',
+'us_ip_blacklist',
+'us_ip_whitelist',
+'us_plugins',
+'us_saas_levels',
+'us_saas_orgs',
+'us_user_sessions',
+);
+
+
+ ?>

@@ -1,4 +1,5 @@
 <?php
+// This is a user-facing page
 /*
 UserSpice 4
 An Open Source PHP User Management System
@@ -20,10 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // error_reporting(E_ALL);
 // ini_set('display_errors', 1);
 ini_set("allow_url_fopen", 1);
-?>
-<?php require_once '../users/init.php';?>
-<?php require_once $abs_us_root.$us_url_root.'users/includes/header.php'; ?>
-<?php require_once $abs_us_root.$us_url_root.'users/includes/navigation.php';
+require_once '../users/init.php';
+require_once $abs_us_root.$us_url_root.'users/includes/template/prep.php';
+
 use PragmaRX\Google2FA\Google2FA;
 if($settings->twofa == 1){
 $google2fa = new Google2FA();
@@ -34,10 +34,8 @@ $google2fa = new Google2FA();
 <?php
 if(ipCheckBan()){Redirect::to($us_url_root.'usersc/scripts/banned.php');die();}
 if($user->isLoggedIn()) Redirect::to($us_url_root.'index.php');
-$settingsQ = $db->query("SELECT * FROM settings");
-$settings = $settingsQ->first();
 if($settings->recaptcha == 1 || $settings->recaptcha == 2){
-        require_once($abs_us_root.$us_url_root."users/includes/recaptcha.config.php");
+        //require_once($abs_us_root.$us_url_root."users/includes/recaptcha.config.php");
 }
 //There is a lot of commented out code for a future release of sign ups with payments
 $form_method = 'POST';
@@ -72,46 +70,29 @@ if(Input::exists()){
         $lname = Input::get('lname');
         $email = Input::get('email');
         if($settings->auto_assign_un==1) {
-        $preusername = $fname[0];
-        $preusername .= $lname;
-        $preQ = $db->query("SELECT username FROM users WHERE username = ?",array($preusername));
-        $preQCount = $preQ->count();
-        if($preQCount == 0)
-        {
-                $username = strtolower($preusername);
+          $username=username_helper($fname,$lname,$email);
+          if(!$username) $username=NULL;
+        } else {
+          $username=Input::get('username');
         }
-        else
-        {
-                $preusername2 = $fname;
-                $preusername2 .= $lname[0];
-                $preQ2 = $db->query("SELECT username FROM users WHERE username = ?",array($preusername2));
-                $preQCount2 = $preQ2->count();
-                        if($preQCount2 == 0)
-                        {
-                                $username = strtolower($preusername2);
-                        }
-                        else
-                        {
-                                $username = $email;
-                        }
-        } }
-        if($settings->auto_assign_un==0) $username = Input::get('username');
         $agreement_checkbox = Input::get('agreement_checkbox');
 
         if ($agreement_checkbox=='on'){
                 $agreement_checkbox=TRUE;
         }else{
+          if($settings->show_tos == 1){
                 $agreement_checkbox=FALSE;
+          }else{
+            $agreement_checkbox=TRUE;
+          }
         }
 
-        $db = DB::getInstance();
-        $settingsQ = $db->query("SELECT * FROM settings");
-        $settings = $settingsQ->first();
         $validation = new Validate();
         if($settings->auto_assign_un==0) {
         $validation->check($_POST,array(
           'username' => array(
                 'display' => 'Username',
+                'is_not_email' => true,
                 'required' => true,
                 'min' => $settings->min_un,
                 'max' => $settings->max_un,
@@ -191,27 +172,32 @@ if(Input::exists()){
         if($validation->passed() && $agreement_checkbox){
                 //Logic if ReCAPTCHA is turned ON
         if($settings->recaptcha == 1 || $settings->recaptcha == 2){
-                        require_once($abs_us_root.$us_url_root."users/includes/recaptcha.config.php");
+                        //require_once($abs_us_root.$us_url_root."users/includes/recaptcha.config.php");
                         //reCAPTCHA 2.0 check
                         $response = null;
 
                         // check secret key
-                        $reCaptcha = new ReCaptcha($settings->recap_private);
+                        $reCaptcha = new \ReCaptcha\ReCaptcha($settings->recap_private);
 
                         // if submitted check response
                         if ($_POST["g-recaptcha-response"]) {
-                                $response = $reCaptcha->verifyResponse(
-                                        $_SERVER["REMOTE_ADDR"],
-                                        $_POST["g-recaptcha-response"]);
+                                $response = $reCaptcha->verify($_POST["g-recaptcha-response"],$_SERVER["REMOTE_ADDR"]);
                         }
-                        if ($response != null && $response->success) {
+                        if ($response != null && $response->isSuccess()) {
                                 // account creation code goes here
                                 $reCaptchaValid=TRUE;
                                 $form_valid=TRUE;
                         }else{
                                 $reCaptchaValid=FALSE;
                                 $form_valid=FALSE;
-                                $validation->addError(["Please check the reCaptcha box."]);
+                                $validation->addError(["reCaptcha check failed, please contact the Administrator"]);
+                                $reCapErrors = $response->getErrorCodes();
+                                // $count=0;
+                                foreach($reCapErrors as $error) {
+                                  // if($count==0) $error_message = $error;
+                                  // else $error_message .= "<br>".$error;
+                                  logger(1,"Recapatcha","Error with reCaptcha: ".$error);
+                                }
                         }
 
                 } //else for recaptcha
@@ -239,7 +225,7 @@ if(Input::exists()){
                         }
                         try {
                                 // echo "Trying to create user";
-                         $theNewId = $user->create(array(
+                              $theNewId = $user->create(array(
                                         'username' => $username,
                                         'fname' => ucfirst(Input::get('fname')),
                                         'lname' => ucfirst(Input::get('lname')),
@@ -251,9 +237,9 @@ if(Input::exists()){
                                         'email_verified' => $pre,
                                         'active' => 1,
                                         'vericode' => $vericode,
-                                        'vericode_expiry' => $vericode_expiry
+                                        'vericode_expiry' => $vericode_expiry,
+                                        'oauth_tos_accepted' => true
                                 ));
-
 
                         } catch (Exception $e) {
                                 die($e->getMessage());
@@ -305,6 +291,7 @@ else {
 </script>
 <?php } ?>
 <?php if($settings->auto_assign_un==0) { ?>
+
 <?php } ?>
 <script type="text/javascript">
     $(document).ready(function(){

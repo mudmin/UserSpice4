@@ -17,11 +17,11 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
- ?>
+?>
 <div class="row">
-<div class="col-xs-12">
-<h1>We were unable to verify your account. Please try again.</h1>
-<a href="verify_resend.php" class="btn btn-primary">Resend Verification Email</a>
-<br />
-</div>
+  <div class="col-sm-12">
+    <h1>We were unable to verify your account. Please try again.</h1>
+    <a href="verify_resend.php" class="btn btn-primary">Resend Verification Email</a>
+    <br />
+  </div>
 </div>

@@ -1,8 +1,8 @@
-<?php require_once '../users/init.php'; ?>
-<?php require_once $abs_us_root.$us_url_root.'users/includes/header.php'; ?>
-<?php require_once $abs_us_root.$us_url_root.'users/includes/navigation.php'; ?>
-<?php if (!securePage($_SERVER['PHP_SELF'])){die();}?>
 <?php
+require_once '../users/init.php';
+require_once $abs_us_root.$us_url_root.'users/includes/template/prep.php';
+if (!securePage($_SERVER['PHP_SELF'])){die();}
+
 if($settings->session_manager!=1) Redirect::to($us_url_root.'users/account.php?err=Session Manager is not enabled.');
 $showAllSessions = Input::get('showAllSessions');
 $errors=[];
@@ -29,14 +29,13 @@ if (!empty($_POST)) {
 
 <div id="page-wrapper">
   <div class="container">
-    <div class="well">
       <div class="row">
-        <div class="col-xs-12 col-md-3">
+        <div class="col-12 col-md-3">
           <p><a href="../users/account.php" class="btn btn-primary">Account Home</a></p>
           <!-- <p><a href="../users/disable2fa.php" class="btn btn-primary">Disable 2FA</a></p> -->
 
         </div>
-        <div class="col-xs-12 col-md-9">
+        <div class="col-12 col-md-9">
           <h1>Manage Sessions</h1>
           <hr>
           <?=resultBlock($errors,$successes);?>
@@ -94,12 +93,13 @@ if (!empty($_POST)) {
             </div>
           </form><br />
         </div>
-      </div>
     </div>
   </div>
-</div>
 
-<?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; ?>
+<?php require_once $abs_us_root.$us_url_root.'usersc/templates/'.$settings->template.'/container_close.php'; //custom template container ?>
+<!-- footers -->
+<?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; // the final html footer copyright row + the external js calls ?>
+
 <script>
 $(function () {
   $('.button-checkbox').each(function () {
@@ -167,4 +167,6 @@ $(function () {
   });
 });
 </script>
-<?php require_once $abs_us_root.$us_url_root.'users/includes/html_footer.php'; ?>
+<!-- Place any per-page javascript here -->
+
+<?php require_once $abs_us_root.$us_url_root.'usersc/templates/'.$settings->template.'/footer.php'; //custom template footer?>

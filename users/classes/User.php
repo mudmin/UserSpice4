@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 class User {
-	private $_db, $_data, $_sessionName, $_isLoggedIn, $_cookieName;
+	private $_db, $_data, $_sessionName, $_isLoggedIn, $_cookieName,$_isNewAccount;
 	public $tableName = 'users';
 
 
@@ -50,8 +50,6 @@ class User {
 		}else
 		$user_id = $this->_db->lastId();
 		$query = $this->_db->insert("user_permission_matches",['user_id'=>$user_id,'permission_id'=>1]);
-		// return $user_id;
-		$query2 = $this->_db->insert("profiles",['user_id'=>$user_id, 'bio'=>'This is your bio']);
 		return $user_id;
 	}
 
@@ -218,12 +216,18 @@ class User {
 					//If a user has neither UserSpice nor oAuth creds
 						//die("user has neither");
 						//$password = password_hash(Token::generate(),PASSWORD_BCRYPT,array('cost' => 12));
-						$insert = $this->_db->query("INSERT INTO $this->tableName SET password = NULL,username = '".$email."',active = '".$active."',oauth_provider = '".$oauth_provider."', oauth_uid = '".$oauth_uid."',permissions = '".$active."', email_verified = '".$active."', fname = '".$fname."', lname = '".$lname."', email = '".$email."', gender = '".$gender."', locale = '".$locale."',picture = '".$picture."', gpluslink = '".$link."', join_date = '".date("Y-m-d H:i:s")."',created = '".date("Y-m-d H:i:s")."', modified = '".date("Y-m-d H:i:s")."'") or die("Google oAuth Error");
+						$settings=$this->_db->query("SELECT * FROM settings")->first();
+						if($settings->auto_assign_un==1) {
+							$username=username_helper($fname,$lname,$email);
+							if(!$username) $username=NULL;
+						} else {
+							$username=$email;
+						}
+						$insert = $this->_db->query("INSERT INTO $this->tableName SET password = NULL,username = '".$username."',active = '".$active."',oauth_provider = '".$oauth_provider."', oauth_uid = '".$oauth_uid."',permissions = '".$active."', email_verified = '".$active."', fname = '".$fname."', lname = '".$lname."', email = '".$email."', gender = '".$gender."', locale = '".$locale."',picture = '".$picture."', gpluslink = '".$link."', join_date = '".date("Y-m-d H:i:s")."',created = '".date("Y-m-d H:i:s")."', modified = '".date("Y-m-d H:i:s")."'") or die("Google oAuth Error");
 						$lastID = $insert->lastId();
 
 						$insert2 = $this->_db->query("INSERT INTO user_permission_matches SET user_id = $lastID, permission_id = 1");
-
-						$insert3 = $this->_db->query("INSERT INTO profiles SET user_id = $lastID, bio = 'This is your bio'");
+						$this->_isNewAccount=true;
 				}
 
 
@@ -231,6 +235,8 @@ class User {
 
 				$query = $this->_db->query("SELECT * FROM $this->tableName WHERE oauth_provider = '".$oauth_provider."' AND oauth_uid = '".$oauth_uid."'") or die("Google oAuth Error");
 				$result = $query->first();
+				if($this->_isNewAccount) $result->isNewAccount = true;
+				else $result->isNewAccount = false;
 				return $result;
 			}
 		// End of Google Section

@@ -1,8 +1,28 @@
-<?php require_once '../users/init.php'; ?>
-<?php require_once $abs_us_root.$us_url_root.'users/includes/header.php'; ?>
-<?php require_once $abs_us_root.$us_url_root.'users/includes/navigation.php'; ?>
-<?php if (!securePage($_SERVER['PHP_SELF'])){die();}?>
 <?php
+// This is a user-facing page
+/*
+UserSpice 4
+An Open Source PHP User Management System
+by the UserSpice Team at http://UserSpice.com
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
+require_once '../users/init.php';
+require_once $abs_us_root.$us_url_root.'users/includes/template/prep.php';
+if (!securePage($_SERVER['PHP_SELF'])){die();}
+
 if($settings->twofa != 1){
   Redirect::to($us_url_root.'users/account.php?err=Sorry.Two+factor+is+not+enabled+at+this+time');
 }
@@ -33,16 +53,16 @@ if (!empty($_POST)) {
   <div class="container">
     <div class="well">
       <div class="row">
-        <div class="col-xs-12 col-md-3">
+        <div class="col-sm-12 col-md-3">
           <p><a href="../users/account.php" class="btn btn-primary">Account Home</a></p>
           <p><a href="../users/disable2fa.php" class="btn btn-primary">Disable 2FA</a></p>
 
         </div>
-        <div class="col-xs-12 col-md-9">
+        <div class="col-sm-12 col-md-9">
           <h1>Manage 2-Factor</h1>
           <hr>
           <?=resultBlock($errors,$successes);?>
-          <form class="verify-admin" action="manage2fa.php" method="POST" id="payment-form">
+          <form class="verify-admin" action="manage2fa.php" method="POST">
             <h4>Recognized Fingerprints</h4>
             <table class="table table-bordered">
               <?php $fingerprints = fetchUserFingerprints();
@@ -74,7 +94,7 @@ if (!empty($_POST)) {
                     <td><span class="show-tooltip" title="<?=date("D, M j, Y g:i:sa",strtotime($fingerprint->Fingerprint_Added))?>"><?=time2str($fingerprint->Fingerprint_Added)?></span></td>
                     <td><span class="show-tooltip" title="<?=date("D, M j, Y g:i:sa",strtotime($fingerprint->Fingerprint_Expiry))?>"><?=time2str($fingerprint->Fingerprint_Expiry)?></span></td>
                     <td>
-                      <?php if(!$fingerprint->Fingerprint==$_SESSION['fingerprint']) {?>
+                      <?php if($fingerprint->Fingerprint!=$_SESSION['fingerprint']) {?>
                         <span class="button-checkbox">
                           <button type="button" class="btn" data-color="warning">Delete</button>
                           <input type="checkbox" class="hidden" name="deleteFingerprint[]" value="<?=$fingerprint->kFingerprintID?>" />
@@ -112,10 +132,10 @@ $(function () {
     color = $button.data('color'),
     settings = {
       on: {
-        icon: 'glyphicon glyphicon-check'
+        icon: 'fa fa-check'
       },
       off: {
-        icon: 'glyphicon glyphicon-unchecked'
+        icon: 'fa fa-times'
       }
     };
 

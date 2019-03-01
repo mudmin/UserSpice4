@@ -18,14 +18,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 ?>
-
-<!-- Bootstrap Core JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
 <?php if (isset($user) && $user->isLoggedIn() && $settings->notifications == 1) {
 require_once $abs_us_root.$us_url_root.'users/includes/notifications.php';
 $not = $notifications->getUnreadCount();
-if($settings->force_notif == 1 && $not > 0 && !isset($_SESSION['cloak_to'])){ ?>
+if($settings->force_notif == 1 && $not > 0 && $currentPage != 'admin_verify.php' && $currentPage != 'admin_pin.php?view=pin' && !isset($_SESSION['cloak_to'])){ ?>
   <script type="text/javascript">
   $(document).ready(function() {
     displayNotifications('new');

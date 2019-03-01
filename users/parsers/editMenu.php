@@ -2,6 +2,7 @@
 //NOTE: This also serves as the reference file for how to do One Click Edit with UserSpice. See comments below.
   require_once '../init.php';
   $db = DB::getInstance();
+  if(hasPerm([2],$user->data()->id)){
   $resp = ['success'=>false];
 
   $id = Input::get('id');
@@ -29,5 +30,8 @@ if($field == 'display_order'){
   $resp['success'] = true;
   echo json_encode($resp);
   exit;
+}
+}else{
+  die();
 }
 ?>

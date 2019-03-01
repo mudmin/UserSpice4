@@ -1,4 +1,5 @@
 <?php
+// This is a user-facing page
 /*
 UserSpice 4
 An Open Source PHP User Management System
@@ -17,12 +18,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-?>
-<?php require_once '../users/init.php'; ?>
-<?php require_once $abs_us_root.$us_url_root.'users/includes/header.php'; ?>
-<?php require_once $abs_us_root.$us_url_root.'users/includes/navigation.php'; ?>
+require_once '../users/init.php';
+require_once $abs_us_root.$us_url_root.'users/includes/template/prep.php';
 
-<?php if (!securePage($_SERVER['PHP_SELF'])){die();} ?>
+if (!securePage($_SERVER['PHP_SELF'])){die();} ?>
 <?php if(!$user->isLoggedIn()) Redirect::to($us_url_root.'users/login.php'); ?>
 <?php if(!$settings->twofa==1) Redirect::to($us_url_root.'users/account.php'); ?>
 <?php if(!$_SESSION['twofa']==1) Redirect::to($us_url_root.'users/account.php'); ?>
@@ -76,8 +75,8 @@ if (!empty($_POST)) {
           unset($_SESSION['twofa']);
           logger($user->data()->id,"Two FA","Two FA Verification passed.");
           if($_SESSION['fingerprint']!='' || !is_null($_SESSION['fingerprint'])) {
-            $db->insert('us_fingerprints',['fkUserId' => $user->Data()->id,'Fingerprint' => $_SESSION['fingerprint'],'Fingerprint_Expiry' => date("Y-m-d H:i:s",strtotime("+30 days",strtotime(date("Y-m-d H:i:s"))))]);
-            $db->insert('us_fingerprint_assets',['fkFingerprintID' => $db->lastId(),'IP_Address' => ipCheck(),'User_Browser' => getBrowser(),'User_OS' => getOS(),'Fingerprint_Added'=>date('Y-m-d H:i:s')]);
+            $db->insert('us_fingerprints',['fkUserId' => $user->Data()->id,'Fingerprint' => $_SESSION['fingerprint'],'Fingerprint_Expiry' => date("Y-m-d H:i:s",strtotime("+30 days",strtotime(date("Y-m-d H:i:s")))),'Fingerprint_Added'=>date('Y-m-d H:i:s')]);
+            $db->insert('us_fingerprint_assets',['fkFingerprintID' => $db->lastId(),'IP_Address' => ipCheck(),'User_Browser' => getBrowser(),'User_OS' => getOS()]);
           }
           $dest=Input::get('dest');
           if (!empty($dest) || !$dest=='') {
@@ -124,13 +123,13 @@ $redirect=Input::get('redirect');
     <!-- Page Heading -->
     <div class="row">
 <?=resultBlock($errors,$successes);?>
-        <div class="col-xs-12 col-md-6">
+        <div class="col-sm-12 col-md-6">
         <h1>Two Factor Authentication</h1>
       </div>
 
      </div>
     <div class="row">
-    <form class="verify-admin" action="twofa.php" method="POST" id="payment-form">
+    <form class="verify-admin" action="twofa.php" method="POST">
     <div class="col-md-5">
     <div class="input-group"><input type="text" class="form-control"  name="twoCode" id="twoCode"  placeholder="2FA Code" autocomplete="off" required autofocus>
         <span class="input-group-btn">

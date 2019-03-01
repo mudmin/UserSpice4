@@ -22,7 +22,7 @@ if($previewsC > 0){
           <td><?=$v->form_name?></td>
           <td><?=$v->view_name?></td>
           <td>displayView(<?=$v->id?>);</td>
-          <td><a class="btn btn-default" href="admin_form_views.php?demo=<?=$v->id?>">Preview</a></td>
+          <td><a class="btn btn-default" href="admin.php?view=form_preview&demo=<?=$v->id?>">Preview</a></td>
           <td>
             <form class="" action="" method="post">
               <input type="hidden" name="delete_view" value="<?=$v->id?>">
@@ -35,5 +35,6 @@ if($previewsC > 0){
   </table>
   <?php
 }else{
-  echo "You have not created any views.";
+  echo "You have not created any views. Please note that a form must have at least one field to create a view!";
 }
+?>

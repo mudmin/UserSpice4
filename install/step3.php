@@ -33,7 +33,7 @@ require_once("../users/classes/Redirect.php");
                   <?php
                   //this is a temporary fix
                   require_once("../users/classes/Redirect.php");
-                  Redirect::to("cleanup.php");
+                  //Redirect::to("cleanup.php");
                   ?>
               </div>
               </div>
