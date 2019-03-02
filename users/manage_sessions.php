@@ -72,8 +72,8 @@ if (!empty($_POST)) {
                     <td>
                       <?php if($session->kUserSessionID!=$_SESSION['kUserSessionID'] && $session->UserSessionEnded!=1) {?>
                         <span class="button-checkbox">
-                          <button type="button" class="btn" data-color="warning">Delete</button>
-                          <input type="checkbox" class="hidden" name="killSession[]" value="<?=$session->kUserSessionID?>" />
+                          <button type="button" class="btn" data-color="warning" style="border-radius: 8px;"></button>
+                          <input type="checkbox" class="hidden" name="killSession[]" value="<?=$session->kUserSessionID?>" style="display: none;" />
                         </span>
                       <?php } ?>
                     </td>

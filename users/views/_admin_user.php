@@ -264,7 +264,7 @@ if(!empty($_POST)) {
           }
         }
       }
-      
+
       //Toggle protected setting
       if(in_array($user->data()->id,$master_account)) {
         $protected = Input::get("protected");
@@ -412,16 +412,16 @@ if(!empty($_POST)) {
                 <label>Last Login: </label> <?php if($userdetails->last_login != 0) { echo $userdetails->last_login; } else {?> <i>Never</i> <?php }?><br/>
 
                 <label>Username:</label>
-                <input  class='form-control' type='text' name='username' value='<?=$userdetails->username?>' />
+                <input  class='form-control' type='text' name='username' value='<?=$userdetails->username?>' autocomplete="off" />
 
                 <label>Email:</label>
-                <input class='form-control' type='text' name='email' value='<?=$userdetails->email?>' />
+                <input class='form-control' type='text' name='email' value='<?=$userdetails->email?>' autocomplete="off" />
 
                 <label>First Name:</label>
-                <input  class='form-control' type='text' name='fname' value='<?=$userdetails->fname?>' />
+                <input  class='form-control' type='text' name='fname' value='<?=$userdetails->fname?>' autocomplete="off" />
 
                 <label>Last Name:</label>
-                <input  class='form-control' type='text' name='lname' value='<?=$userdetails->lname?>' />
+                <input  class='form-control' type='text' name='lname' value='<?=$userdetails->lname?>' autocomplete="off" />
 
               </div>
             </div>
@@ -452,12 +452,12 @@ if(!empty($_POST)) {
                     <div class="modal-body">
                       <div class="form-group">
                         <label>New Password (<?=$settings->min_pw?> char min, <?=$settings->max_pw?> max.)</label>
-                        <input class='form-control' type='password' name='password' <?php if((!in_array($user->data()->id, $master_account) && in_array($userId, $master_account) || !in_array($user->data()->id, $master_account) && $userdetails->protected==1) && $userId != $user->data()->id) {?>disabled<?php } ?>/>
+                        <input class='form-control' type='password' autocomplete="off" name='password' <?php if((!in_array($user->data()->id, $master_account) && in_array($userId, $master_account) || !in_array($user->data()->id, $master_account) && $userdetails->protected==1) && $userId != $user->data()->id) {?>disabled<?php } ?>/>
                       </div>
 
                       <div class="form-group">
                         <label>Confirm Password</label>
-                        <input class='form-control' type='password' name='confirm' <?php if((!in_array($user->data()->id, $master_account) && in_array($userId, $master_account) || !in_array($user->data()->id, $master_account) && $userdetails->protected==1) && $userId != $user->data()->id) {?>disabled<?php } ?>/>
+                        <input class='form-control' type='password' autocomplete="off" name='confirm' <?php if((!in_array($user->data()->id, $master_account) && in_array($userId, $master_account) || !in_array($user->data()->id, $master_account) && $userdetails->protected==1) && $userId != $user->data()->id) {?>disabled<?php } ?>/>
                       </div>
 
                       <label><input type="checkbox" name="sendPwReset" id="sendPwReset" /> Send Reset Email?</label><br>

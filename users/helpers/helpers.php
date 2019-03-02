@@ -32,6 +32,7 @@ require_once("tables.php");
 define("ABS_US_ROOT",$abs_us_root);
 define("US_URL_ROOT",$us_url_root);
 require_once($abs_us_root.$us_url_root."users/vendor/autoload.php");
+require_once($abs_us_root.$us_url_root."usersc/vendor/autoload.php");
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 require_once("permissions.php");

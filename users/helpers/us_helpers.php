@@ -531,7 +531,7 @@ if(!function_exists('resultBlock')) {
 		//Error block
 		if(count($errors) > 0){
 			echo "<div class='alert alert-danger alert-dismissible' role='alert'> <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
-			<ul>";
+			<ul style='padding-left:1.25rem !important'>";
 			foreach($errors as $error){
 				echo "<li>".$error."</li>";
 			}
@@ -542,7 +542,7 @@ if(!function_exists('resultBlock')) {
 		//Success block
 		if(count($successes) > 0){
 			echo "<div class='alert alert-success alert-dismissible' role='alert'> <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
-			<ul>";
+			<ul style='padding-left:1.25rem !important'>";
 			foreach($successes as $success){
 				echo "<li>".$success."</li>";
 			}

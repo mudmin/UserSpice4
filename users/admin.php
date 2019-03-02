@@ -32,7 +32,7 @@ $settings = $db->query("SELECT * FROM settings")->first();
 <div id="right-panel" class="right-panel">
 
   <div id="messages" class="sufee-alert alert with-close alert-primary alert-dismissible fade show d-none">
-    <span id="message" >Testing123</span>
+    <span id="message"></span>
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>

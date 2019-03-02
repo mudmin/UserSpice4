@@ -46,7 +46,7 @@ class User {
 
 	public function create($fields = array()){
 		if (!$this->_db->insert('users', $fields)) {
-			throw new Exception('There was a problem creating an account.');
+			throw new Exception($this->_db->errorString());
 		}else
 		$user_id = $this->_db->lastId();
 		$query = $this->_db->insert("user_permission_matches",['user_id'=>$user_id,'permission_id'=>1]);

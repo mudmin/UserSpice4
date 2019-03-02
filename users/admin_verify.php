@@ -19,15 +19,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 ?>
 <?php require_once '../users/init.php'; ?>
-<?php require_once $abs_us_root.$us_url_root.'users/includes/header.php'; ?>
-<?php require_once $abs_us_root.$us_url_root.'users/includes/navigation.php'; ?>
+<?php require_once $abs_us_root.$us_url_root.'users/includes/template/prep.php'; ?>
 
 <?php if (!securePage($_SERVER['PHP_SELF'])){die();} ?>
 <?php
 $lang = array_merge($lang,array(
-    "ADMIN_VERIFY_NOREF"        => "There is no referrer, you cannot verify yourself. Please return to the Dashboard.",
-    "INCORRECT_ADMINPW"         => "Incorrect credential, please try again",
-    ));
+  "ADMIN_VERIFY_NOREF"        => "There is no referrer, you cannot verify yourself. Please return to the Dashboard.",
+  "INCORRECT_ADMINPW"         => "Incorrect credential, please try again",
+));
 $errors = $successes = [];
 $form_valid=TRUE;
 $current=date("Y-m-d H:i:s");
@@ -35,21 +34,21 @@ if(empty($_POST)) {
   $actual_link = Input::get('actual_link');
   $page = Input::get('page');
   if (empty($actual_link) || empty($page)) {
-      $actual_link = '';
-      $page = '';
-      $errors[] = lang("ADMIN_VERIFY_NOREF");
-      Redirect::to('../index.php');
+    $actual_link = '';
+    $page = '';
+    $errors[] = lang("ADMIN_VERIFY_NOREF");
+    Redirect::to('../index.php');
   }
 }
-  $null=$settings->admin_verify_timeout-1;
-  if(isset($_SESSION['last_confirm']) && $_SESSION['last_confirm']!='' && !is_null($_SESSION['last_confirm'])) $last_confirm=$_SESSION['last_confirm'];
-  else $last_confirm=date("Y-m-d H:i:s",strtotime('-'.$null.' day',strtotime(date("Y-m-d H:i:s"))));
-  $current=date("Y-m-d H:i:s");
-  $ctFormatted = date("Y-m-d H:i:s", strtotime($current));
-  $dbPlus = date("Y-m-d H:i:s", strtotime('+'.$settings->admin_verify_timeout.' minutes', strtotime($last_confirm)));
-  if (strtotime($ctFormatted) < strtotime($dbPlus)){
-    Redirect::to(htmlspecialchars_decode($actual_link));
-  }
+$null=$settings->admin_verify_timeout-1;
+if(isset($_SESSION['last_confirm']) && $_SESSION['last_confirm']!='' && !is_null($_SESSION['last_confirm'])) $last_confirm=$_SESSION['last_confirm'];
+else $last_confirm=date("Y-m-d H:i:s",strtotime('-'.$null.' day',strtotime(date("Y-m-d H:i:s"))));
+$current=date("Y-m-d H:i:s");
+$ctFormatted = date("Y-m-d H:i:s", strtotime($current));
+$dbPlus = date("Y-m-d H:i:s", strtotime('+'.$settings->admin_verify_timeout.' minutes', strtotime($last_confirm)));
+if (strtotime($ctFormatted) < strtotime($dbPlus)){
+  Redirect::to(htmlspecialchars_decode($actual_link));
+}
 if (!empty($_POST)) {
   $token = $_POST['csrf'];
   if(!Token::check($token)){
@@ -65,17 +64,17 @@ if (!empty($_POST)) {
       logger($user->data()->id,"Admin Verification","Access granted to $page via password verification.");
       unset($_SESSION['reauth_count']);
       if(!empty($actual_link)){
-          Redirect::to(htmlspecialchars_decode($actual_link));
+        Redirect::to(htmlspecialchars_decode($actual_link));
       }
     } else {
-    $errors[] = lang("INCORRECT_ADMINPW");
-    if(isset($_SESSION['reauth_count']) && $_SESSION['reauth_count']==3) {
-      logger($user->data()->id,"Admin Verification","3 failed verification attempts, logging out");
-      Redirect::to('../users/logout.php');
-    }
-    if(isset($_SESSION['reauth_count'])) $_SESSION['reauth_count'] = $_SESSION['reauth_count']+1;
-    else $_SESSION['reauth_count'] = 2;
-    logger($user->data()->id,"Admin Verification","Access denied to $page via password verification due to invalid password.");
+      $errors[] = lang("INCORRECT_ADMINPW");
+      if(isset($_SESSION['reauth_count']) && $_SESSION['reauth_count']==3) {
+        logger($user->data()->id,"Admin Verification","3 failed verification attempts, logging out");
+        Redirect::to('../users/logout.php');
+      }
+      if(isset($_SESSION['reauth_count'])) $_SESSION['reauth_count'] = $_SESSION['reauth_count']+1;
+      else $_SESSION['reauth_count'] = 2;
+      logger($user->data()->id,"Admin Verification","Access denied to $page via password verification due to invalid password.");
     }
   }
 }
@@ -87,38 +86,33 @@ if (!empty($_POST)) {
 
     <!-- Page Heading -->
     <div class="row">
-<?=resultBlock($errors,$successes);?>
-<? if ($actual_link !='') { ?>
+      <?=resultBlock($errors,$successes);?>
+      <? if ($actual_link !='') { ?>
         <div class="col-sm-12 col-md-6">
-        <h1>Restricted Access</h1>
-        <p><font color='slate'>Please enter your <strong>password</strong> or <strong>PIN</strong> code below to continue</font></p>
+          <h1>Restricted Access</h1>
+          <p><font color='slate'>Please enter your <strong>password</strong> or <strong>PIN</strong> code below to continue</font></p>
+        </div>
+
       </div>
-
-     </div>
-    <div class="row">
-    <form class="verify-admin" action="admin_verify.php" method="POST">
-    <div class="col-md-5">
-    <div class="input-group"><input class="form-control" type="password" name="password" id="password" required autofocus>
-        <span class="input-group-btn">
-        <input class='btn btn-primary' type='submit' name='verifyAdmin' value='Verify' />
-      </span></div>
-    <input type="hidden" name="verify_uri" value="<?=$actual_link?>" />
-    <input type="hidden" name="verify_page" value="<?=$page?>" />
-    <input type="hidden" value="<?=Token::generate();?>" name="csrf">
-    <? } ?>
+      <div class="row">
+        <form class="verify-admin" action="admin_verify.php" method="POST">
+          <div class="col-md-5">
+            <div class="input-group"><input class="form-control" type="password" name="password" id="password" required autofocus>
+              <span class="input-group-btn">
+                <input class='btn btn-primary' type='submit' name='verifyAdmin' value='Verify' />
+              </span></div>
+              <input type="hidden" name="verify_uri" value="<?=$actual_link?>" />
+              <input type="hidden" name="verify_page" value="<?=$page?>" />
+              <input type="hidden" value="<?=Token::generate();?>" name="csrf">
+            <? } ?>
+          </div>
+        </div>
+      </form><br />
     </div>
-     </div>
-   </form><br />
-   </div>
-   </div>
-
-
   </div>
+
+
 </div>
-    <!-- End of main content section -->
-
-<?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; // the final html footer copyright row + the external js calls ?>
-
-    <!-- Place any per-page javascript here -->
-
-<?php require_once $abs_us_root.$us_url_root.'users/includes/html_footer.php'; // currently just the closing /body and /html ?>
+</div>
+<!-- End of main content section -->
+<?php require_once $abs_us_root . $us_url_root . 'usersc/templates/' . $settings->template . '/footer.php'; //custom template footer ?>

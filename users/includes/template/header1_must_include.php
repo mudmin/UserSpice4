@@ -110,7 +110,7 @@ if($user->isLoggedIn() && $currentPage != 'user_settings.php' && $user->data()->
 $page=currentFile();
 $titleQ = $db->query('SELECT title FROM pages WHERE page = ?', array($page));
 if ($titleQ->count() > 0) {
-    $pageTitle = $titleQ->first()->title;
+	$pageTitle = $titleQ->first()->title;
 }
 else $pageTitle = '';
 ?>
@@ -140,18 +140,37 @@ else $pageTitle = '';
 	?>
 	<title><?= (($pageTitle != '') ? $pageTitle : ''); ?> <?=$settings->site_name?></title>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/1.6.1/fingerprint2.min.js" integrity="sha256-goBybI2a+FUEO9n1gkRyIYOwLPq6fO8z192AxA9O54I=" crossorigin="anonymous"></script>
-<?php if(!isset($_SESSION['fingerprint'])) {?>
-<script>
-new Fingerprint2().get(function(result, components) {
-  var fingerprint = result;
-		$.ajax({
+	<?php if($settings->session_manager && !isset($_SESSION['fingerprint'])) {?>
+		<script src="<?=$us_url_root?>users/js/tomfoolery.js"></script>
+		<script>
+		if (window.requestIdleCallback) {
+			requestIdleCallback(function () {
+				Fingerprint2.get(function (components) {
+					var values = components.map(function (component) { return component.value })
+					var murmur = Fingerprint2.x64hash128(values.join(''), 31)
+					var fingerprint = murmur;
+					$.ajax({
 						type: "POST",
 						url: '<?=$us_url_root?>users/parsers/fingerprint_post.php',
 						data: ({fingerprint:fingerprint}),
-		});
-});
-</script>
+					});
+				})
+			})
+		} else {
+			setTimeout(function () {
+				Fingerprint2.get(function (components) {
+					var values = components.map(function (component) { return component.value })
+					var murmur = Fingerprint2.x64hash128(values.join(''), 31)
+					var fingerprint = murmur;
+					$.ajax({
+						type: "POST",
+						url: '<?=$us_url_root?>users/parsers/fingerprint_post.php',
+						data: ({fingerprint:fingerprint}),
+					});
+				})
+			}, 500)
+		}
+	</script>
 <?php }
 if($settings->session_manager==1) storeUser(); ?>
 
