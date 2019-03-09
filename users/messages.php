@@ -517,4 +517,4 @@ if (!empty($_POST)) {
                                           <!-- <script src="../users/js/pagination/jquery.dataTables.js" type="text/javascript"></script> -->
                                           <script src="<?=$us_url_root?>users/js/pagination/datatables.min.js" type="text/javascript"></script>
 
-                                          <?php require_once $abs_us_root.$us_url_root.'users/includes/html_footer.php'; // currently just the closing /body and /html ?>
+                                          <?php require_once $abs_us_root . $us_url_root . 'usersc/templates/' . $settings->template . '/footer.php'; //custom template footer ?>

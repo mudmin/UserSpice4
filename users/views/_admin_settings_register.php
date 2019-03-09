@@ -129,6 +129,6 @@
 
     </div>
 
-    <input type="hidden" name="csrf" value="<?=$token?>" />
+    <input type="hidden" name="csrf" value="<?=Token::generate()?>" />
 
   </form>

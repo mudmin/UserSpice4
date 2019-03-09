@@ -312,9 +312,8 @@
 
 
 
-          <input type="hidden" name="csrf" value="<?=$token?>" />
+          <input type="hidden" name="csrf" value="<?=Token::generate()?>" />
         </form>
-<?php $token = Token::generate(); ?>
         <?php if(in_array($user->data()->id, $master_account)) {?>
           <script type="text/javascript">
           $(document).ready(function(){
