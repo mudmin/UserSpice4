@@ -7,8 +7,6 @@ require_once $abs_us_root . $us_url_root . 'users/includes/page_footer.php';
 ?>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
-<?php require_once($abs_us_root.$us_url_root.'users/includes/html_footer.php'); ?>
-
 <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
 <script>
 // (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
@@ -29,3 +27,4 @@ require_once $abs_us_root . $us_url_root . 'users/includes/page_footer.php';
                 </div>
         </div>
 </div>
+<?php require_once($abs_us_root.$us_url_root.'users/includes/html_footer.php'); ?>

@@ -555,21 +555,74 @@ if(!function_exists('resultBlock')) {
 //Inputs language strings from selected language.
 if(!function_exists('lang')) {
 	function lang($key,$markers = NULL){
-		global $lang;
+		global $lang, $us_url_root, $abs_us_root;
 		if($markers == NULL){
+			if(isset($lang[$key])){
 			$str = $lang[$key];
 		}else{
+			$str = "";
+		}
+		}else{
 			//Replace any dyamic markers
+			if(isset($lang[$key])){
 			$str = $lang[$key];
 			$iteration = 1;
 			foreach($markers as $marker){
 				$str = str_replace("%m".$iteration."%",$marker,$str);
 				$iteration++;
 			}
+		}else{
+			$str = "";
 		}
+		}
+
+
 		//Ensure we have something to return
 		if($str == ""){
-			return ("No language key found");
+			if(isset($lang["MISSING_TEXT"])){
+				$missing = $lang["MISSING_TEXT"];
+			}else{
+				$missing = "Missing Text";
+			}
+			//if nothing is found, let's check to see if the language is English.
+			if($lang['THIS_CODE'] != "en-US"){
+				$save = $lang['THIS_CODE'];
+				//if it is NOT English, we are going to try to grab the key from the English translation
+				include($abs_us_root.$us_url_root."users/lang/en-US.php");
+				if($markers == NULL){
+					if(isset($lang[$key])){
+					$str = $lang[$key];
+				}else{
+					$str = "";
+				}
+				}else{
+					//Replace any dyamic markers
+					if(isset($lang[$key])){
+					$str = $lang[$key];
+					$iteration = 1;
+					foreach($markers as $marker){
+						$str = str_replace("%m".$iteration."%",$marker,$str);
+						$iteration++;
+					}
+				}else{
+					$str = "";
+				}
+				}
+				$lang = [];
+				include($abs_us_root.$us_url_root."users/lang/$save.php");
+				if($str == ""){
+					//This means that we went to the English file and STILL did not find the language key, so...
+					$str = "{ $missing }";
+					return $str;
+				}else{
+					//falling back to English
+					return $str;
+				}
+			}else{
+				//the language is already English but the code is not found so...
+				$str = "{ $missing }";
+				return $str;
+			}
 		}else{
 			return $str;
 		}
@@ -1626,3 +1679,63 @@ if(!function_exists('pluginActive')) {
 		}
 	}
 }
+
+if(!function_exists('languageSwitcher')) {
+	function languageSwitcher() {
+		global $db,$user,$abs_us_root,$us_url_root,$currentPage,$settings,$token;
+		if($settings->allow_language != 1){
+			return false;
+		}
+		$your_token = $_SERVER['REMOTE_ADDR'];
+		if(!empty($_POST['language_selector'])){
+
+				$the_token = Input::get("your_token");
+			if($your_token != $the_token){
+				err("Language change failed");
+				return false;
+			}else{
+				$count = 0;
+			  $set = '';
+			  foreach($_POST as $k=>$v){
+			    $count++;
+
+			    if($count != 3){
+			      continue;
+			    }else{
+			      $set = substr($k, 0, -2);
+			    }
+			  }
+				if(strlen($set) != 5 || (substr($set,2,1) != '-')){
+					//something is fishy with this language key
+					err("Language change failed");
+					return false;
+				}
+			  $_SESSION['us_lang']=$set;
+				if(isset($user) && $user->isLoggedIn()){
+				$db->update('users',$user->data()->id,['language'=>$set]);
+				}
+			  header("Refresh:0");
+			}
+
+			}
+		$_SESSION['your_token']=$your_token;
+		$languages = scandir($abs_us_root.$us_url_root."users/lang");?>
+
+		<form class="" action="" method="post">
+			<p align="center">
+			<input type="hidden" name="your_token" value="<?=$your_token?>">
+
+			<input type="hidden" name="language_selector" value="1">
+			<?php
+			foreach($languages as $k=>$v){
+				$languages[$k] = substr($v,0,-4);
+				if(file_exists($abs_us_root.$us_url_root."users/lang/flags/".$languages[$k].".png")){?>
+					<input type="image" title="<?=$languages[$k]?>" alt="<?=$languages[$k]?>" name="<?=$languages[$k]?>" src="<?=$us_url_root."users/lang/flags/".$languages[$k].".png"?>" border="0" alt="Submit" style="width: 40px;" />
+				<?php }
+			} ?>
+		</p>
+		<input type="hidden" name="csrf" value="<?=$token?>">
+	</form>
+	<?php
+		}
+	}

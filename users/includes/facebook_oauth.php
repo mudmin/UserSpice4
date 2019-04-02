@@ -59,7 +59,7 @@ $helper = $fb->getRedirectLoginHelper();
 
 $permissions = ['email']; // Optional permissions
 $loginUrl = $helper->getLoginUrl($callback, $permissions);
-
-echo '<a href="' . htmlspecialchars($loginUrl) . '"><img align=right src="'
-.$us_url_root.'users/images/facebook.png" alt=""/></a>';
+?>
+<a href="<?=htmlspecialchars($loginUrl)?>">
+  <img class="img-responsive" align=right src="<?=$us_url_root?>users/images/facebook.png" alt=""/></a>
 ?>

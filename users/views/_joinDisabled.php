@@ -1,5 +1,6 @@
 <?php
 /*
+This is a user-facing page
 UserSpice 4
 An Open Source PHP User Management System
 by the UserSpice Team at http://UserSpice.com
@@ -21,9 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <div class="row">
   <div class="col-sm-12">
-    <h1>Welcome To <?=$settings->site_name?></h1>
-    <p>Unfortunately registration is disabled at this time. Please contact the Site Administrator if you have any questions or concerns.</p>
-    <a href="login.php" class="btn btn-primary">Login</a>
+    <h1><?=lang("JOIN_SUC");?><?=$settings->site_name?></h1>
+    <p><?=lang("JOIN_CLOSED");?></p>
+    <a href="login.php" class="btn btn-primary"><?=lang("SIGNIN_TEXT");?></a>
     <br /><br />
   </div>
 </div>

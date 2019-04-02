@@ -3,7 +3,6 @@ require_once $abs_us_root . $us_url_root . 'usersc/templates/' . $settings->temp
 
 require_once $abs_us_root . $us_url_root . 'users/includes/page_footer.php';
 
-require_once($abs_us_root.$us_url_root.'users/includes/html_footer.php');
 ?>
 
 <script type="text/javascript">
@@ -38,3 +37,4 @@ $(document).ready(function(){
                 </div>
         </div>
 </div>
+<?php require_once($abs_us_root.$us_url_root.'users/includes/html_footer.php');?>

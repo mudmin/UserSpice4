@@ -20,6 +20,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 ?>
+<link rel="shortcut icon" href="<?=$abs_us_root?><?=$us_url_root?>favicon.ico">
 <?php require_once $abs_us_root.$us_url_root.'users/helpers/helpers.php'; ?>
 <?php require_once $abs_us_root.$us_url_root.'users/includes/user_spice_ver.php'; ?>
 
@@ -27,6 +28,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 $db = DB::getInstance();
 $settings = $db->query("SELECT * FROM settings")->first();
 
+//language
+
+if($settings->allow_language == 0 || !isset($user) || !$user->isLoggedIn()){
+	if(!isset($_SESSION['us_lang'])){
+	$_SESSION['us_lang'] = $settings->default_language;
+}
+}else{
+	if(isset($user) && $user->isLoggedIn()){
+	$_SESSION['us_lang'] = $user->data()->language;
+	}else{
+	$_SESSION['us_lang'] = $settings->default_language;
+}
+}
+
+include $abs_us_root.$us_url_root.'users/lang/'.$_SESSION['us_lang'].".php";
 //check for a custom page
 $currentPage = currentPage();
 $currentPage = currentPage();
@@ -110,7 +126,7 @@ if($user->isLoggedIn() && $currentPage != 'user_settings.php' && $user->data()->
 $page=currentFile();
 $titleQ = $db->query('SELECT title FROM pages WHERE page = ?', array($page));
 if ($titleQ->count() > 0) {
-	$pageTitle = $titleQ->first()->title;
+    $pageTitle = $titleQ->first()->title;
 }
 else $pageTitle = '';
 ?>
@@ -154,23 +170,23 @@ else $pageTitle = '';
 						url: '<?=$us_url_root?>users/parsers/fingerprint_post.php',
 						data: ({fingerprint:fingerprint}),
 					});
-				})
-			})
-		} else {
-			setTimeout(function () {
-				Fingerprint2.get(function (components) {
-					var values = components.map(function (component) { return component.value })
-					var murmur = Fingerprint2.x64hash128(values.join(''), 31)
-					var fingerprint = murmur;
-					$.ajax({
-						type: "POST",
-						url: '<?=$us_url_root?>users/parsers/fingerprint_post.php',
-						data: ({fingerprint:fingerprint}),
-					});
-				})
-			}, 500)
-		}
-	</script>
+								})
+							})
+						} else {
+							setTimeout(function () {
+								Fingerprint2.get(function (components) {
+									var values = components.map(function (component) { return component.value })
+									var murmur = Fingerprint2.x64hash128(values.join(''), 31)
+									var fingerprint = murmur;
+									$.ajax({
+										type: "POST",
+										url: '<?=$us_url_root?>users/parsers/fingerprint_post.php',
+										data: ({fingerprint:fingerprint}),
+									});
+								})
+							}, 500)
+						}
+					</script>
 <?php }
 if($settings->session_manager==1) storeUser(); ?>
 

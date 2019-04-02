@@ -101,14 +101,14 @@ if (!empty($_POST)) {
             logger($user->data()->id,"Two FA","3 failed verification attempts, logging out");
             Redirect::to('../users/logout.php');
           }
-          if($twoCode=='' || empty($twoCode)) $errors[] = "<strong>Login Failed</strong> Two Factor Auth Code was not present. Please try again.";
-          else $errors[] = "<strong>Login Failed</strong> Two Factor Auth Code was invalid. Please try again.";
+          if($twoCode=='' || empty($twoCode)) $errors[] = lang("2FA_NP");
+          else $errors[] = lang("2FA_INV");
           if(isset($_SESSION['twofa_count'])) $_SESSION['twofa_count'] = $_SESSION['twofa_count']+1;
           else $_SESSION['twofa_count'] = 2;
           logger($user->data()->id,"Two FA","Two FA Verification failed.");
         }
         else {
-          $errors[] = "Fatal error. Please contact System Admin.";
+          $errors[] = lang("2FA_FATAL");
           logger($user->data()->id,"Two FA","Two FA Verification Fatal Error.");
         }
       }
@@ -124,16 +124,16 @@ $redirect=Input::get('redirect');
     <div class="row">
 <?=resultBlock($errors,$successes);?>
         <div class="col-sm-12 col-md-6">
-        <h1>Two Factor Authentication</h1>
+        <h1><?=lang("2FA");?></h1>
       </div>
 
      </div>
     <div class="row">
     <form class="verify-admin" action="twofa.php" method="POST">
     <div class="col-md-5">
-    <div class="input-group"><input type="text" class="form-control"  name="twoCode" id="twoCode"  placeholder="2FA Code" autocomplete="off" required autofocus>
+    <div class="input-group"><input type="text" class="form-control"  name="twoCode" id="twoCode"  placeholder="<?=lang("2FA_CODE")?>" autocomplete="off" required autofocus>
         <span class="input-group-btn">
-        <input class='btn btn-primary' type='submit' name='verifyTwo' value='Verify' />
+        <input class='btn btn-primary' type='submit' name='verifyTwo' value='<?=lang("GEN_VERIFY");?>' />
       </span></div>
     <input type="hidden" name="dest" value="<?=$dest?>" />
     <input type="hidden" name="redirect" value="<?=$redirect?>" />

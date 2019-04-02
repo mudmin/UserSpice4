@@ -40,7 +40,8 @@ if (Input::get('forgotten_password')) {
     $fuser = new User($email);
     //validate the form
     $validate = new Validate();
-    $validation = $validate->check($_POST,array('email' => array('display' => 'Email','valid_email' => true,'required' => true,),));
+    $msg1 = lang("GEN_EMAIL");
+    $validation = $validate->check($_POST,array('email' => array('display' => $msg1,'valid_email' => true,'required' => true,),));
 
     if($validation->passed()){
         if($fuser->exists()){
@@ -54,16 +55,16 @@ if (Input::get('forgotten_password')) {
               'vericode' => $vericode,
               'reset_vericode_expiry' => $settings->reset_vericode_expiry
             );
-            $subject = 'Password Reset';
+            $subject = lang("PW_RESET");
             $encoded_email=rawurlencode($email);
             $body =  email_body('_email_template_forgot_password.php',$options);
             $email_sent=email($email,$subject,$body);
             logger($fuser->data()->id,"User","Requested password reset.");
             if(!$email_sent){
-                $errors[] = 'Email NOT sent due to error. Please contact site administrator.';
+                $errors[] = lang("ERR_EMAIL");
             }
         }else{
-            $errors[] = 'That email does not exist in our database';
+            $errors[] = lang("ERR_EM_DB");
         }
     }else{
         //display the errors

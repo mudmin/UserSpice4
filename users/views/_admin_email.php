@@ -161,19 +161,20 @@ if(!empty($_POST)){
 
 ?>
 <div class="content mt-3">
-  <h2>Email Server Settings</h2>
+<h2 class="mb-3">Email Server Settings</h2>
   <p>
     These settings control all things email-related for the server including emailing your users and verifying the user's email address.
     You must obtain and verify all settings below for YOUR email server or hosting provider. Encryption with TLS is STRONGLY recommended,
     followed by SSL. No encryption is like shouting your login credentials out into a crowded field and is not supported for now.
   </p>
-</p>It is <strong>HIGHLY</strong> recommended that you test your email settings before turning on the feature to require new users to verify their email<br>
+<p>It is <strong>HIGHLY</strong> recommended that you test your email settings before turning on the feature to require new users to verify their email</p>
 
 <?=resultBlock($errors,$successes);?>
-  <div class="col-lg-3 col-md-0"></div>
-  <div class="col-md-12 col-lg-6">
+<div class="row justify-content-center">
+  <div class="col-md-12 col-lg-6 ">
 
-
+<div class="card no-padding">
+	<div class="card-body">
 
 
 <form name='update' action='admin.php?view=email' method='post'>
@@ -263,9 +264,13 @@ if(!empty($_POST)){
   <input type="radio" name="email_act" value="0" <?php echo ($results->email_act==0)?'checked':''; ?> size="25">No</input>
 
   <input type="hidden" name="csrf" value="<?=Token::generate();?>" /><br><br>
+  <div class="text-center">
   <input class='btn btn-primary' name="update_only" type='submit' value='Update Email Settings' class='submit' />
   <input class='btn btn-danger' name="update_and_test" type='submit' value='Update and Test Email Settings' class='submit' />
+  </div>
 </form>
-
+</div>
+</div>
+</div>
 </div>
   </div>

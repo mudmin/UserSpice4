@@ -64,7 +64,7 @@ if(!empty($_POST)) {
             );
             $validation->check($_POST,array(
                 'username' => array(
-                    'display' => 'Username',
+                    'display' => lang("GEN_UNAME"),
                     'required' => true,
                     'unique_update' => 'users,'.$userId,
 										'min' => $settings->min_un,
@@ -73,10 +73,11 @@ if(!empty($_POST)) {
             ));
             if($validation->passed()){
                 if(($settings->change_un == 2) && ($user->data()->un_changed == 1)){
-                    Redirect::to($us_url_root.'users/user_settings.php?err=Username+has+already+been+changed+once.');
+										$msg = lang("REDIR_UN_ONCE");
+                    Redirect::to($us_url_root.'users/user_settings.php?err='.$msg);
                 }
                 $db->update('users',$userId,$fields);
-                $successes[]="Username updated.";
+                $successes[]=lang("GEN_UNAME")." ".lang("GEN_UPDATED");
 								logger($user->data()->id,"User","Changed username from $userdetails->username to $displayname.");
             }else{
                 //validation did not pass
@@ -93,7 +94,7 @@ if(!empty($_POST)) {
             $fields=array('fname'=>$fname);
             $validation->check($_POST,array(
                 'fname' => array(
-                    'display' => 'First Name',
+                    'display' => lang("GEN_FNAME"),
                     'required' => true,
                     'min' => 1,
                     'max' => 25
@@ -101,7 +102,7 @@ if(!empty($_POST)) {
             ));
             if($validation->passed()){
                 $db->update('users',$userId,$fields);
-                $successes[]='First name updated.';
+                $successes[]=lang("GEN_FNAME")." ".lang("GEN_UPDATED");
 								logger($user->data()->id,"User","Changed fname from $userdetails->fname to $fname.");
             }else{
                 //validation did not pass
@@ -118,7 +119,7 @@ if(!empty($_POST)) {
             $fields=array('lname'=>$lname);
             $validation->check($_POST,array(
                 'lname' => array(
-                    'display' => 'Last Name',
+                    'display' => lang("GEN_LNAME"),
                     'required' => true,
                     'min' => 1,
                     'max' => 25
@@ -126,7 +127,7 @@ if(!empty($_POST)) {
             ));
             if($validation->passed()){
                 $db->update('users',$userId,$fields);
-                $successes[]='Last name updated.';
+              	$successes[]=lang("GEN_FNAME")." ".lang("GEN_UPDATED");
 								logger($user->data()->id,"User","Changed lname from $userdetails->lname to $lname.");
             }else{
                 //validation did not pass
@@ -147,7 +148,7 @@ if(!empty($_POST)) {
             $fields=array('email'=>$email);
             $validation->check($_POST,array(
                 'email' => array(
-                    'display' => 'Email',
+                    'display' => lang("GEN_EMAIL"),
                     'required' => true,
                     'valid_email' => true,
                     'unique_update' => 'users,'.$userId,
@@ -157,7 +158,9 @@ if(!empty($_POST)) {
             ));
             if($validation->passed()){
 							if($confemail == $email) {
-                if($emailR->email_act==0){$db->update('users',$userId,$fields); $successes[]='Email updated.'; logger($user->data()->id,"User","Changed email from $userdetails->email to $email."); }
+                if($emailR->email_act==0){$db->update('users',$userId,$fields);
+									$successes[]=lang("GEN_EMAIL")." ".lang("GEN_UPDATED");
+									logger($user->data()->id,"User","Changed email from $userdetails->email to $email."); }
                 if($emailR->email_act==1){
 									$vericode=randomstring(15);
 				          $vericode_expiry=date("Y-m-d H:i:s",strtotime("+$settings->join_vericode_expiry hours",strtotime(date("Y-m-d H:i:s"))));
@@ -170,15 +173,15 @@ if(!empty($_POST)) {
 											'join_vericode_expiry' => $settings->join_vericode_expiry
 				            );
 				            $encoded_email=rawurlencode($email);
-				            $subject = 'Verify Your Email';
+				            $subject = lang("EML_VER");
 				            $body =  email_body('_email_template_verify_new.php',$options);
 				            $email_sent=email($email,$subject,$body);
-				            if(!$email_sent) $errors[] = 'Email NOT sent due to error. Please contact site administrator.';
-										else $successes[]="Email request received. Please check your email to perform verification. Be sure to check your Spam and Junk folder as the verification link expires in $settings->join_vericode_expiry hours.";
+				            if(!$email_sent) $errors[] = lang("ERR_EMAIL");
+										else $successes[]=lang("EML_CHK")." ".$settings->join_vericode_expiry." ".lang("T_HOURS");
 										if($emailR->email_act==1) logger($user->data()->id,"User","Requested change email from $userdetails->email to $email. Verification email sent.");
                 }
           }
-					else $errors[] = "Your email did not match.";
+					else $errors[] = lang("EML_MAT");
 				 }else{
                 //validation did not pass
                 foreach ($validation->errors() as $error) {
@@ -191,13 +194,13 @@ if(!empty($_POST)) {
         if(!empty($_POST['password'])) {
             $validation->check($_POST,array(
                 'password' => array(
-                    'display' => 'New Password',
+                    'display' => lang("NEW_PW"),
                     'required' => true,
                     'min' => $settings->min_pw,
                 'max' => $settings->max_pw,
                 ),
                 'confirm' => array(
-                    'display' => 'Confirm New Password',
+                    'display' => lang("PW_CONF"),
                     'required' => true,
                     'matches' => 'password',
                 ),
@@ -209,32 +212,32 @@ if(!empty($_POST)) {
                 //process
                 $new_password_hash = password_hash(Input::get('password'),PASSWORD_BCRYPT,array('cost' => 12));
                 $user->update(array('password' => $new_password_hash,'force_pr' => 0,'vericode' => randomstring(15),),$user->data()->id);
-                $successes[]='Password updated.';
+                $successes[]=lang("PW_UPD");
 								logger($user->data()->id,"User","Updated password.");
 								if($settings->session_manager==1) {
 									$passwordResetKillSessions=passwordResetKillSessions();
 									if(is_numeric($passwordResetKillSessions)) {
-										if($passwordResetKillSessions==1) $successes[] = "Successfully Killed 1 Session";
-										if($passwordResetKillSessions >1) $successes[] = "Successfully Killed $passwordResetKillSessions Session";
+										if($passwordResetKillSessions==1) $successes[] = lang("SESS_SUC")." 1 ".lang("GEN_SESSION");
+										if($passwordResetKillSessions >1) $successes[] = lang("SESS_SUC").$passwordResetKillSessions.lang("GEN_SESSIONS");
 									} else {
-										$errors[] = "Failed to kill active sessions, Error: ".$passwordResetKillSessions;
+										$errors[] = lang("ERR_FAIL_ACT").$passwordResetKillSessions;
 									}
 								}
             } else {
 							if(Input::get('old')==Input::get('password')) {
-								$errors[] = "Your old password cannot be the same as your new";
+								$errors[] = lang("ERR_PW_SAME");
 							}
 						}
         }
 			if(!empty($_POST['resetPin']) && Input::get('resetPin')==1) {
 				$user->update(['pin'=>NULL]);
 				logger($user->data()->id,"User","Reset PIN");
-				$successes[]='Reset PIN';
-				$successes[]='You can set a new PIN the next time you require verification';
+				$successes[]=lang("SET_PIN");
+				$successes[]=lang("SET_PIN_NEXT");
 			}
     }
 	else {
-		$errors[]="Current password verification failed. Update failed. Please try again.";
+		$errors[]=lang("ERR_PW_FAIL");
 		}
 	}
  }
@@ -251,19 +254,19 @@ $userdetails=$user2->data();
                     <p><img src="<?=$grav; ?>" class="img-thumbnail" alt="Generic placeholder thumbnail"></p>
                 </div>
                 <div class="col-sm-12 col-md-10">
-                    <h1>Update your user settings</h1>
-                    <strong>Want to change your profile picture? </strong><br> Visit <a href="https://en.gravatar.com/">https://en.gravatar.com/</a> and setup an account with the email address <?=$userdetails->email?>.  It works across millions of sites. It's fast and easy!<br>
+                    <h1><?=lang("SET_UPDATE");?></h1>
+                    <?=lang("SET_GRAVITAR");?><br>
                     <?php if(!$errors=='') {?><div class="alert alert-danger"><?=display_errors($errors);?></div><?php } ?>
                     <?php if(!$successes=='') {?><div class="alert alert-success"><?=display_successes($successes);?></div><?php } ?>
 
                     <form name='updateAccount' action='user_settings.php' method='post'>
 
                         <div class="form-group">
-                            <label>Username</label>
+                            <label><?=lang("GEN_UNAME");?></label>
                             <?php if (($settings->change_un == 0) || (($settings->change_un == 2) && ($userdetails->un_changed == 1)) ) {?>
 															<div class="input-group">
 																 <input  class='form-control' type='text' name='username' value='<?=$userdetails->username?>' readonly/>
-																 <span class="input-group-addon" data-toggle="tooltip" title="<?php if($settings->change_un==0) {?>The Administrator has disabled changing usernames.<?php } if(($settings->change_un == 2) && ($userdetails->un_changed == 1)) {?>The Administrator set username changes to occur only once and you have done so already.<?php } ?>">Why can't I change this?</span>
+																 <span class="input-group-addon" data-toggle="tooltip" title="<?php if($settings->change_un==0) {?><?=lang("SET_NOCHANGE");?><?php } if(($settings->change_un == 2) && ($userdetails->un_changed == 1)) {?><?=lang("SET_ONECHANGE");?><?php } ?>"><?=lang("SET_WHY");?></span>
 															 </div>
                             <?php }else{ ?>
 														<input  class='form-control' type='text' name='username' value='<?=$userdetails->username?>' autocomplete="off">
@@ -271,71 +274,69 @@ $userdetails=$user2->data();
                         </div>
 
                         <div class="form-group">
-                            <label>First Name</label>
+                            <label><?=lang("GEN_FNAME");?></label>
                             <input  class='form-control' type='text' name='fname' value='<?=$userdetails->fname?>' autocomplete="off" />
                         </div>
 
                         <div class="form-group">
-                            <label>Last Name</label>
+                            <label><?=lang("GEN_LNAME");?></label>
                             <input  class='form-control' type='text' name='lname' value='<?=$userdetails->lname?>' autocomplete="off" />
                         </div>
 
                         <div class="form-group">
-                            <label>Email</label>
+                            <label><?=lang("GEN_EMAIL");?></label>
                             <input class='form-control' type='text' name='email' value='<?=$userdetails->email?>' autocomplete="off" />
 														<?php if(!IS_NULL($userdetails->email_new)) {?><br /><div class="alert alert-danger">
-															<p><strong>Please note</strong> there is a pending request to update your email to <?=$userdetails->email_new?>.</p>
-															<p>Please use the verification email to complete this request.</p>
-															<p>If you need a new verification email, please re-enter the email above and submit the request again.</p>
+															<?=lang("SET_NOTE1")?> <?=$userdetails->email_new?> <?=lang("SET_NOTE2");?>
 														</div><?php } ?>
                         </div>
 
 												<div class="form-group">
-                            <label>Confirm Email</label>
+                            <label><?=lang("EML_CONF");?></label>
                             <input class='form-control' type='text' name='confemail' autocomplete="off" />
                         </div>
 
 												<div class="form-group">
-												<label>New Password</label>
+												<label><?=lang("PW_NEW");?></label>
 	                      <div class="input-group" data-container="body">
 	                        <span class="btn btn-secondary input-group-addon password_view_control" id="addon1"><span class="fa fa-eye"></span></span>
 	                        <input  class="form-control" type="password" autocomplete="off" name="password" id="password" aria-describedby="passwordhelp" autocomplete="off">
-													<span class="btn btn-secondary input-group-addon" id="addon2" data-container="body" data-toggle="tooltip" data-placement="top" title="<?=$settings->min_pw?> char min, <?=$settings->max_pw?> max.">?</span>
+													<span class="btn btn-secondary input-group-addon" id="addon2" data-container="body" data-toggle="tooltip" data-placement="top" title="<?=$settings->min_pw?> <?=lang("GEN_CHAR");?> <?=lang("GEN_MIN");?>, <?=$settings->max_pw?> <?=lang("GEN_MAX");?>.">?</span>
 	                      </div></div>
 
 	                      <div class="form-group">
-													<label>Confirm Password</label>
+													<label><?=lang("PW_CONF");?></label>
 	                      <div class="input-group" data-container="body">
 	                        <span class="btn btn-secondary input-group-addon password_view_control" id="addon3"><span class="fa fa-eye"></span></span>
 	                        <input  type="password" autocomplete="off" id="confirm" name="confirm" class="form-control" autocomplete="off">
-	                       <span class="btn btn-secondary input-group-addon" id="addon4" data-container="body" data-toggle="tooltip" data-placement="top" title="Must match the New Password">?</span>
+	                       <span class="btn btn-secondary input-group-addon" id="addon4" data-container="body" data-toggle="tooltip" data-placement="top" title="<?=lang("SET_PW_MATCH");?>">?</span>
 											 </div></div>
 
 											 <?php if(!is_null($userdetails->pin)) {?>
 												 <div class="form-group">
-													 <label>Reset PIN
+													 <label><?=lang("SET_PIN");?>
 													 <input  type="checkbox" id="resetPin" name="resetPin" value="1" /></label>
 													</div>
 												<?php } ?>
 
 											 <div class="form-group">
-													 <label>Old Password<?php if(!is_null($userdetails->password)) {?>, required for changing password, email, or resetting PIN<?php } ?></label>
+													 <label><?=lang("PW_OLD");?><?php if(!is_null($userdetails->password)) {?>, <?=lang("SET_PW_REQ");?><?php } ?></label>
 													 <div class="input-group" data-container="body">
 														 <span class="btn btn-secondary input-group-addon password_view_control" id="addon6"><span class="fa fa-eye"></span></span>
 														 <input class='form-control' type='password' id="old" name='old' <?php if(is_null($userdetails->password)) {?>disabled<?php } ?> autocomplete="off" />
-														 <span class="btn btn-secondary input-group-addon" id="addon5" data-container="body" data-toggle="tooltip" data-placement="top" title="Required to change your password">?</span>
+														 <span class="btn btn-secondary input-group-addon" id="addon5" data-container="body" data-toggle="tooltip" data-placement="top" title="<?php lang("SET_PW_REQI");?>">?</span>
 													 </div>
 											 </div>
 
                         <input type="hidden" name="csrf" value="<?=Token::generate();?>" />
 
-                        <p><input class='btn btn-primary' type='submit' value='Update' class='submit' /></p>
-                        <p><a class="btn btn-info" href="../users/account.php">Cancel</a></p>
+                        <p><input class='btn btn-primary' type='submit' value='<?=lang("GEN_UPDATE");?>' class='submit' /></p>
+                        <p><a class="btn btn-info" href="../users/account.php"><?=lang("GEN_CANCEL");?></a></p>
 
                     </form>
                     <?php
                     if(isset($user->data()->oauth_provider) && $user->data()->oauth_provider != null){
-                        echo "<strong>NOTE:</strong> If you originally signed up with your Google/Facebook account, you will need to use the forgot password link to change your password...unless you're really good at guessing.";
+                        echo lang("ERR_GOOG");
                     }
                     ?>
                 </div>

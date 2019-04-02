@@ -23,9 +23,13 @@ require_once $abs_us_root.$us_url_root.'users/includes/template/prep.php';
 
 if (!securePage($_SERVER['PHP_SELF'])){die();}
 if($settings->twofa != 1){
-  Redirect::to($us_url_root.'users/account.php?err=Sorry.Two+factor+is+not+enabled+at+this+time');
+  $msg = lang("REDIR_2FA");
+  Redirect::to($us_url_root.'users/account.php?err='.$msg);
 }
-if($user->data()->twoKey=='' || is_null($user->data()->twoKey) || $user->data()->twoEnabled==0) Redirect::to($us_url_root.'users/account.php?err=Two FA is not enabled.');
+if($user->data()->twoKey=='' || is_null($user->data()->twoKey) || $user->data()->twoEnabled==0){
+  $msg = lang("REDIR_2FA");
+  Redirect::to($us_url_root.'users/account.php?err='.$msg);
+}
 
 if (!empty($_POST)) {
   $token = $_POST['csrf'];
@@ -33,12 +37,13 @@ if (!empty($_POST)) {
     include($abs_us_root.$us_url_root.'usersc/scripts/token_error.php');
   }
 
-  if(!empty($_POST['twoChange']) && $settings->twofa == 1) {
+  if(!empty($_POST['twoChangeHook']) && $settings->twofa == 1) {
         $twofa=Input::get('twofa');
         if($twofa==1) {
           $db->query("UPDATE users SET twoKey=null,twoEnabled=0 WHERE id = ?",[$user->data()->id]);
           logger($user->data()->id,"Two FA","Disabled Two FA");
-          Redirect::to($us_url_root.'users/account.php?msg=Two FA has been disabled.');
+          $msg = lang("REDIR_2FA_DIS");
+          Redirect::to($us_url_root.'users/account.php?msg='.$msg);
         }
       }
     }
@@ -49,22 +54,23 @@ if (!empty($_POST)) {
     <div class="well">
       <div class="row">
       	<div class="col-sm-12 col-md-3">
-              <p><a href="../users/account.php" class="btn btn-primary">Account Home</a></p>
-              <p><a href="../users/manage2fa.php" class="btn btn-primary">Manage 2FA</a></p>
+              <p><a href="../users/account.php" class="btn btn-primary"><?=lang("ACCT_HOME")?>/a></p>
+              <p><a href="../users/manage2fa.php" class="btn btn-primary"><?=lang("ACCT_2FA");?></a></p>
 
           </div>
           <div class="col-sm-12 col-md-9">
-              <h1>Disable 2-Factor</h1>
-              <p>Are you sure you want to disable 2FA? Your account will no longer be protected.</p>
+              <h1><?=lang("GEN_DISABLE")?> <?=lang("2FA");?></h1>
+              <p><?=lang("2FA_CONFIRM");?></p>
               <form class="verify-admin" action="disable2fa.php" method="POST">
               <div class="col-md-5">
               <div class="input-group">
                 <select name="twofa" id="twofa" class="form-control">
-                  <option value="0">No, keep it on!</option>
-                  <option value="1">Yes, turn it off...</option>
+                  <option value="0"><?=lang("GEN_NO")?></option>
+                  <option value="1"><?=lang("GEN_YES")?></option>
                 </select>
                   <span class="input-group-btn">
-                  <input class='btn btn-primary' type='submit' name='twoChange' value='Submit' />
+                  <input type="hidden" name="twoChangeHook" value="1">
+                  <input class='btn btn-primary' type='submit' name='twoChange' value='<?=lang("GEN_SUBMIT")?>' />
                 </span></div>
               <input type="hidden" value="<?=Token::generate();?>" name="csrf">
               </div>

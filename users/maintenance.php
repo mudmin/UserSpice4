@@ -25,16 +25,16 @@ require_once $abs_us_root.$us_url_root.'users/includes/template/prep.php';
 
 $settingsQ = $db->query("SELECT * FROM settings");
 $settings = $settingsQ->first();
-if($settings->site_offline==0) Redirect::to($us_url_root.'index.php');
+
 ?>
 <div id="page-wrapper">
 <div class="container">
 <div class="row">
 	<div class="col-sm-12">
 				<h1 align="center" style="font-size: 140px; color: #FFD700; text-align:center"><i class="fa fa-frown-o fa-2x"></i></h1>
-				    <h3 align="center">We&rsquo;ll be back soon!</h3>
-				        <p align="center">Sorry for the inconvenience but we&rsquo;re performing some maintenance at the moment.<br> We&rsquo;ll be back online shortly!</p>
-				        <p align="center">&mdash; The <?=$settings->site_name?> Team</p>
+				    <h3 align="center"><?=lang("MAINT_HEAD");?></h3>
+				        <p align="center"><?=lang("MAINT_MSG")?></p>
+				        <p align="center">&mdash; -<?=$settings->site_name?></p>
 		</div>
 	</div>
 </div>

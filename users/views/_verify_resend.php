@@ -1,5 +1,6 @@
 <?php
 /*
+This is a user-facing page
 UserSpice 4
 An Open Source PHP User Management System
 by the UserSpice Team at http://UserSpice.com
@@ -20,20 +21,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ?>
 <div class="row">
   <div class="col-sm-12">
-    <h2>Verify Your Email</h2>
+    <h2><?=lang("EML_VER");?></h2>
     <ol>
-      <li>Enter your email address and click Resend</li>
-      <li>Check your email and click the link that is sent to you</li>
-      <li>Done</li>
+      <li><?=lang("VER_AGAIN");?></li>
+      <?=lang("VER_PAGE");?>
     </ol>
     <form class="" action="verify_resend.php" method="post">
       <?php if(!$errors=='') {?><div class="alert alert-danger"><?=display_errors($errors);?></div><?php } ?>
       <div class="form-group">
-        <label for="email">Enter Your Email</label>
-        <input class="form-control" type="text" id="email" name="email" placeholder="Email" autocomplete="email">
+        <label for="email"><?=lang("ACCOUNT_SPECIFY_EMAIL");?></label>
+        <input class="form-control" type="text" id="email" name="email" placeholder="<?=lang("GEN_EMAIL");?>" autocomplete="email">
       </div>
       <input type="hidden" name="csrf" value="<?=Token::generate();?>">
-      <input type="submit" value="Resend" class="btn btn-primary">
+      <input type="submit" value="<?=lang("VER_RESEND");?>" class="btn btn-primary">
     </form><br />
   </div>
 </div>

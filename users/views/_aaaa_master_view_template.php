@@ -12,6 +12,7 @@
   </div>
 </div>
 </div>
+</header>
 
 <div class="content mt-3">
 <h2>Title</h2>

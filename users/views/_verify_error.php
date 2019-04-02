@@ -1,5 +1,6 @@
 <?php
 /*
+This is a user-facing page
 UserSpice 4
 An Open Source PHP User Management System
 by the UserSpice Team at http://UserSpice.com
@@ -20,8 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ?>
 <div class="row">
   <div class="col-sm-12">
-    <h1>We were unable to verify your account. Please try again.</h1>
-    <a href="verify_resend.php" class="btn btn-primary">Resend Verification Email</a>
+    <h1><?=lang("VER_FAIL");?></h1>
+    <a href="verify_resend.php" class="btn btn-primary"><?=lang("VER_RESEND");?></a>
     <br />
   </div>
 </div>

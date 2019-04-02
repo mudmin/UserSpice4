@@ -1,7 +1,7 @@
 <style>
-    #page-wrapper {
-        /* padding-top: 30px; */
-    }
+    /* #page-wrapper {
+        padding-top: 30px !important;
+    } */
 
     .bg-danger {
     background-color: #f4d2d3 !important;

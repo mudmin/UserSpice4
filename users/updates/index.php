@@ -43,7 +43,7 @@ if(!$db->error()) {
           <?php
           foreach($missing as $m) {
             $update = $m;
-            if(file_exists("components/".$m.".php")){
+            if(file_exists($abs_us_root.$us_url_root."users/updates/components/".$m.".php")){
               include($abs_us_root.$us_url_root.'users/updates/components/'.$m.'.php');
             } else {
               $errors[] = "Update ".$m." unable to be applied, missing file.";
@@ -78,6 +78,7 @@ if(!$db->error()) {
           <?php }
           if($eCount>0) {?>
               <h1>Error Messages</h1>
+              <p>These can often be ignored...especially if they mention duplicate columns.  Feel free to check with us in Discord or on the UserSpice.com forums if you have any questions.</p>
               <?php foreach($errors as $e) {?>
                 <?=$e?><br>
               <?php } ?>

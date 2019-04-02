@@ -83,6 +83,10 @@ $settings = $db->query("SELECT * FROM settings")->first();
       $path = usView('_admin_forms_views.php');
       include($path);
       break;
+    case "form_preview":
+      $path = usView('_admin_forms_preview.php');
+      include($path);
+      break;
     case "general":
       $path = usView('_admin_settings_general.php');
       include($path);

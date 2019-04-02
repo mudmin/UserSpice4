@@ -83,7 +83,7 @@ function activeDropdown($View, $dropId, $Area = false){
 		default:
 		return ['','false'];;
 	}
-	
+
 }
 
 ?>
@@ -147,6 +147,9 @@ function activeDropdown($View, $dropId, $Area = false){
 
           <h3 class="menu-title">Misc</h3><!-- /.menu-title -->
           <li class="menu-item">
+            <?php if(file_exists($abs_us_root.$us_url_root.'usersc/includes/admin_menu.php')){
+              include($abs_us_root.$us_url_root.'usersc/includes/admin_menu.php');
+            }?>
             <a href="<?=$us_url_root?>index.php"><i class="menu-icon fa fa-home"></i>Visit Homepage</a>
             <a href="<?=$us_url_root?>users/account.php"><i class="menu-icon fa fa-qq"></i>Your Account</a>
             <a href="<?=$us_url_root?>users/logout.php"><i class="menu-icon fa fa-hand-peace-o"></i>Logout</a>

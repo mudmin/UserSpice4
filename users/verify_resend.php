@@ -24,7 +24,8 @@ require_once $abs_us_root.$us_url_root.'users/includes/template/prep.php';
 $query = $db->query("SELECT * FROM email");
 $results = $query->first();
 $act = $results->email_act;
-if($act!=1) Redirect::to($us_url_root.'index.php?err=Email verification is not enabled. Please contact the System Administrator.');
+$msg = lang("ERR_EM_VER");
+if($act!=1) Redirect::to($us_url_root.'index.php?err='.$msg);
 if($user->isLoggedIn()) $user->logout();
 
 $token = Input::get('csrf');
@@ -44,7 +45,7 @@ if(Input::exists('post')){
     $validate = new Validate();
     $validation = $validate->check($_POST,array(
     'email' => array(
-      'display' => 'Email',
+      'display' => lang("GEN_EMAIL"),
       'valid_email' => true,
       'required' => true,
     ),
@@ -63,15 +64,15 @@ if(Input::exists('post')){
               'join_vericode_expiry' => $settings->join_vericode_expiry
             );
             $encoded_email=rawurlencode($email);
-            $subject = 'Verify Your Email';
+            $subject = lang("EML_VER");
             $body =  email_body('_email_template_verify.php',$options);
             $email_sent=email($email,$subject,$body);
             logger($fuser->data()->id,"User","Requested a new verification email.");
             if(!$email_sent){
-                $errors[] = 'Email NOT sent due to error. Please contact site administrator.';
+                $errors[] = lang("ERR_EMAIL");
             }
         }else{
-            $errors[] = 'That email does not exist in our database';
+            $errors[] = lang("ERR_EM_DB");
         }
     }else{
         $errors = $validation->errors();

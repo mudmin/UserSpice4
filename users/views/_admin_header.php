@@ -12,7 +12,8 @@
   	if(isset($_GET['msg'])){
       $msg=Input::get('msg');
   		bold($msg);
-  	} ?>
+  	}
+      ?>
 
   <div class="header-menu">
     <div class="col-sm-4">
@@ -20,7 +21,7 @@
       <div class="page-header float-left">
         <div class="page-title">
           <h1>Dashboard</h1>
-            <?php
+          <?php
             include($abs_us_root.$us_url_root.'users/includes/migrations.php');
 
             $updates = $db->query("SELECT * FROM updates");

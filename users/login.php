@@ -35,7 +35,7 @@ if (@$_REQUEST['err']) $errors[] = $_REQUEST['err']; // allow redirects to displ
 $reCaptchaValid=FALSE;
 if($user->isLoggedIn()) Redirect::to($us_url_root.'index.php');
 
-if (Input::exists()) {
+if (!empty($_POST['login_hook'])) {
   $token = Input::get('csrf');
   if(!Token::check($token)){
     include($abs_us_root.$us_url_root.'usersc/scripts/token_error.php');
@@ -58,7 +58,7 @@ if (Input::exists()) {
       $reCaptchaValid=TRUE;
     }else{
       $reCaptchaValid=FALSE;
-      $errors[] = 'reCaptcha check failed, please contact the Administrator';
+      $errors[] = lang("CAPTCHA_ERROR");
       $reCapErrors = $response->getErrorCodes();
       foreach($reCapErrors as $error) {
         logger(1,"Recapatcha","Error with reCaptcha: ".$error);
@@ -97,7 +97,7 @@ if (Input::exists()) {
               //check for need to reAck terms of service
               if($settings->show_tos == 1){
                 if($user->data()->oauth_tos_accepted == 0){
-                  Redirect::to($us_url_root.'usersc/includes/user_agreement_acknowledge.php');
+                  Redirect::to($us_url_root.'users/includes/user_agreement_acknowledge.php');
                 }
               }
 
@@ -120,7 +120,9 @@ if (Input::exists()) {
               }
             }
           } else {
-            $errors[] = '<strong>Login failed</strong>. Please check your username and password and try again.';
+            $msg = lang("SIGNIN_FAIL");
+            $msg2 = lang("SIGNIN_PLEASE_CHK");
+            $errors[] = '<strong>'.$msg.'</strong>'.$msg2;
           }
         }
       }
@@ -128,6 +130,7 @@ if (Input::exists()) {
     if (empty($dest = sanitizedDest('dest'))) {
       $dest = '';
     }
+    $token = Token::generate();
     ?>
     <div id="page-wrapper">
       <div class="container">
@@ -135,7 +138,6 @@ if (Input::exists()) {
         <div class="row">
           <div class="col-sm-12">
             <?php
-
             if($settings->glogin==1 && !$user->isLoggedIn()){
               require_once $abs_us_root.$us_url_root.'users/includes/google_oauth_login.php';
             }
@@ -148,21 +150,21 @@ if (Input::exists()) {
               <input type="hidden" name="dest" value="<?= $dest ?>" />
 
               <div class="form-group">
-                <label for="username">Username OR Email</label>
-                <input  class="form-control" type="text" name="username" id="username" placeholder="Username/Email" required autofocus autocomplete="username">
+                <label for="username"><?=lang("SIGNIN_UORE")?></label>
+                <input  class="form-control" type="text" name="username" id="username" placeholder="<?=lang("SIGNIN_UORE")?>" required autofocus autocomplete="username">
               </div>
 
               <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" class="form-control"  name="password" id="password"  placeholder="Password" required autocomplete="current-password">
+                <label for="password"><?=lang("SIGNIN_PASS")?></label>
+                <input type="password" class="form-control"  name="password" id="password"  placeholder="<?=lang("SIGNIN_PASS")?>" required autocomplete="current-password">
               </div>
 
               <div class="form-group">
                 <label for="remember">
-                  <input type="checkbox" name="remember" id="remember" > Remember Me</label>
+                  <input type="checkbox" name="remember" id="remember" > <?=lang("SIGNIN_REMEMBER")?></label>
                 </div>
-
-                <input type="hidden" name="csrf" value="<?=Token::generate(); ?>">
+                <input type="hidden" name="login_hook" value="1">
+                <input type="hidden" name="csrf" value="<?=$token?>">
                 <input type="hidden" name="redirect" value="<?=Input::get('redirect')?>" />
                 <button class="submit  btn  btn-primary" id="next_button" type="submit"><i class="fa fa-sign-in"></i> <?=lang("SIGNIN_BUTTONTEXT","");?></button>
                 <?php
@@ -174,13 +176,16 @@ if (Input::exists()) {
             </div>
           </div>
           <div class="row">
+
             <div class="col-sm-6"><br>
-              <a class="pull-left" href='../users/forgot_password.php'><i class="fa fa-wrench"></i> <?=lang("ACCOUNT_FORGOTPASS","");?></a><br><br>
+              <a class="pull-left" href='../users/forgot_password.php'><i class="fa fa-wrench"></i> <?=lang("SIGNIN_FORGOTPASS","");?></a>
+              <br><br>
             </div>
             <?php if($settings->registration==1) {?>
               <div class="col-sm-6"><br>
                 <a class="pull-right" href='../users/join.php'><i class="fa fa-plus-square"></i> <?=lang("SIGNUP_TEXT","");?></a><br><br>
               </div><?php } ?>
+                <?php languageSwitcher();?>
             </div>
           </div>
         </div>

@@ -7,9 +7,9 @@
 	if($fieldC > 0){
 		$f = $fieldQ->first();
 	}else{
-		Redirect::to($us_url_root."edit_form.php?edit=".$edit."&err=Field+not+found.");
+		Redirect::to($us_url_root."admin.php?view=forms_edit&edit=".$edit."&err=Field+not+found.");
 	} ?>
-	<form class="" name="createForm" action="edit_form.php?edit=<?=$edit?>" method="post">
+	<form class="" name="createForm" action="admin.php?view=forms_edit&edit=<?=$edit?>" method="post">
 		<input type="hidden" name="editing" value="<?=$field?>">
 		<div class="form-group">
 			<label for="">Label when displaying forms</label>
@@ -25,7 +25,7 @@
 			<label for="">Order</label>
 			<input  class="form-control" type="number" name="ord" value="<?=$f->ord?>" min="0" step="1" required>
 		</div>
-		
+
 		<div class="form-group">
 			<label for="">Required?</label>
 			<select class="form-control" name="required" required>

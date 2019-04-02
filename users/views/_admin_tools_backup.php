@@ -19,7 +19,6 @@ $table_view = $db->query("SHOW TABLES");
 $tablev = $table_view->results();
 
 $errors = $successes = [];
-
 //:: Admin Backup
 $lang = array_merge($lang,array(
   "AB_SETSAVED"      => "Settings Successfully Saved",
@@ -59,7 +58,8 @@ $lang = array_merge($lang,array(
   "AB_BACKUP_NOT"    => "Backup(s) not deleted !",
   "WENT_WRONG" 	   	 => "Something went wrong",
   "AB_DB_ALL_FILES"  => "Database &amp; ALL Files",
-  "AB_SAVE_WARNING"  => "Please click Save Settings BEFORE clicking Backup."
+  "AB_SAVE_WARNING"  => "Please click Save Settings BEFORE clicking Backup.",
+  "AB_ZIP"     	   	 => "Your PHP does not have the zip extension loaded. This means your backups will be in folders instead of zip files and will be about 10x the size they should be. They will also not appear in the list below. You should install the php zip extension if possible.",
 ));
 
 if(isset($_GET['sc1'])){
@@ -386,6 +386,8 @@ $pagename = lang('AB_PAGENAME');
   <div class="row">
 
     <div class="col-sm-12">
+      <?php if(extension_loaded('zip') == false){
+        echo "<strong>".lang('AB_ZIP')."</strong><br>";}?>
       <form class="form-horizontal form-label-left" action="<?=$us_url_root?>users/admin.php?view=backup" name="backup" method="POST">
 
         <!-- backup_dest Option -->

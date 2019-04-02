@@ -122,7 +122,8 @@ if (($single->msg_to != $user->data()->id) && ($single->msg_from != $user->data(
     'ip'                        => $ip,
   );
   $db->insert('audit',$fields);
-  Redirect::to($us_url_root.'users/messages.php?err=That thread does not belong to you or does not exist.'); die();
+  $msg = lang("REDIR_MSG_NOEX");
+  Redirect::to($us_url_root.'users/messages.php?err='.$msg); die();
 }
 
 //ONLY mark messages read if you are the recipient
@@ -136,7 +137,7 @@ if($unread != 1){
 if(!empty($_POST)){
 
 
-  if(!empty($_POST['markUnread'])){
+  if(!empty($_POST['markUnreadHook'])){
     $token = $_POST['csrf'];
     if(!Token::check($token)){
       include($abs_us_root.$us_url_root.'usersc/scripts/token_error.php');
@@ -165,7 +166,7 @@ if(!empty($_POST)){
   //
   $validation = new Validate();
 
-  if(!empty($_POST['reply']) && (($settings->msg_blocked_users==1 || ($perm==2 && $settings->msg_blocked_users==0)) && (!$thread->hidden_from==1 && !$thread->hidden_to==1))){
+  if(!empty($_POST['replyHook']) && (($settings->msg_blocked_users==1 || ($perm==2 && $settings->msg_blocked_users==0)) && (!$thread->hidden_from==1 && !$thread->hidden_to==1))){
     $token = $_POST['csrf'];
     if(!Token::check($token)){
       include($abs_us_root.$us_url_root.'usersc/scripts/token_error.php');
@@ -178,7 +179,7 @@ if(!empty($_POST)){
     $msg_body = Input::get('msg_body');
     $validation->check($_POST,array(
       'msg_body' => array(
-        'display' => 'Message',
+        'display' => lang("MSG_BLANK"),
         'required' => true
       )
     ));
@@ -216,7 +217,7 @@ if(!empty($_POST)){
         email($to,$thread->msg_subject,$body);
       }
       logger($user->data()->id,"Messaging","Sent a message to $email->fname.");
-      $successes[] = "Your message has been sent!";
+      $successes[] = lang("MSG_SENT");
     }
     $findMessageQ = $db->query("SELECT * FROM messages WHERE msg_thread = ? AND deleted = 0",array($id));
     $messages = $findMessageQ->results();
@@ -230,6 +231,7 @@ $csrf = Token::generate();
 <div class="row">
 
   <?php if(!$validation->errors()=='') {?><div class="alert alert-danger"><?=display_errors($validation->errors());?></div><?php } ?>
+  <div id="page-wrapper"><div class="container"><div class="row">
   <div class="col-sm-10 col-sm-offset-1">
     <div class="row">
       <div class="col-sm-10">
@@ -241,7 +243,8 @@ $csrf = Token::generate();
           ?>
           <form class="" action="message.php?id=<?php echo $id?>" method="post">
             <input type="hidden" name="csrf" value="<?=$csrf?>" />
-            <input type="submit" class="btn btn-danger" name="markUnread" value="Mark as Unread">
+            <input type="hidden" name="markUnreadHook" value="1" />
+            <input type="submit" class="btn btn-danger" name="markUnread" value="<?=lang("MSG_MK_UNREAD");?>">
           </form>
           <?php
         }
@@ -263,7 +266,8 @@ $csrf = Token::generate();
         if($difference >= 0 && $difference < 7) {
           $today = date("j");
           $last_message = date("j",$lastmessage);
-          if($today==$last_message) { $last_update = "Today, "; $last_update .= date("g:i A",$lastmessage); }
+          $msg = lang("GEN_TODAY");
+          if($today==$last_message) { $last_update = $msg.", "; $last_update .= date("g:i A",$lastmessage); }
           else {
             $last_update = date("l g:i A",$lastmessage); } }
             elseif($difference >= 7) { $last_update = date("M j, Y g:i A",$lastmessage); }
@@ -300,7 +304,8 @@ $csrf = Token::generate();
                   <?php $msg = html_entity_decode($m->msg_body);
                   echo $msg; ?>
                 </p>
-                <?php if($m->msgfrom = $user->data()->id) {?><p class="pull-right"><?php if($m->msg_read==1) {?><i class="fa fa-check"></i> Read<?php } else { ?><i class="fa fa-times"></i> Delivered<?php } ?></p><?php } ?>
+                <?php if($m->msgfrom = $user->data()->id) {?><p class="pull-right"><?php if($m->msg_read==1) {?><i class="fa fa-check"></i> <?=lang("MSG_READ");?><?php } else { ?><i class="fa fa-times"></i> <?=lang("MSG_DEL");?>
+                <?php } ?></p><?php } ?>
               </div>
             </li>
 
@@ -314,15 +319,16 @@ $csrf = Token::generate();
         <ul>
           <!-- <h3>From: <?php //echouser($m->msg_from);?></h3> -->
 
-          <h3>Quick Reply <a href="#" data-toggle="modal" data-target="#reply"><i class="fa fa-window-restore"></i></a></h3>
+          <h3><?=lang("MSG_QUICK");?> <a href="#" data-toggle="modal" data-target="#reply"><i class="fa fa-window-restore"></i></a></h3>
           <form name="reply_form" action="message.php?id=<?=$id?>" method="post">
             <div align="center">
-              <input type="text" class="form-control" placeholder="Click here or press Alt + R to focus on this box OR press Shift + R to open the expanded reply pane!" name="msg_body" id="msg_body" <?php if(($perm < 2 && $settings->msg_blocked_users==0) || ($thread->hidden_from==1 || $thread->hidden_to==1)) {?>disabled<?php } ?>/>
+              <input type="text" class="form-control" placeholder="<?=lang("MSG_MODAL");?>" name="msg_body" id="msg_body" <?php if(($perm < 2 && $settings->msg_blocked_users==0) || ($thread->hidden_from==1 || $thread->hidden_to==1)) {?>disabled<?php } ?>/>
               <?php /* textarea rows="10" cols="80"  id="mytextarea" name="msg_body"></textarea> */ ?></div>
               <input type="hidden" name="csrf" value="<?=$csrf?>" />
+              <input type="hidden" name="replyHook" value="1" />
             </p>
             <p>
-              <input type="submit" class="btn btn-primary" name="reply" value="Reply">
+              <input type="submit" class="btn btn-primary" name="reply" value="<?=lang("MSG_REPLY");?>">
             </form>
           </div> <!-- /.col -->
 
@@ -334,7 +340,7 @@ $csrf = Token::generate();
                 <div class="modal-content">
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Reply</h4>
+                    <h4 class="modal-title"><?=lang("MSG_REPLY");?></h4>
                   </div>
                   <div class="modal-body">
                     <form name="reply_form" action="message.php?id=<?=$id?>" method="post">
@@ -349,17 +355,19 @@ $csrf = Token::generate();
                         <div class="btn-group">       <input type="hidden" name="csrf" value="<?=$csrf?>" />
                           <input class='btn btn-primary' type='submit' name="reply" value='Reply' class='submit' /></div>
                         </form>
-                        <div class="btn-group"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>
+                        <div class="btn-group"><button type="button" class="btn btn-default" data-dismiss="modal"><?=lang("GEN_CLOSE")?></button></div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div><?php } ?>
+            </div>
             </div> <!-- /.row -->
 
             <?php require_once $abs_us_root.$us_url_root.'usersc/templates/'.$settings->template.'/container_close.php'; //custom template container ?>
             <!-- footers -->
             <?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; // the final html footer copyright row + the external js calls ?>
+
             <script src='https://cdn.tinymce.com/4/tinymce.min.js'></script>
             <script src="../users/js/jwerty.js"></script>
             <script>

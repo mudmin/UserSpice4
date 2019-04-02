@@ -1,4 +1,5 @@
 <?php
+//this is a user-facing page
 // This is where a user goes who has been banned.
 // It could be that you blocked them in the admin panel.
 // Or their ip address could be on the blacklist.
@@ -7,5 +8,5 @@
 // exactly why they were banned, so they don't try to defeat it
 // with something like a VPN.
 ?>
-<h1>Sorry. You have been banned. If you feel this is an error, please contact the administrator.</h1>
+<h1><?=lang("MAINT_BAN");?></h1>
 <?php die(); ?>

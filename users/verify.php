@@ -37,7 +37,7 @@ if(Input::exists('get')){
 	$validate = new Validate();
 	$validation = $validate->check($_GET,array(
 	'email' => array(
-	  'display' => 'Email',
+	  'display' => lang("GEN_EMAIL"),
 	  'valid_email' => true,
 	  'required' => true,
 	),
@@ -55,7 +55,7 @@ if(Input::exists('get')){
 			//in the unlikely event someone has a blank vericode expiry, we're going to generate a new one
 			$vericode_expiry=date("Y-m-d H:i:s",strtotime("+$settings->join_vericode_expiry hours",strtotime(date("Y-m-d H:i:s"))));
 
-			echo "Something is strange. Please re-verify your email. We are sorry for the inconvenience";
+			echo lang("ERR_EMAIL_STR");
 			$verify->update(array('email_verified' => 0,'vericode' => randomstring(15),'vericode_expiry' => $vericode_expiry),$verify->data()->id);
 			require $abs_us_root.$us_url_root.'users/views/_verify_resend.php';
 		}else{
@@ -65,6 +65,7 @@ if(Input::exists('get')){
 			else $verify->update(array('email_verified' => 1,'vericode' => randomstring(15),'vericode_expiry' => date("Y-m-d H:i:s")),$verify->data()->id);
 			$verify_success=TRUE;
 			logger($verify->data()->id,"User","Verification completed via vericode.");
+			$msg = lang("REDIR_EM_SUCC");
 			if($new==1){Redirect::to($us_url_root.'users/user_settings.php?msg=Email Updated Successfully');}
 		}
 	}

@@ -54,7 +54,7 @@ if(Input::exists()){
 				<?php if($action=='') {?>
 				<h3 align="center">You have successfully logged in...redirecting now.</h3>
 				<?php require_once $abs_us_root.$us_url_root.'usersc/includes/oauth_success_redirect.php';?>
-				<?=Redirect::to($us_url_root.'users/account.php'); ?>
+				<?=Redirect::to($us_url_root.$settings->redirect_uri_after_login); ?>
 			<?php }
       if($settings->show_tos == 1){
       if($action=='tos') {
@@ -62,7 +62,19 @@ if(Input::exists()){
 				?>
 				<h2>Registration Terms of Service</h2>
 				<form class="form-signup" action="?action=tos" method="POST">
-					<textarea id="agreement" name="agreement" rows="5" class="form-control" disabled ><?php require $abs_us_root.$us_url_root.'usersc/includes/user_agreement.php'; ?></textarea>
+					<textarea id="agreement" name="agreement" rows="5" class="form-control" disabled >
+            <?php
+            if(!isset($_SESSION['us_lang']) || $_SESSION['us_lang'] == 'en-US' || $_SESSION['us_lang'] == '' ){
+            require $abs_us_root.$us_url_root.'usersc/includes/user_agreement.php';
+            }else{
+              if(file_exists($abs_us_root.$us_url_root.'usersc/lang/termsandcond/'.$_SESSION['us_lang'].'.php')){
+                require $abs_us_root.$us_url_root.'usersc/lang/termsandcond/'.$_SESSION['us_lang'].'.php';
+              }else{
+                require $abs_us_root.$us_url_root.'usersc/includes/user_agreement.php';
+              }
+            }
+            ?>
+          </textarea>
 					<br>
 					<label><input type="checkbox" id="agreement_checkbox" name="agreement_checkbox"> Check box to agree to terms</label>
 

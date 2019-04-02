@@ -45,23 +45,25 @@ if(Input::get('reset') == 1){ //$_GET['reset'] is set when clicking the link in 
 	$vericode = Input::get('vericode');
 	$ruser = new User($email);
 	if (Input::get('resetPassword')) {
-
+		$newPw = lang("PW_NEW");
+		$confPw = lang("PW_CONF");
 		$validate = new Validate();
 		$validation = $validate->check($_POST,array(
 		'password' => array(
-		  'display' => 'New Password',
+		  'display' => $newPw,
 		  'required' => true,
 		  'min' => 6,
 		),
 		'confirm' => array(
-		  'display' => 'Confirm Password',
+		  'display' => $confPw,
 		  'required' => true,
 		  'matches' => 'password',
 		),
 		));
 		if($validation->passed()){
 			if($ruser->data()->vericode != $vericode || (strtotime($ruser->data()->vericode_expiry) - strtotime(date("Y-m-d H:i:s")) <= 0)){
-				Redirect::to($us_url_root.'users/forgot_password_reset.php?err=Something+went+wrong.+Please+try+again.');
+				$msg = lang("REDIR_SOM_TING_WONG");
+				Redirect::to($us_url_root.'users/forgot_password_reset.php?err='.$msg);
 			}
 			//update password
 			$ruser->update(array(
@@ -76,10 +78,14 @@ if(Input::get('reset') == 1){ //$_GET['reset'] is set when clicking the link in 
 			if($settings->session_manager==1) {
 				$passwordResetKillSessions=passwordResetKillSessions();
 				if(is_numeric($passwordResetKillSessions)) {
-					if($passwordResetKillSessions==1) $successes[] = "Successfully Killed 1 Session";
-					if($passwordResetKillSessions >1) $successes[] = "Successfully Killed $passwordResetKillSessions Session";
+					$msg1 = lang("SESS_SUC");
+					$msg2 = lang("GEN_SESSION");
+					$msg3 = lang("GEN_SESSIONS");
+					if($passwordResetKillSessions==1) $successes[] = $msg1." 1 ". $msg2;
+					if($passwordResetKillSessions >1) $successes[] = $msg1." ".$passwordResetKillSessions." ".$msg3;
 				} else {
-					$errors[] = "Failed to kill active sessions, Error: ".$passwordResetKillSessions;
+					$msg = lang("ERR_FAIL_ACT");
+					$errors[] = $msg." ".$passwordResetKillSessions;
 				}
 			}
 		}else{

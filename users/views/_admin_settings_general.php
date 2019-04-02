@@ -128,7 +128,7 @@
           </div>
 
           <div class="form-group">
-            <label for="force_user_pr">Force Password Reset <a class="nounderline" data-toggle="tooltip" title="This will change the force_pr value in your users database for all users to 1, requiring every user including the current one to reset their password. They will not be able to leave the user settings page until this make this change. This will always be no, however when you change it to Yes and save changes, it will perform the above action, and reset back to no. This isn't a setting, but a function."><font color="blue">?</font></a></label>
+            <label>Force Password Reset <a class="nounderline" data-toggle="tooltip" title="This will change the force_pr value in your users database for all users to 1, requiring every user including the current one to reset their password. They will not be able to leave the user settings page until this make this change. This will always be no, however when you change it to Yes and save changes, it will perform the above action, and reset back to no. This isn't a setting, but a function."><font color="blue">?</font></a></label>
             <span style="float:right;">
               <button type="button" name="force_user_pr" id="force_user_pr" class="btn btn-danger input-group-addon">Force PW Reset</button>
               <span>
@@ -307,8 +307,43 @@
               </div>
 
 
-            </div>
-          </div>
+              <br>
+              <h2>User Settings</h2>
+              <br>
+
+              <!-- Set Default Language -->
+              <?php $languages = scandir($abs_us_root.$us_url_root."users/lang");
+              foreach($languages as $k=>$v){
+                $languages[$k] = substr($v,0,-4);
+              }
+              ?>
+              <div class="form-group">
+                <label for="default_language">Default Language <a class="nounderline" data-toggle="tooltip" title="Set the default language for your site"><font color="blue">?</font></a></label>
+                <select id="default_language" class="form-control ajxtxt" data-desc="Default Language" name="default_language">
+                  <option value="<?=$settings->default_language?>"><?=$settings->default_language?></option>
+                  <?php foreach ($languages as $l) {
+                    if($l != false && $l !=$settings->default_language && $l != "f"){?>
+                      <option value="<?=$l?>"><?=$l?></option>
+                    <?php }
+                  }?>
+                </select>
+              </div>
+
+              <!-- Allow Users To Change Language -->
+              <div class="form-group">
+                <label for="allow_language">Allow users to change their language <a class="nounderline" data-toggle="tooltip" title="With this enabled, logged in users will be able to set their default language and non-logged in users will be able to change their language for this session."><font color="blue">?</font></a></label>
+                <span style="float:right;">
+                  <label class="switch switch-text switch-success">
+                    <input id="allow_language" type="checkbox" class="switch-input toggle" data-desc="Allow user to change language setting" <?php if($settings->allow_language==1) echo 'checked="true"'; ?>>
+                    <span data-on="Yes" data-off="No" class="switch-label"></span>
+                    <span class="switch-handle"></span>
+                  </label>
+                </span>
+              </div>
+        		</div>
+        		</div>
+
+
 
 
 

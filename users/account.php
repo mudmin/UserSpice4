@@ -65,19 +65,19 @@ $userdetails = fetchUserDetails(NULL, NULL, $get_info_id); //Fetch user details
 <div class="container">
 <div class="well">
 <div class="row">
-	<div class="col-sm-12 col-md-2">
+	<div class="col-sm-12 col-md-3">
 
 		<p><img src="<?=$grav; ?>" class="img-thumbnail" alt="Generic placeholder thumbnail"></p>
-		<p><a href="../users/user_settings.php" class="btn btn-primary">Edit Account Info</a></p>
+		<p><a href="../users/user_settings.php" class="btn btn-primary"><?=lang("ACCT_EDIT")?></a></p>
 		<?php
 		if($settings->twofa == 1){
 		$twoQ = $db->query("select twoKey from users where id = ? and twoEnabled = 0", [$userdetails->id]);
 		if($twoQ->count() > 0){ ?>
-			<p><a class="btn btn-primary " href="../users/enable2fa.php" role="button">Manage 2 Factor Auth</a></p>
+			<p><a class="btn btn-primary " href="../users/enable2fa.php" role="button"><?=lang("ACCT_2FA")?></a></p>
 	<?php	} else { ?>
-			<p><a class="btn btn-primary " href="../users/manage2fa.php" role="button">Manage 2 Factor Auth</a></p>
+			<p><a class="btn btn-primary " href="../users/manage2fa.php" role="button"><?=lang("ACCT_2FA")?></a></p>
 	<?php }} ?>
-	<?php if($settings->session_manager==1) {?><p><a class="btn btn-primary " href="../users/manage_sessions.php" role="button">Manage Sessions</a></p><?php } ?>
+	<?php if($settings->session_manager==1) {?><p><a class="btn btn-primary " href="../users/manage_sessions.php" role="button"><?=lang("ACCT_SESS")?></a></p><?php } ?>
 	<?php if(isset($_SESSION['cloak_to'])){ ?>
 		<form class="" action="account.php" method="post">
 			<input type="submit" name="uncloak" value="Uncloak!" class='btn btn-danger'>
@@ -85,17 +85,19 @@ $userdetails = fetchUserDetails(NULL, NULL, $get_info_id); //Fetch user details
 		<?php }
 		?>
 	</div>
-	<div class="col-sm-12 col-md-10">
+	<div class="col-sm-12 col-md-9">
 		<h1><?=echousername($user->data()->id)?></h1>
 		<p><?=ucfirst($user->data()->fname)." ".ucfirst($user->data()->lname)?> / <?=echouser($user->data()->id)?></p>
-		<p>Member Since:<?=$signupdate?></p>
-		<p>Number of Logins: <?=$user->data()->logins?></p>
-		<?php if($settings->session_manager==1) {?><p>Number of Active Sessions: <?=UserSessionCount()?> <sup><a class="nounderline" data-toggle="tooltip" title="Click the Manage Sessions button in the left sidebar for more information.">?</a></sup></p><?php } ?>
-		<p>This is the private account page for your users. It can be whatever you want it to be; This code serves as a guide on how to use some of the built-in UserSpice functionality. </p>
+		<p><?=lang("ACCT_SINCE")?>: <?=$signupdate?></p>
+		<p><?=lang("ACCT_LOGINS")?>: <?=$user->data()->logins?></p>
+		<?php if($settings->session_manager==1) {?><p><?=lang("ACCT_SESSIONS")?>: <?=UserSessionCount()?> <sup><a class="nounderline" data-toggle="tooltip" title="<?=lang("ACCT_MNG_SES")?>">?</a></sup></p><?php }
+		?>
 	</div>
-</div>
+
 </div>
 
+</div>
+	<?php languageSwitcher(); ?>
 </div> <!-- /container -->
 
 </div> <!-- /#page-wrapper -->

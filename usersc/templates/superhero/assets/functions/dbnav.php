@@ -178,32 +178,32 @@ foreach ($prep as $key => $value) {
          }
         else {
         $itemString = customItemString($value,$user->data()->id);
-        $itemString = str_replace('{{username}}',$user->data()->username,$itemString);
-        $itemString = str_replace('{{fname}}',$user->data()->fname,$itemString);
-        $itemString = str_replace('{{lname}}',$user->data()->lname,$itemString);
+			  include $abs_us_root.$us_url_root.'users/includes/template/database_navigation_hooks.php';
         include $abs_us_root.$us_url_root.'usersc/includes/database_navigation_hooks.php';
        }
         echo $itemString;
       }
     } else {
       if ($value['logged_in']==0) {
-        echo customItemString($value,0);
+				$itemString = customItemString($value,0);
+			  include $abs_us_root.$us_url_root.'users/includes/template/database_navigation_hooks.php';
+				include $abs_us_root.$us_url_root.'usersc/includes/database_navigation_hooks.php';
+				echo $itemString;
       }
     }
   } else {
     if ($user->isLoggedIn()) {
       if((hasPerm($authorizedGroups,$user->data()->id) || in_array(0,$authorizedGroups)) && $value['logged_in']==1) {
         $dropdownString=customDropdownString($value,$user->data()->id);
-        $dropdownString=str_replace('{{username}}',$user->data()->username,$dropdownString);
-				$dropdownString = str_replace('{{fname}}',$user->data()->fname,$dropdownString);
-        $dropdownString = str_replace('{{lname}}',$user->data()->lname,$dropdownString);
+			  include $abs_us_root.$us_url_root.'users/includes/template/database_navigation_hooks_dropdown.php';
 				include $abs_us_root.$us_url_root.'usersc/includes/database_navigation_hooks_dropdown.php';
         echo $dropdownString;
       }
     } else {
       if ($value['logged_in']==0) {
         $dropdownString=customDropdownString($value,0);
-        #$dropdownString=str_replace('{{username}}',$user->data()->username,$dropdownString); # There *is* no $user->...->username because we're not logged in
+				include $abs_us_root.$us_url_root.'users/includes/template/database_navigation_hooks_dropdown.php';
+				include $abs_us_root.$us_url_root.'usersc/includes/database_navigation_hooks_dropdown.php';
         echo $dropdownString;
       }
     }
