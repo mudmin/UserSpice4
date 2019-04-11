@@ -41,7 +41,6 @@ class DB {
 					Config::get($config[0].'/password'),
 					$opts);
 				}else{
-					dump($config[0]);
 					$this->_pdo = new PDO('mysql:host=' .
 					$config[0].';dbname='.
 					$config[1]. ';charset=utf8',

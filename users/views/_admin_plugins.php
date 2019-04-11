@@ -80,10 +80,16 @@ if(!empty($_POST)){
 $token = Token::generate();
 ?>
 <div class="content mt-3">
-  <h2>Plugin Manager</h2>
-  <strong>Please Note:</strong>There are often important installation and security notes in the big table at the bottom of this page.<br>
+  <div class="row">
+    <div class="col-8">
+      <h2>Plugin Manager</h2>
+      <strong>Please Note:</strong>There are often important installation and security notes in the big table at the bottom of this page.<br>
+    </div>
+    <div class="col-4">
+      <a class="btn btn-success" href="https://userspice.com/plugins" class="button">Download More Plugins</a>
+    </div>
+  </div>
   <?php resultBlock($errors,$successes);?>
-
 <?php if($pluginsC > 0){ ?>
   <table id="plugins" class='table table-striped' cellspacing="0" width="100%">
 

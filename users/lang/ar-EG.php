@@ -195,7 +195,6 @@ $lang = array_merge($lang,array(
 		"JOIN_THANKS"	=> "شكراً لتسجيلك",
 		"JOIN_HAVE"		=> " يحتوي على الاقل",
 		"JOIN_CAP"		=> " حروف كبيرة",
-		"JOIN_CAP"		=> " حروف كبيرة.",
 		"JOIN_TWICE"	=> "متطابق",
 		"JOIN_CLOSED"	=> "للأسف التسجيل مغلق الان برجاء التواصل مع ادارة الموقع اذا كان لديك اي استفسار",
 		"JOIN_TC"			=> "شروط وقوانين التسجيل",
@@ -349,6 +348,25 @@ $lang = array_merge($lang,array(
 		"MAINT_PLEASE"	=> "بنجاح UserSpice! تم تثبيت<br>لمشاهدة كيف يمكنك التعامل مع الخصائص المختلفة برجاء زيارة"
 		));
 
+		//dataTables Added in 4.4.08
+		//NOTE: do not change the words like _START_ between the two _ symbols!
+		$lang = array_merge($lang,array(
+		"DAT_SEARCH"    => "Search",
+		"DAT_FIRST"     => "First",
+		"DAT_LAST"      => "Last",
+		"DAT_NEXT"      => "Next",
+		"DAT_PREV"      => "Previous",
+		"DAT_NODATA"        => "No data available in table",
+		"DAT_INFO"          => "Showing _START_ to _END_ of _TOTAL_ entries",
+		"DAT_ZERO"          => "Showing 0 to 0 of 0 entries",
+		"DAT_FILTERED"      => "(filtered from _MAX_ total entries)",
+		"DAT_MENU_LENG"     => "Show _MENU_ entries",
+		"DAT_LOADING"       => "Loading...",
+		"DAT_PROCESS"       => "Processing...",
+		"DAT_NO_REC"        => "No matching records found",
+		"DAT_ASC"           => "Activate to sort column ascending",
+		"DAT_DESC"          => "Activate to sort column descending",
+		));
 		//LEAVE THIS LINE AT THE BOTTOM.  It allows users/lang to override these keys
 		if(file_exists($abs_us_root.$us_url_root."usersc/lang/".$lang["THIS_CODE"].".php")){
 			include($abs_us_root.$us_url_root."usersc/lang/".$lang["THIS_CODE"].".php");

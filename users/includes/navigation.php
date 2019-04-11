@@ -35,7 +35,7 @@ if ($user->isLoggedIn()) {
 
 ?>
 <!-- Navigation -->
-<div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
+<nav class="navbar navbar-fixed-top navbar-inverse" role="navigation">
 	<div class="container">
 		<!-- Brand and toggle get grouped for better mobile display -->
 		<div class="navbar-header ">
@@ -114,7 +114,7 @@ if ($user->isLoggedIn()) {
 		<?php require_once $abs_us_root.$us_url_root.'usersc/includes/navigation.php';?>
 
 	</div> <!-- End of Div for navigation bar -->
-</div> <!-- End of Div for navigation bar styling -->
+</nav> <!-- End of Div for navigation bar styling -->
 <?php } if($settings->navigation_type==1) {?>
 <?php require_once $abs_us_root.$us_url_root.'users/includes/database-navigation.php'; ?>
 <?php } ?>

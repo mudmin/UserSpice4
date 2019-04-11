@@ -59,10 +59,16 @@
   <!-- Existing Templates -->
   <div class="container">
     <div class="row">
-      <div class="col-md-12 col-sm-12 col-sm-12">
+      <div class="col-8">
         <h2>Template Manager</h2>
-        <!-- <strong>Note:</strong> For testing purposes, this page takes on the style of the active template.<br><br> -->
-
+        <br>
+      </div>
+      <div class="col-4">
+        <a class="btn btn-success" href="https://userspice.com/templates" class="button">Download More Templates</a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
         <?php foreach ($templates as $t) { ?>
           <?php echo "<h3 align='center'>" . ucfirst($t) . "</h3>"; ?>
           <div class="row">

@@ -219,7 +219,8 @@ $settings = $db->query("SELECT * FROM settings")->first();
 
         <script type="text/javascript">
         $(document).ready(function() {
-
+          $('[data-toggle="popover"]').popover();
+          
           //Transaction total in the lower right
           function messages(data) {
             $('#messages').removeClass();

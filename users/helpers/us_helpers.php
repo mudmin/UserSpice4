@@ -587,6 +587,9 @@ if(!function_exists('lang')) {
 			//if nothing is found, let's check to see if the language is English.
 			if($lang['THIS_CODE'] != "en-US"){
 				$save = $lang['THIS_CODE'];
+				if($save == ''){
+					$save = 'en-US';
+				}
 				//if it is NOT English, we are going to try to grab the key from the English translation
 				include($abs_us_root.$us_url_root."users/lang/en-US.php");
 				if($markers == NULL){

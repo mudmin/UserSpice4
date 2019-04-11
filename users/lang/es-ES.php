@@ -31,12 +31,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %m1% - Dymamic markers which are replaced at run time by the relevant index.
 */
 
+
 $lang = array();
 //important strings
 $lang = array_merge($lang,array(
 "THIS_LANGUAGE"	=>"Español",
 "THIS_CODE"			=>"es-ES",
-"MISSING_TEXT"	=>"Missing Text",
+"MISSING_TEXT"	=>"Texto no Encontrado",
 ));
 //Database Menus
 $lang = array_merge($lang,array(
@@ -44,7 +45,7 @@ $lang = array_merge($lang,array(
 "MENU_HELP"			=> "Ayuda",
 "MENU_ACCOUNT"		=> "Mi Cuenta",
 "MENU_DASH"			=> "Administraci&oacute;n",
-"MENU_USER_MGR"	=> "User Management",
+"MENU_USER_MGR"		=> "Gesti&oacute;n de Usuarios",
 "MENU_PAGE_MGR"		=> "P&aacute;ginas",
 "MENU_PERM_MGR"		=> "Permisos",
 "MENU_MSGS_MGR"		=> "Mensajes",
@@ -61,7 +62,7 @@ $lang = array_merge($lang,array(
 
 // Signin
 $lang = array_merge($lang,array(
-	"SIGNIN_FAIL"		=> "** ACCESO FDALLIDO **",
+	"SIGNIN_FAIL"		=> "** ERROR DE ACCESO ** ",
 	"SIGNIN_PLEASE_CHK" => "Por favor comprueba tu usuario y contrase&ntilde;a e int&eacute;ntalo de nuevo",
 	"SIGNIN_UORE"		=> "Usuario o Email",
 	"SIGNIN_PASS"		=> "Contrase&ntilde;a",
@@ -84,7 +85,7 @@ $lang = array_merge($lang,array(
 	"ACCT_SINCE"				=> "Miembro Desde",
 	"ACCT_LOGINS"				=> "Accesos",
 	"ACCT_SESSIONS"				=> "Sesiones Activas",
-	"ACCT_MNG_SES"				=> "Click the Manage Sessions button in the left sidebar for more information.",
+	"ACCT_MNG_SES"				=> "Para m&aacute;s informaci&oacute;n, haz click en el bot&oacute;n Gestionar Sesiones.",
 	));
 
 	//General Terms
@@ -95,8 +96,8 @@ $lang = array_merge($lang,array(
 		"GEN_DISABLE"			=> "Desactivar",
 		"GEN_NO"				=> "No",
 		"GEN_YES"				=> "Si",
-		"GEN_MIN"				=> "min",
-		"GEN_MAX"				=> "max",
+		"GEN_MIN"				=> "m&iacute;nimo",
+		"GEN_MAX"				=> "m&aacute;ximo",
 		"GEN_CHAR"				=> "caracteres", //as in characters
 		"GEN_SUBMIT"			=> "Enviar",
 		"GEN_MANAGE"			=> "Gestionar",
@@ -129,33 +130,33 @@ $lang = array_merge($lang,array(
 		"GEN_AVAIL" 			=> "Disponible",
 		"GEN_BACK" 				=> "Volver",
 		"GEN_RESET" 			=> "Resetear",
-		"GEN_REQ"					=> "required",
-		"GEN_AND"					=> "y",
-		"GEN_SAME"				=> "must be the same",
+		"GEN_REQ"				=> "obligatorio",
+		"GEN_AND"				=> "y",
+		"GEN_SAME"				=> "debe ser el mismo",
 		));
 
 //validation class
 	$lang = array_merge($lang,array(
-		"VAL_SAME"				=> "must be the same",
-		"VAL_EXISTS"			=> "already exists. Please choose another",
-		"VAL_DB"					=> "Database Error",
-		"VAL_NUM"					=> "must be a number",
-		"VAL_INT"					=> "must be a whole number",
-		"VAL_EMAIL"				=> "must be a valid email addresss",
-		"VAL_NO_EMAIL"		=> "cannot be an email addresss",
-		"VAL_SERVER"			=> "must belong to a valid server",
-		"VAL_LESS"				=> "must be less than",
-		"VAL_GREAT"				=> "must be greater than",
-		"VAL_LESS_EQ"			=> "must be less than or equal to",
-		"VAL_GREAT_EQ"		=> "must be greater than or equal to",
-		"VAL_NOT_EQ"			=> "must not be equal to",
-		"VAL_EQ"					=> "must be equal to",
-		"VAL_TZ"					=> "has to be a valid time zone name",
-		"VAL_MUST"				=> "must be",
-		"VAL_MUST_LIST"		=> "must be one of the following",
-		"VAL_TIME"				=> "must be a valid time",
-		"VAL_SEL"					=> "is not a valid selection",
-		"VAL_NA_PHONE"		=> "must be a valid North American phone number",
+		"VAL_SAME"			=> "debe ser el mismo",
+		"VAL_EXISTS"		=> "ya existe. Por favor, elija otro",
+		"VAL_DB"			=> "Error en la Base de Datos",
+		"VAL_NUM"			=> "debe ser un n&uacute;mero",
+		"VAL_INT"			=> "debe ser un n&uacute;mero entero",
+		"VAL_EMAIL"			=> "debe ser una direcci&oacute;n de correo v&aacute;lida",
+		"VAL_NO_EMAIL"		=> "no puede ser una direcci&oacute;n email",
+		"VAL_SERVER"		=> "debe ser un servidor v&aacute;lido",
+		"VAL_LESS"			=> "debe ser menor que",
+		"VAL_GREAT"			=> "debe ser mayor que",
+		"VAL_LESS_EQ"		=> "debe ser menor o igual que",
+		"VAL_GREAT_EQ"		=> "debe ser mayor o igual que",
+		"VAL_NOT_EQ"		=> "no debe ser igual que",
+		"VAL_EQ"			=> "debe ser igual que",
+		"VAL_TZ"			=> "tiene que un nombre de zona horaria v&aacute;lido",
+		"VAL_MUST"			=> "debe ser",
+		"VAL_MUST_LIST"		=> "debe ser uno de los siguientes",
+		"VAL_TIME"			=> "debe ser una hora v&aacute;lida",
+		"VAL_SEL"			=> "no es v&aacute;lido lo seleccionado",
+		"VAL_NA_PHONE"		=> "debe ser un n&uacute;mero de ltel&eacute;fono de Norte America v&aacute;lido",
 	));
 
 		//Time
@@ -201,8 +202,8 @@ $lang = array_merge($lang,array(
 		"JOIN_CLOSED"	=> "En estos momentos el registrarse est&aacute; deshabilitado. por favor, contacta con el Administrador del Sitio para cualquier duda.",
 		"JOIN_TC"		=> "Condiciones y T&eacute;rminos de Usuario al Registrarse",
 		"JOIN_ACCEPTTC" => "Acepto las Condiciones y T&eacute;rminos de Usuario",
-		"JOIN_CHANGED"	=> "Our Terms Have Changed",
-		"JOIN_ACCEPT" 	=> "Accept User Terms and Conditions and Continue",
+		"JOIN_CHANGED"	=> "Nuestror T&eacute;rminos han Cambiado",
+		"JOIN_ACCEPT" 	=> "Aceptar las Condiciones y T&eacute;rminos de Usuario y Continuar",
 		));
 
 
@@ -273,7 +274,7 @@ $lang = array_merge($lang,array(
 		"REDIR_2FA_DIS"				=> "Doble+Autenticaci&oacute;n+Desactivada",
 		"REDIR_2FA_VER"				=> "Doble+Autenticaci&oacute;n+Verificada+y+Activa",
 		"REDIR_SOM_TING_WONG" 		=> "Algo+ha+ido+mal.+Por+favor+intenta+de+nuevo.",
-		"REDIR_MSG_NOEX"			=> "That+thread+does+not+belong+to+you+or+does+not+exist.",
+		"REDIR_MSG_NOEX"			=> "Ese+hilo+no+es+tuoyo+o+no+exist.",
 		"REDIR_UN_ONCE"				=> "El+Nombre+de+Usuario+ya+ha+sido+modificado+una+vez.",
 		"REDIR_EM_SUCC"				=> "Email+Actualizado+Correctamente",
 		));
@@ -295,7 +296,7 @@ $lang = array_merge($lang,array(
 			"VER_AGAIN"		=> "Escribe tu direcci&oacute;n email e intenta de nuevo",
 			"VER_PAGE"		=> "<li>Comprueba tu correo y haz click en el enlace que se te ha enviado</li><li>Hecho</li>",
 			"VER_RES_SUC" 	=> "<p>Se ha enviado tu enlace de verificaci&oacute;n a tu direcci&oacute;n email.</p><p>Haz click en el enlace enviado para completar la verificaci&oacute;n. Aseg&uacute;rate de revisar tu carpeta de Spam si el email no est&aacute; en tu bandeja de entrada.</p><p>Los enlaces de verificaci&oacute;n solo son v&aacute;lidos durante ",
-			"VER_OOPS" 		=> "Oops...something went wrong, maybe an old reset link you clicked on. Click below to try again",
+			"VER_OOPS" 		=> "Vaya... parece que algo no ha ido bien. Puede ser un reset que has enviado antes. Haz click abajo para intentarlo de nuevo",
 			"VER_RESET" 	=> "&iexcl;Tu contrase&ntilde;a ha sido reseteada!",
 			"VER_INS" 		=> "<li>Teclea tu direcci&oacute;n email y haz click en Resetear</li> <li>Comprueba tu correo y haz click en el enlace que se te ha enviado.</li> <li>Sigue las instrucciones indicadas</li>",
 			"VER_SENT" 		=> "<p>Se te ha enviado el enlace de reseteo de contrase&ntilde;a a tu correo.</p> <p>Haz click en el enlace del correo para Resetear la contrase&ntilde;a. Si no ves el correo, comprueba tu bandeja de Spam.</p><p>Enlace v&aacute;lido solo durante ",
@@ -338,10 +339,30 @@ $lang = array_merge($lang,array(
 	$lang = array_merge($lang,array(
 		"MAINT_HEAD"		=> "&iexcl;Volveremos pronto!",
 		"MAINT_MSG"			=> "&iexcl;Lo sentimos, estamos realizando tareas de mantenimiento ahora mismo.<br> Esteremos listos en breve!",
-		"MAINT_BAN" 		=> "Sorry. You have been banned. If you feel this is an error, please contact the administrator.",
+		"MAINT_BAN" 		=> "Lo setimos. Tu IP ha sido bloqueada. Si crees que esto es un error, por favor contacta con el administrador.",
 		"MAINT_TOK" 		=> "Ha habido un error con tu formulario. Vuelve atr&aacute;s e intenta de nuevo. Recuerda que enviar el formulario refrecando la p&aacute;gina, dar&aacute; error. Si vuelve a ocurrir, por favor contacta con el administrador.",
 		"MAINT_OPEN" 		=> "Un Framework Open Source en PHP para la Gesti&oacute;n de Usuarios.",
 		"MAINT_PLEASE" 		=> "&iexcl;UserSpice se ha instalado correctamente!<br>Para ver la documentaci&oacute;n inicial (en ingl&eacute;s), visita ",
+		));
+
+	//dataTables Added in 4.4.08
+	//NOTE: do not change the words like _START_ between the two _ symbols!
+	$lang = array_merge($lang,array(
+		"DAT_SEARCH"    => "Buscar",
+		"DAT_FIRST"     => "Primero",
+		"DAT_LAST"      => "Ultimo",
+		"DAT_NEXT"      => "Siguiente",
+		"DAT_PREV"      => "Anterior",
+		"DAT_NODATA"        => "Tabla no contiene datos",
+		"DAT_INFO"          => "Mostrando entradas _START_ a _END_ de _TOTAL_",
+		"DAT_ZERO"          => "Mostrando entradas 0 a 0 de 0",
+		"DAT_FILTERED"      => "(filtrado de un total de _MAX_ entradas)",
+		"DAT_MENU_LENG"     => "Mostrar _MENU_ entradas",
+		"DAT_LOADING"       => "Cargando...",
+		"DAT_PROCESS"       => "Procesando...",
+		"DAT_NO_REC"        => "No hay registros que coincidan",
+		"DAT_ASC"           => "Activar para ordenar columna de forma ascendente",
+		"DAT_DESC"          => "Activar para ordenar columna de forma descendente",
 		));
 
 	//LEAVE THIS LINE AT THE BOTTOM.  It allows users/lang to override these keys

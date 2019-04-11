@@ -167,17 +167,22 @@ class Validate
 							$str = lang("VAL_LESS_EQ");
 							$this->addError(["{$display} $str {$rule_value_display}",$item]);
 							}
-							if ($rule==">="  &&  $value<$rule_value)
+
+							if ($rule==">="  &&  $value<$rule_value){
 							$str = lang("VAL_GREAT_EQ");
 							$this->addError(["{$display} $str {$rule_value_display}",$item]);
+							}
 
-							if ($rule=="!="  &&  $value==$rule_value)
+							if ($rule=="!="  &&  $value==$rule_value) {
 							$str = lang("VAL_NOT_EQ");
 							$this->addError(["{$display} $str {$rule_value_display}",$item]);
+							}
 
-							if ($rule=="=="  &&  $value!=$rule_value)
+							if ($rule=="=="  &&  $value!=$rule_value){
 							$str = lang("VAL_EQ");
 							$this->addError(["{$display} $str {$rule_value_display}",$item]);
+							}
+
 						}
 						else
 						$str = lang("VAL_NUM");

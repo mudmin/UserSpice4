@@ -34,7 +34,7 @@ $lang = array();
 $lang = array_merge($lang,array(
 "THIS_LANGUAGE"	=>"Română",
 "THIS_CODE"			=>"ro-RO",
-"MISSING_TEXT"	=>"Missing Text",
+"MISSING_TEXT"	=>"Textul lipsa",
 ));
 //Database Menus
 $lang = array_merge($lang,array(
@@ -42,7 +42,7 @@ $lang = array_merge($lang,array(
 "MENU_HELP"			=> "Ajutor",
 "MENU_ACCOUNT"	=> "Cont",
 "MENU_DASH"			=> "Admin Tabloul de bord",
-"MENU_USER_MGR"	=> "User Management",
+"MENU_USER_MGR"	=> "Gestionarea utilizatorilor",
 "MENU_PAGE_MGR"	=> "Administrare paginii",
 "MENU_PERM_MGR"	=> "Gestionarea permiselor",
 "MENU_MSGS_MGR"	=> "Mesaje manager",
@@ -97,7 +97,7 @@ $lang = array_merge($lang,array(
 		"GEN_MAX"					=> "maxim",
 		"GEN_CHAR"				=> "caracter", //as in characters
 		"GEN_SUBMIT"			=> "Executa",
-		"GEN_MANAGE"			=> "Manage",
+		"GEN_MANAGE"			=> "Administra",
 		"GEN_VERIFY"			=> "Verifica",
 		"GEN_SESSION"			=> "Sesiune",
 		"GEN_SESSIONS"		=> "Sesiuni",
@@ -120,40 +120,40 @@ $lang = array_merge($lang,array(
 		"GEN_FUNCTIONS"		=> "Funcţii",
 		"GEN_NUMBER"			=> "număr",
 		"GEN_NUMBERS"			=> "numerele",
-		"GEN_INFO" => "Information",
-		"GEN_REC" => "Recorded",
-		"GEN_DEL" => "Delete",
-		"GEN_NOT_AVAIL" => "Not Available",
-		"GEN_AVAIL" => "Available",
-		"GEN_BACK" => "Back",
-		"GEN_RESET" => "Reset",
-		"GEN_REQ"					=> "required",
-		"GEN_AND"					=> "and",
-		"GEN_SAME"				=> "must be the same",
+		"GEN_INFO" => "Informatie",
+		"GEN_REC" => "Inregistrate",
+		"GEN_DEL" => "Sterge",
+		"GEN_NOT_AVAIL" => "Nu e disponibil",
+		"GEN_AVAIL" => "Disponibil",
+		"GEN_BACK" => "Inapoi",
+		"GEN_RESET" => "Restabili",
+		"GEN_REQ" => "necesar",
+		"GEN_AND" => "si",
+		"GEN_SAME" => "trebuie sa fie la fel",
 		));
 
 //validation class
 	$lang = array_merge($lang,array(
-		"VAL_SAME"				=> "must be the same",
-		"VAL_EXISTS"			=> "already exists. Please choose another",
-		"VAL_DB"					=> "Database Error",
-		"VAL_NUM"					=> "must be a number",
-		"VAL_INT"					=> "must be a whole number",
-		"VAL_EMAIL"				=> "must be a valid email addresss",
-		"VAL_NO_EMAIL"		=> "cannot be an email addresss",
-		"VAL_SERVER"			=> "must belong to a valid server",
-		"VAL_LESS"				=> "must be less than",
-		"VAL_GREAT"				=> "must be greater than",
-		"VAL_LESS_EQ"			=> "must be less than or equal to",
-		"VAL_GREAT_EQ"		=> "must be greater than or equal to",
-		"VAL_NOT_EQ"			=> "must not be equal to",
-		"VAL_EQ"					=> "must be equal to",
-		"VAL_TZ"					=> "has to be a valid time zone name",
-		"VAL_MUST"				=> "must be",
-		"VAL_MUST_LIST"		=> "must be one of the following",
-		"VAL_TIME"				=> "must be a valid time",
-		"VAL_SEL"					=> "is not a valid selection",
-		"VAL_NA_PHONE"		=> "must be a valid North American phone number",
+		"VAL_SAME"				=> "trebuie sa fie la fel",
+		"VAL_EXISTS"			=> "deja exista. Alegeți altul",
+		"VAL_DB"					=> "Eroare baza de date",
+		"VAL_NUM"					=> "trebuie sa fie un numar",
+		"VAL_INT"					=> "trebuie să fie un numar întreg",
+		"VAL_EMAIL"				=> "trebuie sa fie o adresa de e-mail valida",
+		"VAL_NO_EMAIL"		=> "nu poate fi o adresa de e-mail",
+		"VAL_SERVER"			=> "trebuie sa apartina unui server valid",
+		"VAL_LESS"				=> "trebuie sa fie mai mica decat",
+		"VAL_GREAT"				=> "trebuie sa fie mai mare decat",
+		"VAL_LESS_EQ"			=> "trebuie sa fie mai mica sau egala cu",
+		"VAL_GREAT_EQ"		=> "trebuie sa fie mai mare sau egala cu",
+		"VAL_NOT_EQ"			=> "nu trebuie sa fie egal cu",
+		"VAL_EQ"					=> "trebuie sa fie egal cu",
+		"VAL_TZ"					=> "trebuie sa fie un ora din nume zona",
+		"VAL_MUST"				=> "trebuie sa fie",
+		"VAL_MUST_LIST"		=> "trebuie sa fie una dintre urmatoarele",
+		"VAL_TIME"				=> "trebuie sa fie un ora valabila",
+		"VAL_SEL"					=> "nu este o selectie valida",
+		"VAL_NA_PHONE"		=> "trebuie sa fie un numar de telefon din Romania valabil",
 	));
 
 		//Time
@@ -168,8 +168,8 @@ $lang = array_merge($lang,array(
 		"T_DAY"				=> "Zi",
 		"T_HOURS"			=> "Ore",
 		"T_HOUR"			=> "Ora",
-		"T_MINUTES"		=> "Minute",
-		"T_MINUTE"		=> "Minute",
+		"T_MINUTES"		=> "Minut",
+		"T_MINUTE"		=> "Minut",
 		"T_SECONDS"		=> "Secunde",
 		"T_SECOND"		=> "Secunda",
 		));
@@ -197,9 +197,9 @@ $lang = array_merge($lang,array(
 		"JOIN_TWICE"	=> "Tastat corect de două ori",
 		"JOIN_CLOSED"	=> "Din păcate, înregistrarea este dezactivată în acest moment. Contactați administratorul site-ului dacă aveți întrebări sau nelămuriri.",
 		"JOIN_TC"			=> "Înregistrare Termeni și condiții pentru utilizatori",
-		"JOIN_ACCEPTTC" => "I Accept User Terms and Conditions",
-		"JOIN_CHANGED"	=> "Our Terms Have Changed",
-		"JOIN_ACCEPT" 	=> "Accept User Terms and Conditions and Continue",
+		"JOIN_ACCEPTTC" => "Accept Termeni si conditii pentru utilizatori",
+		"JOIN_CHANGED"	=> "Termenii nostri s-au schimbat",
+		"JOIN_ACCEPT" 	=> "Acceptati Termenii si conditiile utilizatorului si continuati",
 		));
 
 
@@ -236,12 +236,12 @@ $lang = array_merge($lang,array(
 		"MSG_UNARCHIVE_SUCCESSFUL"      => "Ați dezarhivat cu succes fișierele %m1%",
 		"MSG_DELETE_SUCCESSFUL"         => "Ați șters cu succes contul %m1%",
 		"USER_MESSAGE_EXEMPT"         			=> "Utilizatorul este% m1% scutit de la mesaje.",
-		"MSG_MK_READ" => "Read",
-		"MSG_MK_UNREAD" => "Unread",
-		"MSG_ARC_THR" => "Archive Selected Threads",
-		"MSG_UN_THR" => "Unarchive Selected Threads",
-		"MSG_DEL_THR" => "Delete Selected Threads",
-		"MSG_SEND" => "Send Message",
+		"MSG_MK_READ" => "Citit",
+		"MSG_MK_UNREAD" => "Necitit",
+		"MSG_ARC_THR" => "Arhiva selectate Subiecte",
+		"MSG_UN_THR" => "Dezarhivati Selectat Subiecte",
+		"MSG_DEL_THR" => "Sterge Selectat Subiecte",
+		"MSG_SEND" => "Trimite mesaj",
 		));
 
 	//2 Factor Authentication
@@ -258,21 +258,21 @@ $lang = array_merge($lang,array(
 		"2FA_NP"		=> "<strong>Autentificare esuata</strong> Codul de confirmare nu era prezent. Vă rugăm să încercați din nou.",
 		"2FA_INV"		=> "<strong>Autentificare esuata/strong> Codul de confirmare este nevalid. Vă rugăm să încercați din nou.",
 		"2FA_FATAL"	=> "<strong>Eroare fatala</strong> Contactați administratorul de problema.",
-		"2FA_EXPS" => "Expires",
-		"2FA_ACTIVE" => "Active Sessions",
-		"2FA_NOT_FN" => "No fingerprints found",
+		"2FA_EXPS" => "Expira",
+		"2FA_ACTIVE" => "Sesiuni active",
+		"2FA_NOT_FN" => "Nu au fost gasite amprente digitale",
 		));
 
 	//Redirect Messages - These get a plus between each word
 	$lang = array_merge($lang,array(
 		"REDIR_2FA"					=> "Scuze.Doua+factor+este+nu+activat+la+acest+timp",
-		"REDIR_2FA_EN"				=> "2+Factor+Authentication+Enabled",
-		"REDIR_2FA_DIS"				=> "2+Factor+Authentication+Disabled",
-		"REDIR_2FA_VER"				=> "2+Factor+Authentication+Verified+and+Enabled",
-		"REDIR_SOM_TING_WONG" => "Something+went+wrong.+Please+try+again.",
-		"REDIR_MSG_NOEX"			=> "That+thread+does+not+belong+to+you+or+does+not+exist.",
-		"REDIR_UN_ONCE"				=> "Username+has+already+been+changed+once.",
-		"REDIR_EM_SUCC"				=> "Email+Updated+Successfully",
+		"REDIR_2FA_EN"				=> "2+Factor+Autentificare+Activat",
+		"REDIR_2FA_DIS"				=> "2+Factor+Autentificare+Dezactivat",
+		"REDIR_2FA_VER"				=> "2+Factor+Autentificare+Verificat+si+Activat",
+		"REDIR_SOM_TING_WONG" => "Ceva+a+mers+greșit.+Vă+rugăm+să+încercați+din+nou.",
+		"REDIR_MSG_NOEX"			=> "Asta+fir+nu+nu+apartine+pentru+tine+sau+nu+nu+exista",
+		"REDIR_UN_ONCE"				=> "Utilizator+a+fost+deja+schimbat+o+dată.",
+		"REDIR_EM_SUCC"				=> "E-mail+Actualizat+cu+succes",
 		));
 
 	//Emails
@@ -292,14 +292,14 @@ $lang = array_merge($lang,array(
 			"VER_AGAIN"		=> "Introduceți adresa de e-mail și încercați din nou",
 			"VER_PAGE"		=> "<li>Verificați adresa de e-mail și faceți clic pe link-ul care vi-a fost trimis</li><li>Terminat</li>",
 			"VER_RES_SUC" => "<p>Linkul dvs. de verificare a fost trimis la adresa dvs. de e-mail.</p><p>Dați clic pe linkul din e-mail pentru a finaliza verificarea. Asigurați-vă că verificați dosarul dvs. de spam dacă e-mailul nu este în căsuța de e-mail.</p><p>Link-urile de verificare sunt valabile numai pentru ",
-			"VER_OOPS" => "Oops...something went wrong, maybe an old reset link you clicked on. Click below to try again",
-			"VER_RESET" => "Your password has been reset!",
+			"VER_OOPS" => "Oops ... ceva a mers prost, poate o legătură de resetare veche pe care ați făcut clic. Faceți clic mai jos pentru a încerca din nou.",
+			"VER_RESET" => "Parola ta a fost resetata!",
 
 			"VER_INS" => "<li>Enter your email address and click Reset</li> <li>Check your email and click the link that is sent to you.</li> <li>Follow the on screen instructions</li>",
 
 			"VER_SENT" => "<p>Your password reset link has been sent to your email address.</p> <p>Click the link in the email to Reset your password. Be sure to check your spam folder if the email isn't in your inbox.</p><p>Reset links are only valid for ",
 
-			"VER_PLEASE" => "Please reset your password",
+			"VER_PLEASE" => "va rugam sa va resetati parola",
 			));
 
 	//User Settings
@@ -342,11 +342,11 @@ $lang = array_merge($lang,array(
 	//Maintenance Page
 	$lang = array_merge($lang,array(
 		"MAINT_HEAD"		=> "Vom reveni in curand!",
-		"MAINT_MSG"			=> "Ne pare rău pentru neplăcere, dar în prezent efectuăm o întreținere.<br> Vom reveni online în curând!",
-		"MAINT_BAN" => "Sorry. You have been banned. If you feel this is an error, please contact the administrator.",
-		"MAINT_TOK" => "There was an error with your form. Please go back and try again. Please note that submitting the form by refreshing the page will cause an error. If this continues to happen, please contact the administrator.",
-		"MAINT_OPEN" => "An Open Source PHP User Management Framework.",
-		"MAINT_PLEASE" => "You have successfully installed UserSpice!<br>To view our getting started documentation, please visit",
+		"MAINT_MSG"			=> "Ne pare rau pentru neplacere, dar în prezent efectuam o întretinere.<br> Vom reveni online în curand!",
+		"MAINT_BAN" => "Scuze. Ati fost interzis. Daca credeti ca este o eroare, contactati administratorul.",
+		"MAINT_TOK" => "A aparut o eroare la formularul dvs. Reveniti si încercati din nou. Rețineți ca trimiterea formularului prin actualizarea paginii va duce la o eroare. Daca acest lucru se întâmpla în continuare, contactati administratorul.",
+		"MAINT_OPEN" => "Un cadru de gestionare a utilizatorilor PHP Open Source.",
+		"MAINT_PLEASE" => "Ati instalat cu succes UserSpice!<br>Pentru a vedea documentatia noastra de început, va rugam sa vizitati",
 		));
 
 		//LEAVE THIS LINE AT THE BOTTOM.  It allows users/lang to override these keys

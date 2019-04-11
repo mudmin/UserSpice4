@@ -97,7 +97,7 @@ if (!empty($_POST['login_hook'])) {
               //check for need to reAck terms of service
               if($settings->show_tos == 1){
                 if($user->data()->oauth_tos_accepted == 0){
-                  Redirect::to($us_url_root.'users/includes/user_agreement_acknowledge.php');
+                  Redirect::to($us_url_root.'users/user_agreement_acknowledge.php');
                 }
               }
 
