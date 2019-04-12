@@ -10,12 +10,11 @@ $results = $query->first();
   <title></title>
 </head>
 <body>
-  <p>Hello <?=$fname;?>,</p>
-  <p>An Administrator of <?=$sitename?> has reset your password.</p>
-  <p><label>Username:</label> <?=$username?></p>
-  <p><label>Password:</label> <a href="<?php echo $results->verify_url."users/forgot_password_reset.php?email=".$email."&vericode=$vericode&reset=1"; ?>" class="nounderline">Set Password</a></p>
-  <p>You will be required to set your password using the link above.</p>
-  <p>See you soon!</p>
-  <sup><p>Please note, Password links expire in <?=$reset_vericode_expiry?> minutes.</p></sup>
+  <p><?=lang("EML_HELLO")?><?=$sitename?>,</p>
+  <p><?=lang("EML_AD_HAS")?></p>
+  <p><label><?=lang("GEN_UNAME")?>:</label> <?=$username?></p>
+  <p><label><?=lang("GEN_EMAIL")?>:</label> <a href="<?php echo $results->verify_url."users/forgot_password_reset.php?email=".$email."&vericode=$vericode&reset=1"; ?>" class="nounderline"><?=lang("PW_RESET");?></a></p>
+  <p><?=lang("EML_REQ");?></p>
+  <sup><p><?=lang("EML_EXP")?> <?=$reset_vericode_expiry?> <?=lang("T_MINUTES")?>.</p></sup>
 </body>
 </html>

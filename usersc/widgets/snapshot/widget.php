@@ -85,7 +85,7 @@ $top = $db->query("SELECT id, logins FROM users ORDER BY logins DESC LIMIT 5")->
       </li>
 
       <li class="list-group-item">
-        <a href="https://discord.gg/VgCa6fk" target="_blank"> <i class="fa fa-comments"></i>  Live Discord Chat </a>
+        <a href="https://discord.gg/PMNquvh" target="_blank"> <i class="fa fa-comments"></i>  Live Discord Chat </a>
       </li>
 
       <li class="list-group-item">
@@ -93,7 +93,7 @@ $top = $db->query("SELECT id, logins FROM users ORDER BY logins DESC LIMIT 5")->
       </li>
 
       <li class="list-group-item">
-        <a href="https://userspice.com/bugs" target="_blank"> <i class="fa fa-bug"></i>  Bug Reports </a>
+        <a href="https://www.patreon.com/userspice" target="_blank"> <i class="fa fa-heart"></i>  Support UserSpice </a>
       </li>
     </ul>
   </section>

@@ -173,7 +173,7 @@ function activeDropdown($View, $dropId, $Area = false){
                       </div>
                       <div class="col-sm-12 clearfix">
                        <button class="btn btn-primary btn-block"
-                        onclick="window.location.href='https://userspice.com/bugs/usersc/dashboard.php','_blank'">Continue</button>
+                       onclick=" window.open('https://userspice.com/bugs/usersc/dashboard.php','_blank')">Continue</button>
                      </div>
 
                 </div>

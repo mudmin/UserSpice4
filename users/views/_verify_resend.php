@@ -29,7 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <form class="" action="verify_resend.php" method="post">
       <?php if(!$errors=='') {?><div class="alert alert-danger"><?=display_errors($errors);?></div><?php } ?>
       <div class="form-group">
-        <label for="email"><?=lang("ACCOUNT_SPECIFY_EMAIL");?></label>
         <input class="form-control" type="text" id="email" name="email" placeholder="<?=lang("GEN_EMAIL");?>" autocomplete="email">
       </div>
       <input type="hidden" name="csrf" value="<?=Token::generate();?>">

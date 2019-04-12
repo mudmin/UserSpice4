@@ -37,11 +37,4 @@ if (!securePage($_SERVER['PHP_SELF'])){die();}
 </div>
 
 
-<?php require_once $abs_us_root.$us_url_root.'usersc/templates/'.$settings->template.'/container_close.php'; //custom template container ?>
-
-<!-- footers -->
-<?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; // the final html footer copyright row + the external js calls ?>
-
-<!-- Place any per-page javascript here -->
-
-<?php require_once $abs_us_root.$us_url_root.'usersc/templates/'.$settings->template.'/footer.php'; //custom template footer?>
+<?php require_once $abs_us_root . $us_url_root . 'users/includes/html_footer.php'; ?>

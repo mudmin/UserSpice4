@@ -270,6 +270,20 @@ $lang = array_merge($lang,array(
 		"EML_CHK"				=> "Ihre Anfrage wurde erhalten. Pr&uuml;fen Sie bitte Ihr Posteingang, um die Verifizierung auszuf&uml;hren. Pr&uuml;fen Sie Bitte Ihren Spam-Ordner, falls Sie die Email im Posteingang nicht finden k&ouml;nnen. G&uuml;ltigkeit des Verifizierungslinks: ",
 		"EML_MAT"				=> "Emailadressen stimmen nicht &uuml;ber.",
 		"EML_HELLO"			=> "Hallo von ",
+		"EML_HI"				=> "Hi ",
+		"EML_AD_HAS"		=> "An Administrator has reset your password.",
+		"EML_AC_HAS"		=> "An Administrator has created your account.",
+		"EML_REQ"				=> "You will be required to set your password using the link above.",
+		"EML_EXP"				=> "Please note, Password links expire in ",
+		"EML_VER_EXP"		=> "Please note, Verification links expire in ",
+		"EML_CLICK"			=> "Click here to login.",
+		"EML_REC"				=> "It is recommended to change your password upon logging in.",
+		"EML_MSG"				=> "You have a new message from",
+		"EML_REPLY"			=> "Click here to reply or view the thread",
+		"EML_WHY"				=> "You are receiving this email because a request was made to reset your password. If this was not you, you may disregard this email.",
+		"EML_HOW"				=> "If this was you, click the link below to continue with the password reset process.",
+		"EML_EML"				=> "A request to change your email was made from within your user account.",
+		"EML_VER_EML"		=> "Thanks for signing up.  Once you verify your email address you will be ready to login! Please click the link below to verify your email address.",
 		));
 
 		//Verification

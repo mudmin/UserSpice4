@@ -20,7 +20,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 ?>
-<link rel="shortcut icon" href="<?=$abs_us_root?><?=$us_url_root?>favicon.ico">
 <?php require_once $abs_us_root.$us_url_root.'users/helpers/helpers.php'; ?>
 <?php require_once $abs_us_root.$us_url_root.'users/includes/user_spice_ver.php'; ?>
 
@@ -133,6 +132,7 @@ else $pageTitle = '';
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<link rel="shortcut icon" href="<?=$abs_us_root?><?=$us_url_root?>favicon.ico">
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">

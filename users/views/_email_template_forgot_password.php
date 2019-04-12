@@ -9,12 +9,10 @@ $results = $query->first();
   <meta charset="utf-8">
 </head>
 <body>
-  <p>Hello <?=$fname;?>,</p>
-  <p>You are receiving this email because a request was made to reset your password. If this was not you, you may disregard this email.</p>
-  <p>If this was you, click the link below to continue with the password reset process.</p>
-  <p><a href="<?php echo $results->verify_url."users/forgot_password_reset.php?email=".$email."&vericode=$vericode&reset=1"; ?>" class="nounderline">Reset Password</a></p>
-  <p>Sincerely,</p>
-  <p>-The Team-</p>
-  <sup><p>Please note, Password links expire in <?=$reset_vericode_expiry?> minutes.</p></sup>
+  <p><?=lang("EML_HI")?> <?=$fname;?>,</p>
+  <p><?=lang("EML_WHY")?></p>
+  <p><?=lang("EML_HOW")?></p>
+  <p><a href="<?php echo $results->verify_url."users/forgot_password_reset.php?email=".$email."&vericode=$vericode&reset=1"; ?>" class="nounderline"><?=lang("PW_RESET");?></a></p>
+  <sup><p><?=lang("EML_EXP")?> <?=$reset_vericode_expiry?> <?=lang("T_MINUTES")?>.</p></sup>
 </body>
 </html>

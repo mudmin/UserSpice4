@@ -10,9 +10,9 @@ $results = $query->first();
   <title></title>
 </head>
 <body>
-  <p>Hello <?=$fname;?>,</p>
-  <p>You have a new message from <?=$sendfname;?>!</p>
-  <p><a href="<?=$results->verify_url?>users/message.php?id=<?=$msg_thread?>" class="nounderline">Click here</a> to reply or view the thread.</p>
+  <p><?=lang("EML_HI")?> <?=$fname;?>,</p>
+  <p><?=lang("EML_MSG");?> <?=$sendfname;?>!</p>
+  <p><a href="<?=$results->verify_url?>users/message.php?id=<?=$msg_thread?>" class="nounderline"><?=lang("EML_REPLY")?></a> </p>
   <hr />
   <?=html_entity_decode($body)?>
 </body>

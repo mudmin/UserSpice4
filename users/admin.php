@@ -22,6 +22,7 @@ ini_set('memory_limit','1024M');
 ?>
 <?php
 require_once '../users/init.php';
+include $abs_us_root.$us_url_root."users/includes/dashboard_language.php";
 $db = DB::getInstance();
 $settings = $db->query("SELECT * FROM settings")->first();
 ?>
@@ -220,7 +221,7 @@ $settings = $db->query("SELECT * FROM settings")->first();
         <script type="text/javascript">
         $(document).ready(function() {
           $('[data-toggle="popover"]').popover();
-          
+
           //Transaction total in the lower right
           function messages(data) {
             $('#messages').removeClass();
@@ -344,5 +345,12 @@ $settings = $db->query("SELECT * FROM settings")->first();
           });
         });
       </script>
+      <?php foreach($usplugins as $k=>$v){
+        if($v == 1){
+        if(file_exists($abs_us_root.$us_url_root."usersc/plugins/".$k."/footer.php")){
+          include($abs_us_root.$us_url_root."usersc/plugins/".$k."/footer.php");
+          }
+        }
+      }?>
     </body>
     </html>

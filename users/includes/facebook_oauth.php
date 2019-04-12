@@ -62,4 +62,3 @@ $loginUrl = $helper->getLoginUrl($callback, $permissions);
 ?>
 <a href="<?=htmlspecialchars($loginUrl)?>">
   <img class="img-responsive" align=right src="<?=$us_url_root?>users/images/facebook.png" alt=""/></a>
-?>

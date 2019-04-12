@@ -578,6 +578,7 @@ if(!function_exists('lang')) {
 
 
 		//Ensure we have something to return
+		// dump($key);
 		if($str == ""){
 			if(isset($lang["MISSING_TEXT"])){
 				$missing = $lang["MISSING_TEXT"];
@@ -585,7 +586,7 @@ if(!function_exists('lang')) {
 				$missing = "Missing Text";
 			}
 			//if nothing is found, let's check to see if the language is English.
-			if($lang['THIS_CODE'] != "en-US"){
+			if(isset($lang['THIS_CODE']) && $lang['THIS_CODE'] != "en-US"){
 				$save = $lang['THIS_CODE'];
 				if($save == ''){
 					$save = 'en-US';
