@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 // UserSpice Specific Functions
 require_once $abs_us_root.$us_url_root.'usersc/includes/custom_functions.php';
-require_once $abs_us_root.$us_url_root.'usersc/includes/analytics.php';
+
 $user_agent = $_SERVER['HTTP_USER_AGENT'];
 
 if(!function_exists('testUS')) {
@@ -1743,3 +1743,71 @@ if(!function_exists('languageSwitcher')) {
 	<?php
 		}
 	}
+
+	if(!function_exists('getMyHooks')) {
+		function getMyHooks($opts = []) {
+			global $db, $currentPage;
+
+		if($opts == []){
+			$hooks = $db->query("SELECT * FROM us_plugin_hooks WHERE page = ? AND disabled = 0",[$currentPage])->results();
+		}elseif(isset($opts['page']) && $opts['page'] != ''){
+			$hooks = $db->query("SELECT * FROM us_plugin_hooks WHERE page = ? AND disabled = 0",[$opts['page']])->results();
+		}
+			$data = [];
+			foreach($hooks as $h){
+				if($h->position == "post"){
+					$data['post'] = $h->folder.'/'.$h->hook;
+				}elseif($h->position == "form"){
+					$data['form'] = $h->folder.'/'.$h->hook;
+				}elseif($h->position == "body"){
+					$data['body'] = $h->folder.'/'.$h->hook;
+				}elseif($h->position == "bottom"){
+					$data['bottom'] = $h->folder.'/'.$h->hook;
+				}
+
+			}
+					return $data;
+	}
+}
+
+if(!function_exists('includeHook')) {
+	function includeHook($hooks,$position) {
+		global $db, $abs_us_root, $us_url_root, $usplugins;
+		if(isset($hooks[$position]) && file_exists($abs_us_root.$us_url_root.'usersc/plugins/'.$hooks[$position]) && $hooks[$position] != ''){
+			$plugin = strstr($hooks[$position], '/', 'before_needle');
+			if($usplugins[$plugin] == 1){//only include this file if plugin is installed and active.
+			include $abs_us_root.$us_url_root.'usersc/plugins/'.$hooks[$position];
+			}
+		}else{
+			//automatically disable hook ...eventually
+		}
+
+}
+}
+
+
+
+if(!function_exists('registerHooks')) {
+	function registerHooks($hooks,$plugin_name) {
+		global $db;
+		foreach($hooks as $k=>$v){
+		foreach($v as $key=>$value){
+			$fields = array(
+				'page'=>$k,
+				'folder'=>$plugin_name,
+				'position'=>$key,
+				'hook'=>$value,
+			);
+			$db->insert('us_plugin_hooks',$fields);
+		}
+		}
+}
+}
+
+if(!function_exists('deRegisterHooks')) {
+	function deRegisterHooks($plugin_name) {
+		global $db;
+		$hooks = $db->query("DELETE FROM us_plugin_hooks WHERE folder = ?",[$plugin_name]);
+
+}
+}

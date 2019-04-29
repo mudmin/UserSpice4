@@ -143,6 +143,6 @@ if(!empty($_POST)){
   <script type="text/javascript" src="js/pagination/datatables.min.js"></script>
   <script>
     $(document).ready(function() {
-      $('#paginate').DataTable({"pageLength": 25,"aLengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]], "aaSorting": []});
+      $('#paginate').DataTable({"pageLength": 25,"stateSave": true,"aLengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]], "aaSorting": []});
     } );
   </script>

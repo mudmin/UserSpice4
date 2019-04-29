@@ -86,7 +86,7 @@ require_once($abs_us_root.$us_url_root.'usersc/templates/superhero/assets/functi
 </nav>
 <div class="text-center">
 <?php
-require_once $abs_us_root . $us_url_root . 'usersc/templates/bs4/container_open.php'; //custom template container
+require_once $abs_us_root . $us_url_root . 'usersc/templates/superhero/container_open.php'; //custom template container
 
 require_once $abs_us_root . $us_url_root . 'usersc/templates/superhero/container_open.php'; //custom template container
 ?>

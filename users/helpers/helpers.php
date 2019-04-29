@@ -54,7 +54,7 @@ if($usfeatures['saas'] == 1) {require_once("saas.php");}
 
 
 require_once $abs_us_root.$us_url_root.'usersc/includes/custom_functions.php';
-require_once $abs_us_root.$us_url_root.'usersc/includes/analytics.php';
+
 
 // Readeable file size
 function size($path) {

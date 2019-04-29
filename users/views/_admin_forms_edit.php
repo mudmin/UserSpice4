@@ -142,6 +142,13 @@ if(!empty($_POST['create_field'])){
           'col'=>$col,
         );
         $db->update($name,$id,$fields);
+      }elseif($field_type == "money"){
+        $db->query("ALTER TABLE $mainTable ADD `$col` decimal(11,2)");
+        $fields = array(
+          'col_type'=>$field_type,
+          'col'=>$col,
+        );
+        $db->update($name,$id,$fields);
       }elseif($field_type == "textarea" || $field_type == "checkbox"){
         $field_type = 'text';
         $db->query("ALTER TABLE $mainTable ADD $col $field_type");

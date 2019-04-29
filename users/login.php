@@ -22,7 +22,7 @@ ini_set("allow_url_fopen", 1);
 if(isset($_SESSION)){session_destroy();}
 require_once '../users/init.php';
 require_once $abs_us_root.$us_url_root.'users/includes/template/prep.php';
-
+$hooks =  getMyHooks();
 if($settings->twofa == 1){
   $google2fa = new PragmaRX\Google2FA\Google2FA();
 }
@@ -40,6 +40,7 @@ if (!empty($_POST['login_hook'])) {
   if(!Token::check($token)){
     include($abs_us_root.$us_url_root.'usersc/scripts/token_error.php');
   }
+
   //Check to see if recaptcha is enabled
   if($settings->recaptcha == 1){
     //require_once $abs_us_root.$us_url_root.'users/includes/recaptcha.config.php';
@@ -74,7 +75,8 @@ if (!empty($_POST['login_hook'])) {
     $validation = $validate->check($_POST, array(
       'username' => array('display' => 'Username','required' => true),
       'password' => array('display' => 'Password', 'required' => true)));
-
+      //plugin goes here with the ability to kill validation
+      includeHook($hooks,'post');
       if ($validation->passed()) {
         //Log user in
         $remember = (Input::get('remember') === 'on') ? true : false;
@@ -138,6 +140,8 @@ if (!empty($_POST['login_hook'])) {
         <div class="row">
           <div class="col-sm-12">
             <?php
+
+            includeHook($hooks,'body');
             if($settings->glogin==1 && !$user->isLoggedIn()){
               require_once $abs_us_root.$us_url_root.'users/includes/google_oauth_login.php';
             }
@@ -158,7 +162,7 @@ if (!empty($_POST['login_hook'])) {
                 <label for="password"><?=lang("SIGNIN_PASS")?></label>
                 <input type="password" class="form-control"  name="password" id="password"  placeholder="<?=lang("SIGNIN_PASS")?>" required autocomplete="current-password">
               </div>
-
+              <?php   includeHook($hooks,'form');?>
               <div class="form-group">
                 <label for="remember">
                   <input type="checkbox" name="remember" id="remember" > <?=lang("SIGNIN_REMEMBER")?></label>
@@ -176,7 +180,6 @@ if (!empty($_POST['login_hook'])) {
             </div>
           </div>
           <div class="row">
-
             <div class="col-sm-6"><br>
               <a class="pull-left" href='../users/forgot_password.php'><i class="fa fa-wrench"></i> <?=lang("SIGNIN_FORGOTPASS","");?></a>
               <br><br>
@@ -185,6 +188,7 @@ if (!empty($_POST['login_hook'])) {
               <div class="col-sm-6"><br>
                 <a class="pull-right" href='../users/join.php'><i class="fa fa-plus-square"></i> <?=lang("SIGNUP_TEXT","");?></a><br><br>
               </div><?php } ?>
+              <?php   includeHook($hooks,'bottom');?>
                 <?php languageSwitcher();?>
             </div>
           </div>

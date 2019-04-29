@@ -169,7 +169,9 @@ Special thanks to John Bovey for the password strenth feature.
         </div>
         <br><br>
 
-        <?php include($abs_us_root.$us_url_root.'usersc/scripts/additional_join_form_fields.php'); ?>
+        <?php
+        includeHook($hooks,'form');
+        include($abs_us_root.$us_url_root.'usersc/scripts/additional_join_form_fields.php'); ?>
         <?php if($settings->show_tos == 1){ ?>
           <label for="confirm"> <?=lang("JOIN_TC");?></label>
           <textarea id="agreement" name="agreement" rows="5" class="form-control" style="background-color:white;" disabled >

@@ -1,3 +1,4 @@
+<?php $hooks = getMyHooks(['page' =>'admin.php?view=general']); ?>
 <div class="col-sm-8">
   <div class="page-header float-right">
     <div class="page-title">
@@ -192,7 +193,7 @@
                   </div>
                 </div>
               </div>
-
+              <?php includeHook($hooks,'body');?>
             </div>
 
             <!-- right column -->

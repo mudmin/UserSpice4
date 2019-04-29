@@ -147,7 +147,10 @@ else $pageTitle = '';
 	<!-- Custom Fonts/Animation/Styling-->
 	<link rel="stylesheet" href="<?=$us_url_root?>users/fonts/css/font-awesome.min.css">
 
-	<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+	<script
+	  src="https://code.jquery.com/jquery-3.4.0.min.js"
+	  integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg="
+	  crossorigin="anonymous"></script>
 	<!-- jQuery Fallback -->
 	<script type="text/javascript">
 	if (typeof jQuery == 'undefined') {

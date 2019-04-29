@@ -5,12 +5,14 @@
       <option value=""></option>
       <option value="text">text</option>
       <option value="number">whole number</option>
+      <option value="money">money(xxx.xx)</option>
       <option value="textarea">textarea</option>
       <option value="dropdown">dropdown</option>
       <option value="checkbox">checkbox</option>
       <option value="radio">radio</option>
       <option value="date">date</option>
       <option value="datetime">datetime</option>
+      <option value="time">time</option>
       <option value="timestamp">timestamp</option>
       <option value="hidden">hidden</option>
       <option value="password">password (plain)</option>

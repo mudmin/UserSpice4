@@ -78,7 +78,7 @@ $count = $adminNotificationsQ->count();
   <?php if($count > 0) {?><label><input type="checkbox" class="checkAllMsg" />
     [ check/uncheck all ]</label><?php } ?>                         <div class="btn-group pull-right"><button type="button" class="btn btn-info" data-toggle="modal" data-target="#composemass"><i class="fa fa-plus"></i> New Mass Notification</button></div>
     <br><br>
-    <form name="threads" action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
+    <form name="threads" action="admin.php?view=notifications" method="post">
       <table id="paginate" class="table table-striped">
         <thead>
           <tr>
@@ -157,15 +157,15 @@ $count = $adminNotificationsQ->count();
             $(document).ready(function() {
               $('#paginate').DataTable(
                 {  searching: true,
-                  "pageLength": 25,
+                  "pageLength": 25,"stateSave": true,
                   "ordering": false,
                   "aLengthMenu": [[10, 25, 50, 100,-1], [10, 25, 50,100,"All"]],
                 }
               );
               $('.checkAllMsg').on('click', function(e) {
+                console.log("clicked");
                 $('.maincheck').prop('checked', $(e.target).prop('checked'));
               });
             } );
             </script>
-            <script src="../users/js/pagination/jquery.dataTables.js" type="text/javascript"></script>
-            <script src="../users/js/pagination/dataTables.js" type="text/javascript"></script>
+            <script src="../users/js/pagination/dataTables.min.js" type="text/javascript"></script>

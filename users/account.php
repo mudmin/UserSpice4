@@ -19,15 +19,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 require_once '../users/init.php';
-// dump($_SESSION);
-// if($user->isLoggedIn()){
-// 	dump("yes");
-// }else{
-// 	dump("no");
-// }
-// dump($user->data());
 if (!securePage($_SERVER['PHP_SELF'])){die();}
 require_once $abs_us_root.$us_url_root.'users/includes/template/prep.php';
+$hooks =  getMyHooks();
+
+
 
 if(!empty($_POST['uncloak'])){
 	logger($user->data()->id,"Cloaking","Attempting Uncloak");
@@ -66,7 +62,8 @@ $userdetails = fetchUserDetails(NULL, NULL, $get_info_id); //Fetch user details
 <div class="well">
 <div class="row">
 	<div class="col-sm-12 col-md-3">
-
+		<p>
+		</p>
 		<p><img src="<?=$grav; ?>" class="img-thumbnail" alt="Generic placeholder thumbnail"></p>
 		<p><a href="../users/user_settings.php" class="btn btn-primary"><?=lang("ACCT_EDIT")?></a></p>
 		<?php
@@ -84,6 +81,7 @@ $userdetails = fetchUserDetails(NULL, NULL, $get_info_id); //Fetch user details
 		</form><br>
 		<?php }
 		?>
+		<?php includeHook($hooks,'body');?>
 	</div>
 	<div class="col-sm-12 col-md-9">
 		<h1><?=echousername($user->data()->id)?></h1>
@@ -92,6 +90,7 @@ $userdetails = fetchUserDetails(NULL, NULL, $get_info_id); //Fetch user details
 		<p><?=lang("ACCT_LOGINS")?>: <?=$user->data()->logins?></p>
 		<?php if($settings->session_manager==1) {?><p><?=lang("ACCT_SESSIONS")?>: <?=UserSessionCount()?> <sup><a class="nounderline" data-toggle="tooltip" title="<?=lang("ACCT_MNG_SES")?>">?</a></sup></p><?php }
 		?>
+		<?php includeHook($hooks,'bottom');?>
 	</div>
 
 </div>

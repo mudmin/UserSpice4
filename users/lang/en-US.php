@@ -387,7 +387,7 @@ $lang = array_merge($lang,array(
 		"DAT_DESC"          => "Activate to sort column descending",
 		));
 
-		
+
 
 //LEAVE THIS LINE AT THE BOTTOM.  It allows users/lang to override these keys
 if(file_exists($abs_us_root.$us_url_root."usersc/lang/".$lang["THIS_CODE"].".php")){

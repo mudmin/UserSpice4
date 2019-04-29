@@ -22,7 +22,7 @@ require_once '../users/init.php';
 require_once $abs_us_root.$us_url_root.'users/includes/template/prep.php';
 
 if (!securePage($_SERVER['PHP_SELF'])){die();}
-
+$hooks =  getMyHooks();
 //dealing with if the user is logged in
 if($user->isLoggedIn() && !checkMenu(2,$user->data()->id)){
 	if (($settings->site_offline==1) && (!in_array($user->data()->id, $master_account)) && ($currentPage != 'login.php') && ($currentPage != 'maintenance.php')){
@@ -54,6 +54,7 @@ if(!empty($_POST)) {
     if(!Token::check($token)){
 				include($abs_us_root.$us_url_root.'usersc/scripts/token_error.php');
     }else {
+			includeHook($hooks,'post');
         //Update display name
 				//if (($settings->change_un == 0) || (($settings->change_un == 2) && ($user->data()->un_changed == 1)))
         $displayname = Input::get("username");
@@ -257,7 +258,9 @@ $userdetails=$user2->data();
                     <h1><?=lang("SET_UPDATE");?></h1>
                     <?=lang("SET_GRAVITAR");?><br>
                     <?php if(!$errors=='') {?><div class="alert alert-danger"><?=display_errors($errors);?></div><?php } ?>
-                    <?php if(!$successes=='') {?><div class="alert alert-success"><?=display_successes($successes);?></div><?php } ?>
+                    <?php if(!$successes=='') {?><div class="alert alert-success"><?=display_successes($successes);?></div><?php }
+										includeHook($hooks,'body');
+										?>
 
                     <form name='updateAccount' action='user_settings.php' method='post'>
 
@@ -327,7 +330,7 @@ $userdetails=$user2->data();
 														 <span class="btn btn-secondary input-group-addon" id="addon5" data-container="body" data-toggle="tooltip" data-placement="top" title="<?php lang("SET_PW_REQI");?>">?</span>
 													 </div>
 											 </div>
-
+											 <?php includeHook($hooks,'form');?>
                         <input type="hidden" name="csrf" value="<?=Token::generate();?>" />
 
                         <p><input class='btn btn-primary' type='submit' value='<?=lang("GEN_UPDATE");?>' class='submit' /></p>
@@ -338,7 +341,9 @@ $userdetails=$user2->data();
                     if(isset($user->data()->oauth_provider) && $user->data()->oauth_provider != null){
                         echo lang("ERR_GOOG");
                     }
+										includeHook($hooks,'bottom');
                     ?>
+
                 </div>
             </div>
         </div>

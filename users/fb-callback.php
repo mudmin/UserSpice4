@@ -132,7 +132,21 @@ if($twoQ->count()>0) {
     logger($user->data()->id,"Two FA","Two FA being requested.");
     Redirect::To($us_url_root.'users/twofa.php');
   }
-
+  $ip = ipCheck();
+  $q = $db->query("SELECT id FROM us_ip_list WHERE ip = ?",array($ip));
+  $c = $q->count();
+  if($c < 1){
+    $db->insert('us_ip_list', array(
+      'user_id' => $feusr->id,
+      'ip' => $ip,
+    ));
+  }else{
+    $f = $q->first();
+    $db->update('us_ip_list',$f->id, array(
+      'user_id' => $feusr->id,
+      'ip' => $ip,
+    ));
+  }
 Redirect::to($us_url_root.'users/account.php');
 }else{
   if($settings->registration==0) {

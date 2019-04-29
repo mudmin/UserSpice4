@@ -30,8 +30,8 @@ $google2fa = new Google2FA();
 }
 ?>
 
-<?php if (!securePage($_SERVER['PHP_SELF'])){die();} ?>
-<?php
+<?php if (!securePage($_SERVER['PHP_SELF'])){die();}
+$hooks =  getMyHooks();
 if(ipCheckBan()){Redirect::to($us_url_root.'usersc/scripts/banned.php');die();}
 if($user->isLoggedIn()) Redirect::to($us_url_root.'index.php');
 if($settings->recaptcha == 1 || $settings->recaptcha == 2){
@@ -66,6 +66,7 @@ if(Input::exists()){
   if(!Token::check($token)){
     include($abs_us_root.$us_url_root.'usersc/scripts/token_error.php');
   }
+
         $fname = Input::get('fname');
         $lname = Input::get('lname');
         $email = Input::get('email');
@@ -240,7 +241,7 @@ if(Input::exists()){
                                         'vericode_expiry' => $vericode_expiry,
                                         'oauth_tos_accepted' => true
                                 ));
-
+                        includeHook($hooks,'post');
                         } catch (Exception $e) {
                                 die($e->getMessage());
                         }
@@ -274,6 +275,7 @@ if($settings->registration==1) {
 else {
   require $abs_us_root.$us_url_root.'users/views/_joinDisabled.php';
 }
+includeHook($hooks,'bottom');
 ?>
 
 </div>

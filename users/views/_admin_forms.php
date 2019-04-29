@@ -16,11 +16,11 @@
 
   <div class="row">
     <!-- Existing Forms -->
-    <div class="col-md-6 col-sm-12">
+    <div class="col-lg-6 col-12">
       <?php require_once($abs_us_root.$us_url_root.'users/views/_form_existing_forms.php');?>
     </div>
     <!-- Existing Views -->
-    <div class="col-md-6 col-sm-12">
+    <div class="col-lg-6 col-12">
       <?php require_once($abs_us_root.$us_url_root.'users/views/_form_existing_views.php');?>
     </div>
 
@@ -41,7 +41,7 @@
           <p>Please give the new form a name:</p>
           <div class="form-group">
             <form class="inline-form" action="" method="POST" id="newFormForm">
-              <input size="50" type="text" name="name" value="" class="form-control" placeholder="Lowercase letters, no symbols/numbers except _"><br />
+              <input size="50" type="text" name="name" value="" class="form-control" placeholder="Lowercase letters and numbers only"><br />
               <div class="btn-group pull-right"><input class='btn btn-primary' type='submit' name="create_form" value='Create Form' class='submit' /></div><br />
             </form>
           </div>
@@ -173,7 +173,7 @@
 
       </div>
     </div>
-	
+
 </div>
 
     <script src="../users/js/jwerty.js"></script>
@@ -201,4 +201,3 @@
       });
     });
   </script>
-

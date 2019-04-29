@@ -13,7 +13,7 @@
 </header>
 <?php
 if(!in_array($user->data()->id,$master_account)){
-  Redirect::to($us_url_root.'admin.php?err=You+do+not+have+master+account+privelages');
+  Redirect::to($us_url_root.'users/admin.php?err=You+do+not+have+master+account+privelages');
 }
 $table_view = $db->query("SHOW TABLES");
 $tablev = $table_view->results();

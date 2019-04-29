@@ -1,3 +1,4 @@
+<?php $hooks = getMyHooks(['page' =>'admin.php?view=social']); ?>
 <div class="col-sm-8">
   <div class="page-header float-right">
     <div class="page-title">
@@ -111,3 +112,4 @@
     </div>
     <input type="hidden" name="csrf" value="<?=Token::generate()?>" />
   </form>
+  <?php includeHook($hooks,'body');?>

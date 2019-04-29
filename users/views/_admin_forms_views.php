@@ -71,36 +71,33 @@ if(!empty($_POST['delete_view'])){
 <div class="content mt-3">
   <?php require_once($abs_us_root.$us_url_root.'users/views/_form_manager_menu.php');?>
   <div class="row">
-    <div class="col-sm-6">
+    <div class="col-lg-6 col-12">
       <h2>Create a custom form view</h2>
-      Custom views allow you to create a simpler version of an existing form.
-    </div>
-    <div class="col-sm-6">
+      Custom views allow you to create a simpler version of an existing form.<br><br>
 
       <h4>Select a form to create a view</h4>
       <?php if($formsC > 0){ ?>
-        <h2><form class="" action="" method="post">
+        <h4><form class="" action="" method="post">
           <select class="" name="select_form">
             <?php foreach($forms as $f) { ?>
               <option value="<?=$f->form?>"><?=$f->form?></option>
             <?php } ?>
           </select>
-          <input type="submit" class="btn btn-default" name="submit" value="Go!">
+          <input type="submit" name="submit" value="Go!">
         </form>
-      </h2>
+      </h4>
     <?php }else{ ?>
       You don't have any forms! <a href="admin.php?view=forms">Create one </a>first.
     <?php } ?>
-  </div>
+
 </div>
 <hr>
-<div class="row">
-  <div class="col-sm-12">
+  <div class="col-lg-6 col-12">
     <?php
     if(isset($find)){ //creating new view?>
       <table id="views" class='table table-hover table-list-search'>
         <form class="" action="" method="post">
-          <h2>Select the fields you would like to include in your custom view</h2>
+          <h4>Select the fields you would like to include in your custom view</h4>
           <thead>
             <tr>
               <th>Select</th>
@@ -111,7 +108,7 @@ if(!empty($_POST['delete_view'])){
             <?php
             foreach ($find as $f) { ?>
               <tr>
-                <td><input type="checkbox" class="form-control" name="selected[]" value="<?=$f->id?>"></td>
+                <td><input type="checkbox" class="" name="selected[]" value="<?=$f->id?>"></td>
                 <td><?=$f->form_descrip?></td>
               </tr>
             <?php }
@@ -119,7 +116,7 @@ if(!empty($_POST['delete_view'])){
             <input type="hidden" name="select_form" value="<?=$findPre?>">
           </tbody>
         </table>
-        <font size="5"><label for="">Give this view a name</label>
+        <h4>Give this view a name</h4>
           <input type="text" name="view_name" value="" placeholder="No spaces/special chars" required>
           <input type="submit" name="create_view" value="Create View"></font>
         </form>

@@ -120,6 +120,9 @@ if($settings->track_guest == 1 && $user->isLoggedIn()){
 
 }
 
+// Get html lang attribute, default 'en'
+if(isset($_SESSION['us_lang'])){ $html_lang = substr($_SESSION['us_lang'],0,2);}else{$html_lang = 'en';}
+
 if($user->isLoggedIn() && $currentPage != 'user_settings.php' && $user->data()->force_pr == 1) Redirect::to($us_url_root.'users/user_settings.php?err=You+must+change+your+password!');
 
 $page=currentFile();
@@ -130,14 +133,9 @@ if ($titleQ->count() > 0) {
 else $pageTitle = '';
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?=$html_lang ?>">
 <head>
-	<link rel="shortcut icon" href="<?=$abs_us_root?><?=$us_url_root?>favicon.ico">
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-	<meta name="description" content="">
-	<meta name="author" content="">
+	<link rel="shortcut icon" href="<?=$us_url_root?>favicon.ico">
 
 	<?php
 	if(file_exists($abs_us_root.$us_url_root.'usersc/includes/head_tags.php')){

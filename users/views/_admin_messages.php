@@ -191,7 +191,7 @@ if (!empty($_POST)) {
         <h2>Conversations <a href="#" data-toggle="modal" class="nounderline" data-target="#settings"><i class="fa fa-cog"></i></a></h2>
         <?php if($count > 0) {?><label><input type="checkbox" class="checkAllMsg" />
           [ check/uncheck all ]</label><?php } ?>                         <div class="btn-group pull-right"><button type="button" class="btn btn-info" data-toggle="modal" data-target="#composemass"><i class="fa fa-plus"></i> New Mass Message</button></div>
-          <form name="threads" action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
+          <form name="threads" action="admin.php?view=messages" method="post">
             <center><table id="paginate" class="table table-striped">
               <thead>
                 <tr>
@@ -298,7 +298,7 @@ if (!empty($_POST)) {
                             <h4 class="modal-title">Message Settings</h4>
                           </div>
                           <div class="modal-body">
-                            <form class="form" id="messageSettings" name='messageSettings' action='admin_messages.php' method='post'>
+                            <form class="form" id="messageSettings" name='messageSettings' action='admin.php?view=messages' method='post'>
                               <div class="form-group">
                                 <label for="msg_notification">Message Email Notification</label>
                                 <select id="msg_notification" class="form-control" name="msg_notification">
@@ -345,7 +345,7 @@ if (!empty($_POST)) {
                               <h4 class="modal-title">New Mass Message</h4>
                             </div>
                             <div class="modal-body">
-                              <form name="create_mass_message" action="admin_messages.php" method="post">
+                              <form name="create_mass_message" action="admin.php?view=messages" method="post">
 
                                 <label>Subject:</label>
                                 <input required size='100' class='form-control' type='text' name='msg_subject' value='' required/>

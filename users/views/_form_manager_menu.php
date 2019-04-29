@@ -1,6 +1,6 @@
 <?php
 if(!in_array($user->data()->id,$master_account)){
-  Redirect::to('admin.php?err=You+do+not+have+permission');
+  Redirect::to($us_url_root.'users/admin.php?err=You+do+not+have+permission');
 }
 //Errors Successes
 $errors = [];
@@ -45,18 +45,23 @@ if(!empty($_POST['deleteThisForm'])){
   Redirect::to($us_url_root.'users/admin.php?view=forms&err='.$msg);
 }
 ?>
-<h2>Forms Manager
-  <a href="admin.php?view=forms" class="show-tooltip" title="Form manager home"><i class="fa fa-home"></i></a>
-  <a href="#" data-toggle="modal" data-target="#newForm" class="show-tooltip" title="Create new form"><i class="fa fa-plus"></i></a>
-  <a href="#" data-toggle="modal" data-target="#duplicate" class="show-tooltip" title="Duplicate an existing form"><i class="fa fa-clone"></i></a>
-  <a href="#" data-toggle="modal" data-target="#fromDB" class="show-tooltip" title="Create form from existing db table"><i class="fa fa-tasks"></i></a>
-  <a href="admin.php?view=forms_views" class="show-tooltip" title="Manage form views"><i class="fa fa-eye"></i></a>
-  <a href="#" data-toggle="modal" data-target="#deleteForm" class="show-tooltip" title="Delete a form"><i class="fa fa-times-circle"></i></a>
-  <a href="https://userspice.com/using-the-form-manager/" class="show-tooltip" title="Help with forms"><i class="fa fa-question-circle"></i></a>
-</h2>
-Please note: While the forms are designed to be filled out by the end user, the forms manager is not designed to be accessable to the public. Please keep it as master account only.
-<?=resultBlock($errors,$successes);?>
-<hr>
+<div class="row">
+  <div class="col-12">
+    <h2>Forms Manager
+      <a href="admin.php?view=forms" class="show-tooltip" title="Form manager home"><i class="fa fa-home"></i></a>
+      <a href="#" data-toggle="modal" data-target="#newForm" class="show-tooltip" title="Create new form"><i class="fa fa-plus"></i></a>
+      <a href="#" data-toggle="modal" data-target="#duplicate" class="show-tooltip" title="Duplicate an existing form"><i class="fa fa-clone"></i></a>
+      <a href="#" data-toggle="modal" data-target="#fromDB" class="show-tooltip" title="Create form from existing db table"><i class="fa fa-tasks"></i></a>
+      <a href="admin.php?view=forms_views" class="show-tooltip" title="Manage form views"><i class="fa fa-eye"></i></a>
+      <a href="#" data-toggle="modal" data-target="#deleteForm" class="show-tooltip" title="Delete a form"><i class="fa fa-times-circle"></i></a>
+      <a href="#" onclick=" window.open('https://userspice.com/using-the-form-manager/','_blank')" class="show-tooltip" title="Help with forms"><i class="fa fa-question-circle"></i></a>
+    </h2>
+    Please note: While the forms are designed to be filled out by the end user, the forms manager is not designed to be accessable to the public. Please keep it as master account only.
+    <?=resultBlock($errors,$successes);?>
+    <hr>
+  </div>
+</div>
+
 
 <!-- Modal -->
 <div id="newForm" class="modal" role="dialog">
@@ -72,7 +77,7 @@ Please note: While the forms are designed to be filled out by the end user, the 
         <p>Please give the new form a name:</p>
         <div class="form-group">
           <form class="inline-form" action="" method="POST" id="newFormForm">
-            <input size="50" type="text" name="name" value="" class="form-control" placeholder="Lowercase letters, no symbols/numbers except _"><br />
+            <input size="50" type="text" name="name" value="" class="form-control" placeholder="Lowercase letters and numbers only"><br />
             <div class="btn-group pull-right"><input class='btn btn-primary' type='submit' name="create_form" value='Create Form' class='submit' /></div><br />
           </form>
         </div>

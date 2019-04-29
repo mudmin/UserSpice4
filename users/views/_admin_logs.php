@@ -79,11 +79,13 @@ $(document).ready(function () {
   // DataTable
   var table = $('#paginate').DataTable({
     "pageLength": 10,
+    "stateSave": true,
     "aLengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
     "aaSorting": [],
     "serverSide": true,
     "processing": true,
     "scrollX": true,
+    "stateSave": true,
     "order": [ 0, 'desc' ],
     "ajax": {
       "url": "loader.php",

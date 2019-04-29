@@ -281,7 +281,7 @@ if (!empty($_POST)) {
       jwerty.key('esc', function(){
         $('.modal').modal('hide');
       });
-      $('#paginate').DataTable({"pageLength": 25,"aLengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]], "aaSorting": []});
+      $('#paginate').DataTable({"pageLength": 25,"stateSave": true,"aLengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]], "aaSorting": []});
 
       $('.password_view_control').hover(function () {
         $('#password').attr('type', 'text');

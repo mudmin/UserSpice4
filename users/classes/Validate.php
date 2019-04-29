@@ -47,7 +47,7 @@ class Validate
 				if ($rule==='required'  &&  $length==0) {
 					$str = lang("GEN_REQ");
 					if ($rule_value)
-						$this->addError(["{$display} $str",$item]);
+					$this->addError(["{$display} $str",$item]);
 				}
 				else
 				if ($length != 0) {
@@ -59,7 +59,7 @@ class Validate
 						$str1 = lang("GEN_CHAR");
 						$str2 = lang("GEN_REQ");
 						if ($length < $rule_value)
-							$this->addError(["{$display} $str {$rule_value} $str1 $str2",$item]);
+						$this->addError(["{$display} $str {$rule_value} $str1 $str2",$item]);
 						break;
 
 						case 'max':
@@ -90,9 +90,9 @@ class Validate
 							$str = lang("VAL_EXISTS");
 							$str1 = lang("VAL_DB");
 							if ($this->_db->count())
-							$this->addError(["{$display} $str2 {$display}",$item]);
+							$this->addError(["{$display} $str {$display}",$item]);
 						} else
-							$this->addError([$str1,$item]);
+						$this->addError([$str1,$item]);
 						break;
 
 						case 'unique_update':
@@ -109,13 +109,13 @@ class Validate
 						case 'is_numeric': case 'is_num':
 						$str = lang("VAL_NUM");
 						if ($rule_value  &&  !is_numeric($value))
-							$this->addError(["{$display} $str",$item]);
+						$this->addError(["{$display} $str",$item]);
 						break;
 
 						case 'valid_email':
 						$str = lang("VAL_EMAIL");
 						if(!filter_var($value,FILTER_VALIDATE_EMAIL))
-							$this->addError(["{$display} $str",$item]);
+						$this->addError(["{$display} $str",$item]);
 						break;
 
 						case 'is_not_email':
@@ -154,45 +154,45 @@ class Validate
 							}
 
 							if ($rule=="<"  &&  $value>=$rule_value){
-							$str = lang("VAL_LESS");
-							$this->addError(["{$display} $str {$rule_value_display}",$item]);
+								$str = lang("VAL_LESS");
+								$this->addError(["{$display} $str {$rule_value_display}",$item]);
 							}
 
 							if ($rule==">"  &&  $value<=$rule_value){
-							$str = lang("VAL_LESS");
-							$this->addError(["{$display} $str {$rule_value_display}",$item]);
+								$str = lang("VAL_LESS");
+								$this->addError(["{$display} $str {$rule_value_display}",$item]);
 							}
 
 							if ($rule=="<="  &&  $value>$rule_value){
-							$str = lang("VAL_LESS_EQ");
-							$this->addError(["{$display} $str {$rule_value_display}",$item]);
+								$str = lang("VAL_LESS_EQ");
+								$this->addError(["{$display} $str {$rule_value_display}",$item]);
 							}
 
 							if ($rule==">="  &&  $value<$rule_value){
-							$str = lang("VAL_GREAT_EQ");
-							$this->addError(["{$display} $str {$rule_value_display}",$item]);
+								$str = lang("VAL_GREAT_EQ");
+								$this->addError(["{$display} $str {$rule_value_display}",$item]);
 							}
 
-							if ($rule=="!="  &&  $value==$rule_value) {
-							$str = lang("VAL_NOT_EQ");
-							$this->addError(["{$display} $str {$rule_value_display}",$item]);
+							if ($rule=="!="  &&  $value==$rule_value){
+								$str = lang("VAL_NOT_EQ");
+								$this->addError(["{$display} $str {$rule_value_display}",$item]);
 							}
 
 							if ($rule=="=="  &&  $value!=$rule_value){
-							$str = lang("VAL_EQ");
-							$this->addError(["{$display} $str {$rule_value_display}",$item]);
+								$str = lang("VAL_EQ");
+								$this->addError(["{$display} $str {$rule_value_display}",$item]);
 							}
-
 						}
-						else
-						$str = lang("VAL_NUM");
-						$this->addError(["{$display} $str",$item]);
+						else{
+							$str = lang("VAL_NUM");
+							$this->addError(["{$display} $str",$item]);
+						}
 						break;
 
 						case 'is_integer': case 'is_int':
 						if ($rule_value  &&  filter_var($value, FILTER_VALIDATE_INT)===false){
-						$str = lang("VAL_INT");
-						$this->addError(["{$display} $str",$item]);
+							$str = lang("VAL_INT");
+							$this->addError(["{$display} $str",$item]);
 						}
 						break;
 
@@ -242,8 +242,8 @@ class Validate
 							$object = DateTime::createFromFormat((empty($rule_value) || is_bool($rule_value) ? "Y-m-d H:i:s" : $rule_value), $value);
 
 							if (!$object  ||  DateTime::getLastErrors()["warning_count"]>0  ||  DateTime::getLastErrors()["error_count"]>0){
-							$str = lang("VAL_TIME");
-							$this->addError(["{$display} $str",$item]);
+								$str = lang("VAL_TIME");
+								$this->addError(["{$display} $str",$item]);
 							}
 						}
 						break;
@@ -256,9 +256,9 @@ class Validate
 							$to_be_checked = $value; //The value to checked
 							$array_to_check_in = $rule_value; //The array to check $value against
 							if(!in_array($to_be_checked, $array_to_check_in)){
-							$str = lang("VAL_SEL");
-							$this->addError(["{$display} $str",$item]);
-						}
+								$str = lang("VAL_SEL");
+								$this->addError(["{$display} $str",$item]);
+							}
 						}
 						break;
 

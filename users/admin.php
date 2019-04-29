@@ -44,6 +44,7 @@ $settings = $db->query("SELECT * FROM settings")->first();
   function usView($file){
     global $abs_us_root;
     global $us_url_root;
+    if(checkAccess($file)){
     if(file_exists($abs_us_root.$us_url_root.'usersc/includes/admin/'.$file)){
       $path = $abs_us_root.$us_url_root.'usersc/includes/admin/'.$file;
     }elseif(file_exists($abs_us_root.$us_url_root.'users/views/'.$file)){
@@ -52,16 +53,93 @@ $settings = $db->query("SELECT * FROM settings")->first();
       $path = $abs_us_root.$us_url_root.'users/views/_admin_dashboard.php';
     }
     return $path;
+  }else{
+    $path = $abs_us_root.$us_url_root.'users/views/_admin_dashboard.php';
+    return $path;
+  }
+  }
+
+  function checkAccess($file){
+    global $db, $user, $master_account;
+    if (in_array($user->data()->id, $master_account)){
+      return true;
+    }else{
+      $checkQ = $db->query("SELECT * FROM us_management WHERE page = ?",[$file]);
+
+      $checkC = $checkQ->count();
+      if($checkC < 1){
+        //if a page is not in this table, we're going to side with security and deny access.
+        return false;
+      }else{
+        $check = $checkQ->first();
+        if(hasPerm([2,$check->access],$user->data()->id)){
+          return true;
+        }else{
+          return false;
+        }
+      }
+    }
+
+function checkAccess($file){
+  global $db, $user, $master_account;
+  if (in_array($user->data()->id, $master_account)){
+    return true;
+  }else{
+    $checkQ = $db->query("SELECT * FROM us_management WHERE page = ?",[$file]);
+
+    $checkC = $checkQ->count();
+    if($checkC < 1){
+      //if a page is not in this table, we're going to side with security and deny access.
+      return false;
+    }else{
+      $check = $checkQ->first();
+      if(hasPerm([2,$check->access],$user->data()->id)){
+        return true;
+      }else{
+        return false;
+      }
+    }
+  }
+
+  }
+}
+function checkAdminMenu($view){
+  global $db, $user, $master_account;
+  if (in_array($user->data()->id, $master_account) || hasPerm([2],$user->data()->id)){
+    return true;
+  }else{
+    $checkQ = $db->query("SELECT * FROM us_management WHERE view = ?",[$view]);
+    $checkC = $checkQ->count();
+    if($checkC < 1){
+      //if a page is not in this table, we're going to side with security and deny access.
+      return false;
+    }else{
+      $check = $checkQ->first();
+      if(hasPerm([2,$check->access],$user->data()->id)){
+        return true;
+      }else{
+        return false;
+      }
+    }
+  }
   }
   //$view = Input::get('view');
   include($abs_us_root.$us_url_root.'usersc/includes/admin_override.php');
   switch ($view) {
+    case "access":
+      $path = usView('_dashboard_access.php');
+      include($path);
+      break;
     case "backup":
       $path = usView('_admin_tools_backup.php');
       include($path);
       break;
     case "cron":
       $path = usView('_admin_cron.php');
+      include($path);
+      break;
+    case "custom":
+      $path = usView('_admin_settings_custom.php');
       include($path);
       break;
     case "email":

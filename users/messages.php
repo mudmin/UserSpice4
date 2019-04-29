@@ -336,6 +336,7 @@ include($abs_us_root.$us_url_root."users/views/msg4.php");
   $(document).ready(function() {
     $('#paginate').DataTable(
       {  searching: false,
+        "stateSave": true,
         "pageLength": 10
       }
     );
