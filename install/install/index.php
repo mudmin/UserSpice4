@@ -219,13 +219,16 @@ include "../users/includes/user_spice_ver.php";
     </div>
     <?php if ($errors === 0) { ?>
         <div class="row mt-4 mb-5">
-            <div class="col-12">
-                  <p class="text-center">
-                    <strong>By clicking continue, you agree with the terms of the <a href="license.php" target="_blank"><?= $app_name ?> License.</a></strong>
-                  </p>
-                  <p class="text-center"><a href="step2.php" class="btn btn-success">Continue</a></p>
+            <div class="col-6">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="defaultCheck2" disabled checked>
+                    <label class="form-check-label" for="defaultCheck2">
+                        By clicking continue, you agree with the terms of the <a href="license.php" target="_blank"><?= $app_name ?>
+                            License.</a>
+                    </label>
                 </div>
             </div>
+            <div class="col-6 text-right"><a href="step2.php" class="btn btn-success">Continue</a></div>
         </div>
     <?php } elseif ($errors === 1) { ?>
         <div class="alert alert-danger" role="alert">

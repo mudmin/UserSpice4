@@ -1,41 +1,44 @@
-<?php require_once("install/includes/header.php");
+<?php
+	require_once("install/includes/header.php");
+	$go = 0;
+?>
 
-$go = 0; ?>
 <div class="container">
+    <div class="row justify-content-center mt-4">
+        <div class="col-6">
+            <div class="list-group list-group-horizontal-xl">
+                <a href="#" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">Step 1</h5>
+                    </div>
+                    <p class="mb-1"><?= $step1 ?></p>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action active">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">Step 2</h5>
+                    </div>
+                    <p class="mb-1"><?= $step2 ?></p>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">Step 3</h5>
+                    </div>
+                    <p class="mb-1"><?= $step3 ?></p>
+                </a>
+            </div>
+        </div>
+    </div>
 
-  <div class="row">
-      <div class="col-sm-5">
-
-      </div> <!-- / panel preview -->
-      </div>
-
-
- <div class="row">
-        <div class="col-sm-12">
-            <ul class="nav nav-pills nav-justified thumbnail">
-                <li><a href="#">
-                    <h4 class="list-group-item-heading">Step 1</h4>
-                    <p class="list-group-item-text"><?=$step1?></p>
-                </a></li>
-                <li class="active"><a href="#">
-                    <h4 class="list-group-item-heading">Step 2</h4>
-                    <p class="list-group-item-text"><?=$step2?></p>
-                </a></li>
-                <li><a href="#">
-                    <h4 class="list-group-item-heading">Step 3</h4>
-                    <p class="list-group-item-text"><?=$step3?></p>
-                </a></li>
-              </ul>
-          </div>
-          <div class="row">
-              <div class="col-sm-12">
-              <?php  if (!empty($_POST)){
-                  echo "We are importing the tables...one moment please!"; } ?>
-                <H2>Please fill in your information</H2>
+	<div class="row">
+        <div class="col-12 mt-4">
+		<?php
+			if (!empty($_POST)){
+				echo '<div class="alert alert-primary" role="alert">We are importing the tables... one moment please!</div>';
+			}
+		?>
+                <h3>Please fill in your information</h3>
                 <form class="form" action="" method="post">
-                  <div class="panel panel-default">
-                      <div class="panel-body form-horizontal payment-form">
-                          <div class="form-group">
+					<div class="form-group row">
                               <label for="timezone" class="col-sm-4 control-label">Region/Timezone (required)</label>
                               <div class="col-sm-8">
                                 <?php
@@ -65,8 +68,7 @@ $go = 0; ?>
                                       }
                                     }
                                     // View
-                                    print '<select class="form-control" id="timezone" name="timezone" required>';
-
+																		print '<select class="form-control" id="timezone" name="timezone" required data-live-search="true">';
                                     foreach($timezones as $region => $list)
                                     {
                                       print '<optgroup label="' . $region . '">' . "\n";
@@ -83,33 +85,33 @@ $go = 0; ?>
                                     print '</select>';?>
                               </div>
                           </div>
-                          <div class="form-group">
+                          <div class="form-group row">
                               <label for="dbh" class="col-sm-4 control-label">Database Host (required)</label>
                               <div class="col-sm-8">
-                                <input required class="form-control" type="text" name="dbh"  value="<?php if (!empty($_POST['dbh'])){ print $_POST['dbh']; } ?>" required>
+                                <input required class="form-control" type="text" name="dbh" value="<?php if (!empty($_POST['dbh'])){ print $_POST['dbh']; } ?>" required placeholder="localhost">
                               </div>
                           </div>
-                          <div class="form-group">
+                          <div class="form-group row">
                               <label for="dbu" class="col-sm-4 control-label">Database User (required)</label>
                               <div class="col-sm-8">
-                                  <input required class="form-control" type="text" name="dbu"  value="<?php if (!empty($_POST['dbu'])){ print $_POST['dbu']; } ?>" required>
+                                  <input required class="form-control" type="text" name="dbu" value="<?php if (!empty($_POST['dbu'])){ print $_POST['dbu']; } ?>" required>
                               </div>
                           </div>
-                          <div class="form-group">
+                          <div class="form-group row">
                               <label for="dbp" class="col-sm-4 control-label">Database Password (usually required)</label>
                               <div class="col-sm-8">
-                                <input class="form-control" type="text" name="dbp"  value="<?php if (!empty($_POST['dbp'])){ print $_POST['dbp']; } ?>">
+                                <input class="form-control" type="text" name="dbp" value="<?php if (!empty($_POST['dbp'])){ print $_POST['dbp']; } ?>">
                               </div>
                           </div>
-                          <div class="form-group">
+                          <div class="form-group row">
                               <label for="dbn" class="col-sm-4 control-label">Database Name (required)</label>
                               <div class="col-sm-8">
-                                  <input class="form-control" type="text" name="dbn"  value="<?php if (!empty($_POST['dbn'])){ print $_POST['dbn']; } ?>" required>
+                                  <input class="form-control" type="text" name="dbn" value="<?php if (!empty($_POST['dbn'])){ print $_POST['dbn']; } ?>" required>
                               </div>
                           </div>
-                          <div class="form-group">
+                          <div class="form-group row">
                               <div class="col-sm-12 text-right">
-                                <input class="btn btn-primary" type="submit" name="test" value="Try These Settings (This will take a moment)">
+                                <input class="btn btn-dark" type="submit" name="test" value="Try These Settings (This will take a moment)">
                               </div>
                           </div>
                       </div>
@@ -177,7 +179,7 @@ if(!empty($_POST['tryToCreate'])){
 
   } catch (PDOException $e) {
       $success = false;
-      echo "Database connection <font color='red'><strong>unsuccessful</font></strong>! Please try again.";
+      echo '<div class="alert alert-danger" role="alert">Database connection <strong>unsuccessful</strong>! Please try again.</div>';
   }
 }
 //If Testing
@@ -192,11 +194,11 @@ try {
 $pdo = new PDO($dsn, $dbu, $dbp, $opt) or die('could not connect');
 } catch (PDOException $e) {
     $success = false;
-    echo "Database connection <font color='red'><strong>unsuccessful</font></strong>! Please try again.";
+    echo '<div class="alert alert-danger" role="alert">Database connection <strong>unsuccessful</strong>! Please try again.</div>';
 }
 
 if ($success) {
-    echo "Database connection <font color='green'><strong>successful</font></strong>!<br><br>";
+    echo '<div class="alert alert-success" role="alert">Database connection <strong>successful</strong>!</div>';
     $link = mysqli_connect($dbh, $dbu, $dbp, $dbn);
     if (!$link) {
 
@@ -237,15 +239,15 @@ if($go === 1){
     if (substr(trim($line), -1, 1) == ';')
     {
         // Perform the query
-        mysqli_query($link,$templine) or print('Error performing query \'<strong>' . $templine . '\': ' . mysqli_connect_error() . '<br /><br />');
+        mysqli_query($link,$templine) or print('<div class="alert alert-danger" role="alert">Error performing query:<br><code>' . $templine . '</code></div>');
         // Reset temp variable to empty
         $templine = '';
     }
     }
-     echo "If you do not see a bunch of errors above this line, your tables imported successfully<br>";
+     echo '<div class="alert alert-success" role="alert">If you do not see a bunch of errors above this line, your tables imported successfully</div>';
     ?>
 
-<input class="btn btn-danger" type="submit" name="submit" value="Finalize Install >>">
+<input class="btn btn-success" type="submit" name="submit" value="Finalize Install">
 </form>
 <?php
 }
@@ -260,4 +262,11 @@ if($go === 1){
               </div>
     	</div>
     </div>
-<?php require_once("install/includes/header.php"); ?>
+<?php require_once("install/includes/footer.php"); ?>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.10/css/bootstrap-select.min.css" integrity="sha256-jwJEU4p1YdtymLFwAjYfam5Pj5NOnylms63k7LYQ9Jk=" crossorigin="anonymous" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.10/js/bootstrap-select.min.js" integrity="sha256-FXzZGmaRFZngOjUKy3lWZJq/MflaMpffBbu3lPT0izE=" crossorigin="anonymous"></script>
+<script>
+$(function () {
+    $('select').selectpicker();
+});
+</script>
