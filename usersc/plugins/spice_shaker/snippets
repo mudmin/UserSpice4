@@ -1,0 +1,40 @@
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <tr>
+    <th>Project Name</th>
+    <th>Version</th>
+    <th>Release</th>
+    <th>Repository</th>
+    <th>Install</th>
+  </tr>
+    </tr>
+  </thead>
+  <tbody>
+    <?php
+
+    foreach($dev as $d){ ?>
+      <tr>
+        <td><?=$d->project?></td>
+        <td><?=$d->version." (".$d->status.")";?></td>
+        <td><?php if($d->release_type == 0){
+          echo "Community";
+        }else{
+          echo "Official";
+        }?></td>
+        <?php //$url = gitUrl($d->service);?>
+        <td>
+          <a href="<?=$url.$d->repo?>">Repo</a>
+        </td>
+        <td>
+        <a href="<?=$url.$d->url?>">Install</a>
+        </td>
+      </tr>
+      <tr>
+      <th scope="row" class="sr-only">Additional details</th>
+      <td colspan="5"><?=$d->descrip?></td>
+    </tr>
+    <?php } ?>
+  </tbody>
+</table>
+</table>
