@@ -1,27 +1,28 @@
-<?php require_once("install_settings.php"); ?>
-<html class="no-js" lang="">
-   <head>
-       <meta charset="utf-8">
-       <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-       <title>InstallSpice</title>
-       <meta name="description" content="">
-       <meta name="viewport" content="width=device-width, initial-scale=1">
+<?php
+ini_set('max_execution_time', 1356);
+ini_set('memory_limit','1024M');
+?><?php require_once("install_settings.php"); ?>
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>UserSpice Installation</title>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha256-YLGeXaapI0/5IgZopewRJcFXomhRMlYYjugPLSyNjTY=" crossorigin="anonymous" />
+		<style>.table td,.table th{padding: .2rem .7rem}</style>
+	</head>
+<body>
+<header>
+  <div class="navbar navbar-dark bg-dark shadow-sm">
+    <div class="container d-flex justify-content-between">
+      <a href="/install/" class="navbar-brand d-flex align-items-center">
+		<strong>User</strong>Spice
+      </a>
+	  <a class="btn btn btn-danger" href="/install/recovery.php">Reset and Start Over</a>
+    </div>
+  </div>
+</header>
 
-       <link rel="stylesheet" href="install/css/bootstrap.min.css">
-
-
-               <style>
-                   body {
-                       padding-top: 50px;
-                       padding-bottom: 20px;
-                   }
-               </style>
-               <link rel="stylesheet" href="install/css/bootstrap-theme.min.css">
-               <link rel="stylesheet" href="install/css/main.css">
-
-               <script src="install/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
-           </head>
-           <body>
  <?php
  function redirect($location = null){
    if ($location) {
@@ -39,5 +40,3 @@
    }
  }
  ?>
-            <div align="center">
-Having Problems?  <a class="btn btn-primary" href="recovery.php">Reset and Start Over</a></div>

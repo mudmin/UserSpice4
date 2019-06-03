@@ -1,10 +1,12 @@
-<p>Licenses for other included software are located in the /users/licenses folder. By using this software you are agreeing to all included licenses. </p>
+<?php require_once("install/includes/header.php"); ?>
+
+<div class="container mt-5 mb-5">
 
 <h3 style="text-align: center;">GNU GENERAL PUBLIC LICENSE</h3>
 <p style="text-align: center;">Version 3, 29 June 2007</p>
 
-<p>Copyright &copy; 2007 Free Software Foundation, Inc.
- &lt;<a href="http://fsf.org/">http://fsf.org/</a>&gt;</p><p>
+<p>Copyright © 2007 Free Software Foundation, Inc.
+ &lt;<a href="https://fsf.org/">https://fsf.org/</a>&gt;</p><p>
  Everyone is permitted to copy and distribute verbatim copies
  of this license document, but changing it is not allowed.</p>
 
@@ -75,35 +77,35 @@ modification follow.</p>
 
 <h4><a name="section0"></a>0. Definitions.</h4>
 
-<p>&ldquo;This License&rdquo; refers to version 3 of the GNU General Public License.</p>
+<p>“This License” refers to version 3 of the GNU General Public License.</p>
 
-<p>&ldquo;Copyright&rdquo; also means copyright-like laws that apply to other kinds of
+<p>“Copyright” also means copyright-like laws that apply to other kinds of
 works, such as semiconductor masks.</p>
  
-<p>&ldquo;The Program&rdquo; refers to any copyrightable work licensed under this
-License.  Each licensee is addressed as &ldquo;you&rdquo;.  &ldquo;Licensees&rdquo; and
-&ldquo;recipients&rdquo; may be individuals or organizations.</p>
+<p>“The Program” refers to any copyrightable work licensed under this
+License.  Each licensee is addressed as “you”.  “Licensees” and
+“recipients” may be individuals or organizations.</p>
 
-<p>To &ldquo;modify&rdquo; a work means to copy from or adapt all or part of the work
+<p>To “modify” a work means to copy from or adapt all or part of the work
 in a fashion requiring copyright permission, other than the making of an
-exact copy.  The resulting work is called a &ldquo;modified version&rdquo; of the
-earlier work or a work &ldquo;based on&rdquo; the earlier work.</p>
+exact copy.  The resulting work is called a “modified version” of the
+earlier work or a work “based on” the earlier work.</p>
 
-<p>A &ldquo;covered work&rdquo; means either the unmodified Program or a work based
+<p>A “covered work” means either the unmodified Program or a work based
 on the Program.</p>
 
-<p>To &ldquo;propagate&rdquo; a work means to do anything with it that, without
+<p>To “propagate” a work means to do anything with it that, without
 permission, would make you directly or secondarily liable for
 infringement under applicable copyright law, except executing it on a
 computer or modifying a private copy.  Propagation includes copying,
 distribution (with or without modification), making available to the
 public, and in some countries other activities as well.</p>
 
-<p>To &ldquo;convey&rdquo; a work means any kind of propagation that enables other
+<p>To “convey” a work means any kind of propagation that enables other
 parties to make or receive copies.  Mere interaction with a user through
 a computer network, with no transfer of a copy, is not conveying.</p>
 
-<p>An interactive user interface displays &ldquo;Appropriate Legal Notices&rdquo;
+<p>An interactive user interface displays “Appropriate Legal Notices”
 to the extent that it includes a convenient and prominently visible
 feature that (1) displays an appropriate copyright notice, and (2)
 tells the user that there is no warranty for the work (except to the
@@ -114,27 +116,27 @@ menu, a prominent item in the list meets this criterion.</p>
 
 <h4><a name="section1"></a>1. Source Code.</h4>
 
-<p>The &ldquo;source code&rdquo; for a work means the preferred form of the work
-for making modifications to it.  &ldquo;Object code&rdquo; means any non-source
+<p>The “source code” for a work means the preferred form of the work
+for making modifications to it.  “Object code” means any non-source
 form of a work.</p>
 
-<p>A &ldquo;Standard Interface&rdquo; means an interface that either is an official
+<p>A “Standard Interface” means an interface that either is an official
 standard defined by a recognized standards body, or, in the case of
 interfaces specified for a particular programming language, one that
 is widely used among developers working in that language.</p>
 
-<p>The &ldquo;System Libraries&rdquo; of an executable work include anything, other
+<p>The “System Libraries” of an executable work include anything, other
 than the work as a whole, that (a) is included in the normal form of
 packaging a Major Component, but which is not part of that Major
 Component, and (b) serves only to enable use of the work with that
 Major Component, or to implement a Standard Interface for which an
 implementation is available to the public in source code form.  A
-&ldquo;Major Component&rdquo;, in this context, means a major essential component
+“Major Component”, in this context, means a major essential component
 (kernel, window system, and so on) of the specific operating system
 (if any) on which the executable work runs, or a compiler used to
 produce the work, or an object code interpreter used to run it.</p>
 
-<p>The &ldquo;Corresponding Source&rdquo; for a work in object code form means all
+<p>The “Corresponding Source” for a work in object code form means all
 the source code needed to generate, install, and (for an executable
 work) run the object code and to modify the work, including scripts to
 control those activities.  However, it does not include the work's
@@ -221,7 +223,7 @@ terms of section 4, provided that you also meet all of these conditions:</p>
 <li>b) The work must carry prominent notices stating that it is
     released under this License and any conditions added under section
     7.  This requirement modifies the requirement in section 4 to
-    &ldquo;keep intact all notices&rdquo;.</li>
+    “keep intact all notices”.</li>
 
 <li>c) You must license the entire work, as a whole, under this
     License to anyone who comes into possession of a copy.  This
@@ -241,7 +243,7 @@ terms of section 4, provided that you also meet all of these conditions:</p>
 works, which are not by their nature extensions of the covered work,
 and which are not combined with it such as to form a larger program,
 in or on a volume of a storage or distribution medium, is called an
-&ldquo;aggregate&rdquo; if the compilation and its resulting copyright are not
+“aggregate” if the compilation and its resulting copyright are not
 used to limit the access or legal rights of the compilation's users
 beyond what the individual works permit.  Inclusion of a covered work
 in an aggregate does not cause this License to apply to the other
@@ -301,12 +303,12 @@ in one of these ways:</p>
 from the Corresponding Source as a System Library, need not be
 included in conveying the object code work.</p>
 
-<p>A &ldquo;User Product&rdquo; is either (1) a &ldquo;consumer product&rdquo;, which means any
+<p>A “User Product” is either (1) a “consumer product”, which means any
 tangible personal property which is normally used for personal, family,
 or household purposes, or (2) anything designed or sold for incorporation
 into a dwelling.  In determining whether a product is a consumer product,
 doubtful cases shall be resolved in favor of coverage.  For a particular
-product received by a particular user, &ldquo;normally used&rdquo; refers to a
+product received by a particular user, “normally used” refers to a
 typical or common use of that class of product, regardless of the status
 of the particular user or of the way in which the particular user
 actually uses, or expects or is expected to use, the product.  A product
@@ -314,7 +316,7 @@ is a consumer product regardless of whether the product has substantial
 commercial, industrial or non-consumer uses, unless such uses represent
 the only significant mode of use of the product.</p>
 
-<p>&ldquo;Installation Information&rdquo; for a User Product means any methods,
+<p>“Installation Information” for a User Product means any methods,
 procedures, authorization keys, or other information required to install
 and execute modified versions of a covered work in that User Product from
 a modified version of its Corresponding Source.  The information must
@@ -349,7 +351,7 @@ unpacking, reading or copying.</p>
 
 <h4><a name="section7"></a>7. Additional Terms.</h4>
 
-<p>&ldquo;Additional permissions&rdquo; are terms that supplement the terms of this
+<p>“Additional permissions” are terms that supplement the terms of this
 License by making exceptions from one or more of its conditions.
 Additional permissions that are applicable to the entire Program shall
 be treated as though they were included in this License, to the extent
@@ -394,8 +396,8 @@ that material) supplement the terms of this License with terms:</p>
     those licensors and authors.</li>
 </ul>
 
-<p>All other non-permissive additional terms are considered &ldquo;further
-restrictions&rdquo; within the meaning of section 10.  If the Program as you
+<p>All other non-permissive additional terms are considered “further
+restrictions” within the meaning of section 10.  If the Program as you
 received it, or any part of it, contains a notice stating that it is
 governed by this License along with a term that is a further
 restriction, you may remove that term.  If a license document contains
@@ -459,7 +461,7 @@ receives a license from the original licensors, to run, modify and
 propagate that work, subject to this License.  You are not responsible
 for enforcing compliance by third parties with this License.</p>
 
-<p>An &ldquo;entity transaction&rdquo; is a transaction transferring control of an
+<p>An “entity transaction” is a transaction transferring control of an
 organization, or substantially all assets of one, or subdividing an
 organization, or merging organizations.  If propagation of a covered
 work results from an entity transaction, each party to that
@@ -479,17 +481,17 @@ sale, or importing the Program or any portion of it.</p>
 
 <h4><a name="section11"></a>11. Patents.</h4>
 
-<p>A &ldquo;contributor&rdquo; is a copyright holder who authorizes use under this
+<p>A “contributor” is a copyright holder who authorizes use under this
 License of the Program or a work on which the Program is based.  The
-work thus licensed is called the contributor's &ldquo;contributor version&rdquo;.</p>
+work thus licensed is called the contributor's “contributor version”.</p>
 
-<p>A contributor's &ldquo;essential patent claims&rdquo; are all patent claims
+<p>A contributor's “essential patent claims” are all patent claims
 owned or controlled by the contributor, whether already acquired or
 hereafter acquired, that would be infringed by some manner, permitted
 by this License, of making, using, or selling its contributor version,
 but do not include claims that would be infringed only as a
 consequence of further modification of the contributor version.  For
-purposes of this definition, &ldquo;control&rdquo; includes the right to grant
+purposes of this definition, “control” includes the right to grant
 patent sublicenses in a manner consistent with the requirements of
 this License.</p>
 
@@ -498,10 +500,10 @@ patent license under the contributor's essential patent claims, to
 make, use, sell, offer for sale, import and otherwise run, modify and
 propagate the contents of its contributor version.</p>
 
-<p>In the following three paragraphs, a &ldquo;patent license&rdquo; is any express
+<p>In the following three paragraphs, a “patent license” is any express
 agreement or commitment, however denominated, not to enforce a patent
 (such as an express permission to practice a patent or covenant not to
-sue for patent infringement).  To &ldquo;grant&rdquo; such a patent license to a
+sue for patent infringement).  To “grant” such a patent license to a
 party means to make such an agreement or commitment not to enforce a
 patent against the party.</p>
 
@@ -513,7 +515,7 @@ then you must either (1) cause the Corresponding Source to be so
 available, or (2) arrange to deprive yourself of the benefit of the
 patent license for this particular work, or (3) arrange, in a manner
 consistent with the requirements of this License, to extend the patent
-license to downstream recipients.  &ldquo;Knowingly relying&rdquo; means you have
+license to downstream recipients.  “Knowingly relying” means you have
 actual knowledge that, but for the patent license, your conveying the
 covered work in a country, or your recipient's use of the covered work
 in a country, would infringe one or more identifiable patents in that
@@ -527,7 +529,7 @@ or convey a specific copy of the covered work, then the patent license
 you grant is automatically extended to all recipients of the covered
 work and works based on it.</p>
 
-<p>A patent license is &ldquo;discriminatory&rdquo; if it does not include within
+<p>A patent license is “discriminatory” if it does not include within
 the scope of its coverage, prohibits the exercise of, or is
 conditioned on the non-exercise of one or more of the rights that are
 specifically granted under this License.  You may not convey a covered
@@ -578,7 +580,7 @@ address new problems or concerns.</p>
 
 <p>Each version is given a distinguishing version number.  If the
 Program specifies that a certain numbered version of the GNU General
-Public License &ldquo;or any later version&rdquo; applies to it, you have the
+Public License “or any later version” applies to it, you have the
 option of following the terms and conditions either of that numbered
 version or of any later version published by the Free Software
 Foundation.  If the Program does not specify a version number of the
@@ -599,7 +601,7 @@ later version.</p>
 
 <p>THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY
 APPLICABLE LAW.  EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT
-HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM &ldquo;AS IS&rdquo; WITHOUT WARRANTY
+HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY
 OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO,
 THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
 PURPOSE.  THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM
@@ -627,154 +629,5 @@ an absolute waiver of all civil liability in connection with the
 Program, unless a warranty or assumption of liability accompanies a
 copy of the Program in return for a fee.</p>
 
-<p>END OF TERMS AND CONDITIONS</p>
-
-<h3><a name="howto"></a>How to Apply These Terms to Your New Programs</h3>
-
-<p>If you develop a new program, and you want it to be of the greatest
-possible use to the public, the best way to achieve this is to make it
-free software which everyone can redistribute and change under these terms.</p>
-
-<p>To do so, attach the following notices to the program.  It is safest
-to attach them to the start of each source file to most effectively
-state the exclusion of warranty; and each file should have at least
-the &ldquo;copyright&rdquo; line and a pointer to where the full notice is found.</p>
-
-<pre>    &lt;one line to give the program's name and a brief idea of what it does.&gt;
-    Copyright (C) &lt;year&gt;  &lt;name of author&gt;
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
-</pre>
-
-<p>Also add information on how to contact you by electronic and paper mail.</p>
-
-<p>If the program does terminal interaction, make it output a short
-notice like this when it starts in an interactive mode:</p>
-
-<pre>    &lt;program&gt;  Copyright (C) &lt;year&gt;  &lt;name of author&gt;
-    This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
-    This is free software, and you are welcome to redistribute it
-    under certain conditions; type `show c' for details.
-</pre>
-
-<p>The hypothetical commands `show w' and `show c' should show the appropriate
-parts of the General Public License.  Of course, your program's commands
-might be different; for a GUI interface, you would use an &ldquo;about box&rdquo;.</p>
-
-<p>You should also get your employer (if you work as a programmer) or school,
-if any, to sign a &ldquo;copyright disclaimer&rdquo; for the program, if necessary.
-For more information on this, and how to apply and follow the GNU GPL, see
-&lt;<a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>&gt;.</p>
-
-<p>The GNU General Public License does not permit incorporating your program
-into proprietary programs.  If your program is a subroutine library, you
-may consider it more useful to permit linking proprietary applications with
-the library.  If this is what you want to do, use the GNU Lesser General
-Public License instead of this License.  But first, please read
-&lt;<a href="http://www.gnu.org/philosophy/why-not-lgpl.html">http://www.gnu.org/philosophy/why-not-lgpl.html</a>&gt;.</p>
-
 </div>
-
-</div><!-- for id="content", starts in the include above -->
-
-              <!-- begin server/footer-text.html -->
-<div id="fsf-links">
- <ul>
-  <li><a href="/">GNU&nbsp;home&nbsp;page</a></li>
-  <li><a href="http://www.fsf.org/">FSF&nbsp;home&nbsp;page</a></li>
-  <li><a href="/graphics/graphics.html">GNU&nbsp;Art</a></li>
-  <li><a href="/people/people.html">GNU's&nbsp;Who?</a></li>
-  <li><a href="http://directory.fsf.org">Free&nbsp;Software&nbsp;Directory</a></li>
-  <li><a href="https://h-node.org/">Hardware</a></li>
-  <li><a href="/server/sitemap.html">Site&nbsp;map</a></li>
- </ul>
-</div><!-- /fsf-links -->
-
-<div id="mission-statement">
-
-<blockquote>
-<p><a href="http://www.fsf.org"><img id="fsfbanner"
-src="/graphics/fsf-logo-notext.png" alt=" [FSF logo] "/></a><strong>&ldquo;Our
-mission is to preserve, protect and promote the freedom to use, study,
-copy, modify, and redistribute computer software, and to defend the
-rights of Free Software users.&rdquo;</strong></p>
-</blockquote>
-
-<p>The <a href="http://www.fsf.org">Free Software Foundation</a> is
-the principal organizational sponsor of the GNU Operating System.
-<strong>Support GNU and the FSF</strong> by <a
-href="http://shop.fsf.org/">buying manuals and gear</a>, <a
-href="https://my.fsf.org/associate/support_freedom?referrer=4052">
-<strong>joining the FSF</strong></a> as an associate member, or making
-a <strong>donation</strong>, either <a
-href="http://donate.fsf.org/">directly to the FSF</a> or <a
-href="http://flattr.com/thing/313733/gnuproject-on-Flattr">via
-Flattr</a>.</p>
-
-<p id="backtotop"><a href="#header">back to top</a></p>
-
-</div><!-- /mission-statement -->
-<!-- end server/footer-text.html -->
-
-
-<div id="footer">
-<div class="unprintable">
-
-<p>Please send general FSF &amp; GNU inquiries to
-<a href="mailto:gnu@gnu.org">&lt;gnu@gnu.org&gt;</a>.
-There are also <a href="/contact/">other ways to contact</a>
-the FSF.  Broken links and other corrections or suggestions can be sent
-to <a href="mailto:webmasters@gnu.org">&lt;webmasters@gnu.org&gt;</a>.</p>
-
-<p><!-- TRANSLATORS: Ignore the original text in this paragraph,
-        replace it with the translation of these two:
-
-        We work hard and do our best to provide accurate, good quality
-        translations.  However, we are not exempt from imperfection.
-        Please send your comments and general suggestions in this regard
-        to <a href="mailto:web-translators@gnu.org">
-        &lt;web-translators@gnu.org&gt;</a>.</p>
-
-        <p>For information on coordinating and submitting translations of
-        our web pages, see <a
-        href="/server/standards/README.translations.html">Translations
-        README</a>. -->
-Please see the <a
-href="/server/standards/README.translations.html">Translations
-README</a> for information on coordinating and submitting translations
-of this article.</p>
-</div>
-
-<!-- Regarding copyright, in general, standalone pages (as opposed to
-     files generated as part of manuals) on the GNU web server should
-     be under CC BY-ND 3.0 US.  Please do NOT change or remove this
-     without talking with the webmasters or licensing team first.
-     Please make sure the copyright date is consistent with the
-     document.  For web pages, it is ok to list just the latest year the
-     document was modified, or published.
-     
-     If you wish to list earlier years, that is ok too.
-     Either "2001, 2002, 2003" or "2001-2003" are ok for specifying
-     years, as long as each year in the range is in fact a copyrightable
-     year, i.e., a year in which the document was published (including
-     being publicly visible on the web or in a revision control system).
-     
-     There is more detail about copyright years in the GNU Maintainers
-     Information document, www.gnu.org/prep/maintain. -->
-
-<p>Copyright notice above.</p>
-
-<p>
-Everyone is permitted to copy and distribute verbatim copies of this license document, but changing it is not allowed.
-</p>
+<?php require_once("install/includes/footer.php");

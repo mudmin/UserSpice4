@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+  <name>Demo Plugin</name>
+  <author>Dan Hoover</author>
+<!-- Feel free to include your github repo here -->
+  <website>https://www.userspice.com</website>
+
+<!-- the version of the plugin iteself -->
+  <version>0.01</version>
+
+<!-- release date of THIS version -->
+  <release>April 26,2018</release>
+
+<!-- the last version of UserSpice you tested the plugin with -->
+  <tested>4.4</tested>
+
+<!-- What does your plugin do? -->
+  <description>This is the demo plugin for UserSpice. It serves as a plugin for your own plugin design.</description>
+
+  <!-- This is the launch button in the plugin manager. If it is blank or missing, Configure Plugin will show up. -->
+    <button>Configure Button</button>
+</plugin>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+  <name>UserSpice Language Checker</name>
+  <author>Dan Hoover</author>
+<!-- Feel free to include your github repo here -->
+  <website>https://www.userspice.com</website>
+
+<!-- the version of the plugin iteself -->
+  <version>1.0.0</version>
+
+<!-- release date of THIS version -->
+  <release>March 29,2019</release>
+
+<!-- the last version of UserSpice you tested the plugin with -->
+  <tested>4.4</tested>
+
+<!-- What does your plugin do? -->
+  <description>This plugin will allow you to check language files to see if they are missing any keys.
+   </description>
+
+ <!-- This is the launch button in the plugin manager -->
+   <button>Open Language Checker</button>
+</plugin>

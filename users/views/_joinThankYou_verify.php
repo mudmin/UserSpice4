@@ -1,5 +1,6 @@
 <?php
 /*
+This is a user-facing page
 UserSpice 4
 An Open Source PHP User Management System
 by the UserSpice Team at http://UserSpice.com
@@ -17,12 +18,11 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
- ?>
+?>
 <div class="row">
-<div class="col-xs-12">
-<div class="jumbotron text-center">
-<h1>Welcome To UserSpice!</h1>
-<p>Thanks for registering! Please check your email to verify your account.</p>
-</div>
-</div>
+  <div class="col-sm-12">
+    <h1><?=lang("JOIN_SUC");?><?=$settings->site_name?></h1>
+    <?=lang("VER_RES_SUC");?><?=$settings->join_vericode_expiry?> <?=lang("T_HOURS");?>.</p>
+    <br />
+  </div>
 </div>

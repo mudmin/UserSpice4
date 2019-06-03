@@ -17,451 +17,418 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+ini_set('max_execution_time', 1356);
+ini_set('memory_limit','1024M');
 ?>
-<?php require_once 'init.php'; ?>
-<?php require_once $abs_us_root.$us_url_root.'users/includes/header.php'; ?>
-<?php require_once $abs_us_root.$us_url_root.'users/includes/navigation.php'; ?>
-
+<?php
+require_once '../users/init.php';
+include $abs_us_root.$us_url_root."users/includes/dashboard_language.php";
+$db = DB::getInstance();
+$settings = $db->query("SELECT * FROM settings")->first();
+?>
+<?php require_once $abs_us_root.$us_url_root.'users/includes/user_spice_ver.php'; ?>
 <?php if (!securePage($_SERVER['PHP_SELF'])){die();} ?>
-<?php
-// To make this panel super admin only, uncomment out the lines below
-// if($user->data()->id !='1'){
-//   Redirect::to('account.php');
-// }
+<?php $view = Input::get('view');?>
+<?php require_once $abs_us_root.$us_url_root.'users/views/_admin_menu.php'; ?>
+<div id="right-panel" class="right-panel">
 
-//PHP Goes Here!
-delete_user_online(); //Deletes sessions older than 24 hours
+  <div id="messages" class="sufee-alert alert with-close alert-primary alert-dismissible fade show d-none">
+    <span id="message"></span>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
 
-//Find users who have logged in in X amount of time.
-$date = date("Y-m-d H:i:s");
+  <?php require_once $abs_us_root.$us_url_root.'users/views/_admin_header.php'; ?>
+  <?php
+  function usView($file){
+    global $abs_us_root;
+    global $us_url_root;
+    if(checkAccess($file)){
+    if(file_exists($abs_us_root.$us_url_root.'usersc/includes/admin/'.$file)){
+      $path = $abs_us_root.$us_url_root.'usersc/includes/admin/'.$file;
+    }elseif(file_exists($abs_us_root.$us_url_root.'users/views/'.$file)){
+      $path = $abs_us_root.$us_url_root.'users/views/'.$file;
+    }else{
+      $path = $abs_us_root.$us_url_root.'users/views/_admin_dashboard.php';
+    }
+    return $path;
+  }else{
+    $path = $abs_us_root.$us_url_root.'users/views/_admin_dashboard.php';
+    return $path;
+  }
+  }
 
-$hour = date("Y-m-d H:i:s", strtotime("-1 hour", strtotime($date)));
-$today = date("Y-m-d H:i:s", strtotime("-1 day", strtotime($date)));
-$week = date("Y-m-d H:i:s", strtotime("-1 week", strtotime($date)));
-$month = date("Y-m-d H:i:s", strtotime("-1 month", strtotime($date)));
+  function checkAccess($file){
+    global $db, $user, $master_account;
+    if (in_array($user->data()->id, $master_account)){
+      return true;
+    }else{
+      $checkQ = $db->query("SELECT * FROM us_management WHERE page = ?",[$file]);
 
-$last24=time()-86400;
+      $checkC = $checkQ->count();
+      if($checkC < 1){
+        //if a page is not in this table, we're going to side with security and deny access.
+        return false;
+      }else{
+        $check = $checkQ->first();
+        if(hasPerm([2,$check->access],$user->data()->id)){
+          return true;
+        }else{
+          return false;
+        }
+      }
+    }
 
-$recentUsersQ = $db->query("SELECT * FROM users_online WHERE timestamp > ? ORDER BY timestamp DESC",array($last24));
-$recentUsersCount = $recentUsersQ->count();
-$recentUsers = $recentUsersQ->results();
+function checkAccess($file){
+  global $db, $user, $master_account;
+  if (in_array($user->data()->id, $master_account)){
+    return true;
+  }else{
+    $checkQ = $db->query("SELECT * FROM us_management WHERE page = ?",[$file]);
 
-$usersHourQ = $db->query("SELECT * FROM users WHERE last_login > ?",array($hour));
-$usersHour = $usersHourQ->results();
-$hourCount = $usersHourQ->count();
+    $checkC = $checkQ->count();
+    if($checkC < 1){
+      //if a page is not in this table, we're going to side with security and deny access.
+      return false;
+    }else{
+      $check = $checkQ->first();
+      if(hasPerm([2,$check->access],$user->data()->id)){
+        return true;
+      }else{
+        return false;
+      }
+    }
+  }
 
-$usersTodayQ = $db->query("SELECT * FROM users WHERE last_login > ?",array($today));
-$dayCount = $usersTodayQ->count();
-$usersDay = $usersTodayQ->results();
-
-$usersWeekQ = $db->query("SELECT username FROM users WHERE last_login > ?",array($week));
-$weekCount = $usersWeekQ->count();
-
-$usersMonthQ = $db->query("SELECT username FROM users WHERE last_login > ?",array($month));
-$monthCount = $usersMonthQ->count();
-
-$usersQ = $db->query("SELECT * FROM users");
-$user_count = $usersQ->count();
-
-$pagesQ = $db->query("SELECT * FROM pages");
-$page_count = $pagesQ->count();
-
-$levelsQ = $db->query("SELECT * FROM permissions");
-$level_count = $levelsQ->count();
-
-$settingsQ = $db->query("SELECT * FROM settings");
-$settings = $settingsQ->first();
-
-if(!empty($_POST['settings'])){
-	$token = $_POST['csrf'];
-	if(!Token::check($token)){
-		die('Token doesn\'t match!');
-	}
-
-	if($settings->recaptcha != $_POST['recaptcha']) {
-		$recaptcha = Input::get('recaptcha');
-		$fields=array('recaptcha'=>$recaptcha);
-		$db->update('settings',1,$fields);
-	}
-	if($settings->site_name != $_POST['site_name']) {
-		$site_name = Input::get('site_name');
-		$fields=array('site_name'=>$site_name);
-		$db->update('settings',1,$fields);
-	}
-	if($settings->login_type != $_POST['login_type']) {
-		$login_type = Input::get('login_type');
-		$fields=array('login_type'=>$login_type);
-		$db->update('settings',1,$fields);
-	}
-	if($settings->force_ssl != $_POST['force_ssl']) {
-		$force_ssl = Input::get('force_ssl');
-		$fields=array('force_ssl'=>$force_ssl);
-		$db->update('settings',1,$fields);
-	}
-	if($settings->force_pr != $_POST['force_pr']) {
-		$force_pr = Input::get('force_pr');
-		$fields=array('force_pr'=>$force_pr);
-		$db->update('settings',1,$fields);
-	}
-	if($settings->site_offline != $_POST['site_offline']) {
-		$site_offline = Input::get('site_offline');
-		$fields=array('site_offline'=>$site_offline);
-		$db->update('settings',1,$fields);
-	}
-	if($settings->track_guest != $_POST['track_guest']) {
-		$track_guest = Input::get('track_guest');
-		$fields=array('track_guest'=>$track_guest);
-		$db->update('settings',1,$fields);
-	}
-
-	Redirect::to('admin.php');
+  }
 }
-
-if(!empty($_POST['css'])){
-	if($settings->css_sample != $_POST['css_sample']) {
-		$css_sample = Input::get('css_sample');
-		$fields=array('css_sample'=>$css_sample);
-		$db->update('settings',1,$fields);
-	}
-
-	if($settings->us_css1 != $_POST['us_css1']) {
-		$us_css1 = Input::get('us_css1');
-		$fields=array('us_css1'=>$us_css1);
-		$db->update('settings',1,$fields);
-	}
-	if($settings->us_css2 != $_POST['us_css2']) {
-		$us_css2 = Input::get('us_css2');
-		$fields=array('us_css2'=>$us_css2);
-		$db->update('settings',1,$fields);
-	}
-
-	if($settings->us_css3 != $_POST['us_css3']) {
-		$us_css3 = Input::get('us_css3');
-		$fields=array('us_css3'=>$us_css3);
-		$db->update('settings',1,$fields);
-	}
-	Redirect::to('admin.php');
-}
-
+function checkAdminMenu($view){
+  global $db, $user, $master_account;
+  if (in_array($user->data()->id, $master_account) || hasPerm([2],$user->data()->id)){
+    return true;
+  }else{
+    $checkQ = $db->query("SELECT * FROM us_management WHERE view = ?",[$view]);
+    $checkC = $checkQ->count();
+    if($checkC < 1){
+      //if a page is not in this table, we're going to side with security and deny access.
+      return false;
+    }else{
+      $check = $checkQ->first();
+      if(hasPerm([2,$check->access],$user->data()->id)){
+        return true;
+      }else{
+        return false;
+      }
+    }
+  }
+  }
+  //$view = Input::get('view');
+  include($abs_us_root.$us_url_root.'usersc/includes/admin_override.php');
+  switch ($view) {
+    case "access":
+      $path = usView('_dashboard_access.php');
+      include($path);
+      break;
+    case "backup":
+      $path = usView('_admin_tools_backup.php');
+      include($path);
+      break;
+    case "cron":
+      $path = usView('_admin_cron.php');
+      include($path);
+      break;
+    case "custom":
+      $path = usView('_admin_settings_custom.php');
+      include($path);
+      break;
+    case "email":
+      $path = usView('_admin_email.php');
+      include($path);
+      break;
+    case "email_test":
+      $path = usView('_admin_email_test.php');
+      include($path);
+      break;
+    case "forms":
+      $path = usView('_admin_forms.php');
+      include($path);
+      break;
+    case "forms_edit":
+      $path = usView('_admin_forms_edit.php');
+      include($path);
+      break;
+    case "forms_views":
+      $path = usView('_admin_forms_views.php');
+      include($path);
+      break;
+    case "form_preview":
+      $path = usView('_admin_forms_preview.php');
+      include($path);
+      break;
+    case "general":
+      $path = usView('_admin_settings_general.php');
+      include($path);
+      break;
+    case "ip":
+      $path = usView('_admin_manage_ip.php');
+      include($path);
+      break;
+    case "legacy":
+      if(file_exists($abs_us_root.$us_url_root.'usersc/includes/admin_panels.php')){
+      include($abs_us_root.$us_url_root.'usersc/includes/admin_panels.php');
+        }else{
+          Redirect::to('admin.php?view=stats&err=Legacy+files+not+found');
+        }
+      break;
+    case "logs":
+      $path = usView('_admin_logs.php');
+      include($path);
+      break;
+    case "logsman":
+      $path = usView('_admin_logs_manager.php');
+      include($path);
+      break;
+    case "messages":
+      $path = usView('_admin_messages.php');
+      include($path);
+      break;
+    case "nav":
+      $path = usView('_admin_nav.php');
+      include($path);
+      break;
+    case "nav_item":
+      $path = usView('_admin_nav_item.php');
+      include($path);
+      break;
+    case "notifications":
+      $path = usView('_admin_notifications.php');
+      include($path);
+      break;
+    case "page":
+      $path = usView('_admin_page.php');
+      include($path);
+      break;
+    case "pages":
+      $path = usView('_admin_pages.php');
+      include($path);
+      break;
+    case "permission":
+      $path = usView('_admin_permission.php');
+      include($path);
+      break;
+    case "permissions":
+      $path = usView('_admin_permissions.php');
+      include($path);
+      break;
+    case "pin":
+      $path = usView('_admin_pin.php');
+      include($path);
+      break;
+    case "plugins":
+      $path = usView('_admin_plugins.php');
+      include($path);
+      break;
+    case "plugins_config":
+      $plugin = Input::get('plugin');
+      if(file_exists($abs_us_root.$us_url_root.'usersc/plugins/'.$plugin.'/configure.php')){
+      include $abs_us_root.$us_url_root.'usersc/plugins/'.$plugin.'/configure.php';
+      }
+      break;
+    case "reg":
+      $path = usView('_admin_settings_register.php');
+      include($path);
+      break;
+    case "security_logs":
+      $path = usView('_admin_security_logs.php');
+      include($path);
+      break;
+    case "sessions":
+      $path = usView('_admin_sessions.php');
+      include($path);
+      break;
+    case "social":
+      $path = usView('_admin_settings_login.php');
+      include($path);
+      break;
+    case "stats":
+      $path = usView('_admin_statistics.php');
+      include($path);
+      break;
+    case "templates":
+      $path = usView('_admin_templates.php');
+      include($path);
+      break;
+    case "updates":
+      $path = usView('_admin_tools_check_updates.php');
+      include($path);
+      break;
+    case "user":
+      $path = usView('_admin_user.php');
+      include($path);
+      break;
+    case "users":
+      $path = usView('_admin_users.php');
+      include($path);
+      break;
+    case "verify":
+      $path = usView('_admin_verify.php');
+      include($path);
+      break;
+    default:
+    if($view == ''){
+    include($abs_us_root.$us_url_root.'users/views/_admin_dashboard.php');
+  }else{
+    $path = usView($view.".php");
+    include($path);
+  }
+    }
 ?>
-<div id="page-wrapper"> <!-- leave in place for full-screen backgrounds etc -->
-<div class="container"> <!-- -fluid -->
-
-<h1 class="text-center">UserSpice Dashboard <?=$user_spice_ver?></h1>
-
-<div class="row"> <!-- row for Users, Permissions, Pages, Email settings panels -->
-	<h2>Admin Panels</h2>
-	<!-- Users Panel -->
-	<div class="col-xs-6 col-md-3">
-	<div class="panel panel-default">
-	<div class="panel-heading"><strong>Users</strong></div>
-	<div class="panel-body text-center"><div class="huge"> <i class='fa fa-user fa-1x'></i> <?=$user_count?></div></div>
-	<div class="panel-footer">
-	<span class="pull-left"><a href="admin_users.php">Manage</a></span>
-	<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-	<div class="clearfix"></div>
-	</div> <!-- /panel-footer -->
-	</div><!-- /panel -->
-	</div><!-- /col -->
-
-	<!-- Permissions Panel -->
-	<div class="col-xs-6 col-md-3">
-	<div class="panel panel-default">
-	<div class="panel-heading"><strong>Permission Levels</strong></div>
-	<div class="panel-body text-center"><div class="huge"> <i class='fa fa-lock fa-1x'></i> <?=$level_count?></div></div>
-	<div class="panel-footer">
-	<span class="pull-left"><a href="admin_permissions.php">Manage</a></span>
-	<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-	<div class="clearfix"></div>
-	</div> <!-- /panel-footer -->
-	</div><!-- /panel -->
-	</div> <!-- /.col -->
-
-	<!-- Pages Panel -->
-	<div class="col-xs-6 col-md-3">
-	<div class="panel panel-default">
-	<div class="panel-heading"><strong>Pages</strong></div>
-	<div class="panel-body  text-center"><div class="huge"> <i class='fa fa-file-text fa-1x'></i> <?=$page_count?></div></div>
-	<div class="panel-footer">
-	<span class="pull-left"><a href="admin_pages.php">Manage</a></span>
-	<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-	<div class="clearfix"></div>
-	</div> <!-- /panel-footer -->
-	</div><!-- /panel -->
-	</div><!-- /col -->
-
-	<!-- Email Settings Panel -->
-	<div class="col-xs-6 col-md-3">
-	<div class="panel panel-default">
-	<div class="panel-heading"><strong>Email Settings</strong></div>
-	<div class="panel-body text-center"><div class="huge"> <i class='fa fa-paper-plane fa-1x'></i> 9</div></div>
-	<div class="panel-footer">
-	<span class="pull-left"><a href='email_settings.php'>Manage</a></span>
-	<span class="pull-right"><i class='fa fa-arrow-circle-right'></i></span>
-	<div class="clearfix"></div>
-	</div> <!-- /panel-footer -->
-	</div> <!-- /panel -->
-	</div> <!-- /col -->
-
-</div> <!-- /.row -->
-
-<!-- CHECK IF ADDITIONAL ADMIN PAGES ARE PRESENT AND INCLUDE IF AVAILABLE -->
-
-<?php
-if(file_exists($abs_us_root.$us_url_root.'usersc/includes/admin_panels.php')){
-	require_once $abs_us_root.$us_url_root.'usersc/includes/admin_panels.php';
-}
-?>
-
-<!-- /CHECK IF ADDITIONAL ADMIN PAGES ARE PRESENT AND INCLUDE IF AVAILABLE -->
-
-<div class="row "> <!-- rows for Info Panels -->
-	<h2>Info Panels</h2>
-	<div class="col-xs-12 col-md-6">
-	<div class="panel panel-default">
-	<div class="panel-heading"><strong>All Users</strong> <span class="small">(Who have logged in)</span></div>
-	<div class="panel-body text-center">
-	<div class="row">
-		<div class="col-xs-3 "><h3><?=$hourCount?></h3><p>per hour</p></div>
-		<div class="col-xs-3"><h3><?=$dayCount?></h3><p>per day</p></div>
-		<div class="col-xs-3 "><h3><?=$weekCount?></h3><p>per week</p></div>
-		<div class="col-xs-3 "><h3><?=$monthCount?></h3><p>per month</p></div>
-	</div>
-	</div>
-	</div><!--/panel-->
+<p align="center">
+<font color='black'><br>&copy;<?=date("Y ")?><?=$settings->copyright; ?></font>
+</p>
 
 
-	<div class="panel panel-default">
-	<div class="panel-heading"><strong>All Visitors</strong> <span class="small">(Whether logged in or not)</span></div>
-	<div class="panel-body">
-	<?php  if($settings->track_guest == 1){ ?>
-	<?="In the last 30 minutes, the unique visitor count was ".count_users()."<br>";?>
-	<?php }else{ ?>
-	Guest tracking off. Turn "Track Guests" on below for advanced tracking statistics.
-	<?php } ?>
-	</div>
-	</div><!--/panel-->
+          </div> <!-- .content -->
+        </div><!-- /#right-panel -->
 
-	</div> <!-- /col -->
-
-	<div class="col-xs-12 col-md-6">
-	<div class="panel panel-default">
-	<div class="panel-heading"><strong>Logged In Users</strong> <span class="small">(past 24 hours)</span></div>
-	<div class="panel-body">
-	<div class="uvistable table-responsive">
-	<table class="table">
-	<?php if($settings->track_guest == 1){ ?>
-	<thead><tr><th>Username</th><th>IP</th><th>Last Activity</th></tr></thead>
-	<tbody>
-
-	<?php foreach($recentUsers as $v1){
-		$user_id=$v1->user_id;
-		$username=name_from_id($v1->user_id);
-		$timestamp=date("Y-m-d H:i:s",$v1->timestamp);
-		$ip=$v1->ip;
-
-		if ($user_id==0){
-			$username="guest";
-		}
-
-		if ($user_id==0){?>
-			<tr><td><?=$username?></td><td><?=$ip?></td><td><?=$timestamp?></td></tr>
-		<?php }else{ ?>
-			<tr><td><a href="admin_user.php?id=<?=$user_id?>"><?=$username?></a></td><td><?=$ip?></td><td><?=$timestamp?></td></tr>
-		<?php } ?>
-
-	<?php } ?>
-
-	</tbody>
-	<?php }else{echo 'Guest tracking off. Turn "Track Guests" on below for advanced tracking statistics.';} ?>
-	</table>
-	</div>
-	</div>
-	</div><!--/panel-->
-	</div> <!-- /col2/2 -->
-</div> <!-- /row -->
-
-
-<div class="row"> <!-- rows for Main Settings -->
-	<div class="col-xs-12 col-md-6"> <!-- Site Settings Column -->
-		<form class="" action="admin.php" name="settings" method="post">
-		<h2 >Site Settings</h2>
-
-		<!-- List group -->
-
-		<!-- Site Name -->
-		<div class="form-group">
-		<label for="site_name">Site Name</label>
-		<input type="text" class="form-control" name="site_name" id="site_name" value="<?=$settings->site_name?>">
-		</div>
-
-		<!-- Recaptcha Option -->
-		<div class="form-group">
-			<label for="recaptcha">Recaptcha</label>
-			<select id="recaptcha" class="form-control" name="recaptcha">
-				<option value="1" <?php if($settings->recaptcha==1) echo 'selected="selected"'; ?> >Enabled</option>
-				<option value="0" <?php if($settings->recaptcha==0) echo 'selected="selected"'; ?> >Disabled</option>
-			</select>
-		</div>
-
-		<!-- Force SSL -->
-		<div class="form-group">
-			<label for="force_ssl">Force SSL (experimental)</label>
-			<select id="force_ssl" class="form-control" name="force_ssl">
-				<option value="1" <?php if($settings->force_ssl==1) echo 'selected="selected"'; ?> >Yes</option>
-				<option value="0" <?php if($settings->force_ssl==0) echo 'selected="selected"'; ?> >No</option>
-			</select>
-		</div>
-
-		<!-- Force Password Reset -->
-		<div class="form-group">
-			<label for="force_pr">Force Password Reset (disabled)</label>
-			<select id="force_pr" class="form-control" name="force_pr" disabled>
-				<option value="1" <?php if($settings->force_pr==1) echo 'selected="selected"'; ?> >Yes</option>
-				<option value="0" <?php if($settings->force_pr==0) echo 'selected="selected"'; ?> >No</option>
-			</select>
-		</div>
-
-		<!-- Site Offline -->
-		<div class="form-group">
-			<label for="site_offline">Site Offline</label>
-			<select id="site_offline" class="form-control" name="site_offline">
-				<option value="1" <?php if($settings->site_offline==1) echo 'selected="selected"'; ?> >Yes</option>
-				<option value="0" <?php if($settings->site_offline==0) echo 'selected="selected"'; ?> >No</option>
-			</select>
-		</div>
-
-		<!-- Track Guests -->
-		<div class="form-group">
-			<label for="track_guest">Track Guests</label>
-			<select id="track_guest" class="form-control" name="track_guest">
-				<option value="1" <?php if($settings->track_guest==1) echo 'selected="selected"'; ?> >Yes</option>
-				<option value="0" <?php if($settings->track_guest==0) echo 'selected="selected"'; ?> >No</option>
-			</select><small>If your site gets a lot of traffic and starts to stumble, this is the first thing to turn off.</small>
-		</div>
-
-		<input type="hidden" name="csrf" value="<?=Token::generate();?>" />
-
-		<p><input class='btn btn-primary' type='submit' name="settings" value='Save Site Settings' /></p>
-		</form>
-	</div> <!-- /col1/2 -->
-
-	<div class="col-xs-12 col-md-6"><!-- CSS Settings Column -->
-		<form class="" action="admin.php" name="css" method="post">
-		<!-- Test CSS Settings -->
-		<h2>Sitewide CSS</h2>
-
-		<div class="form-group">
-			<label for="css_sample">Show CSS Samples</label>
-			<select id="css_sample" class="form-control" name="css_sample">
-				<option value="1" <?php if($settings->css_sample==1) echo 'selected="selected"'; ?> >Enabled</option>
-				<option value="0" <?php if($settings->css_sample==0) echo 'selected="selected"'; ?> >Disabled</option>
-			</select>
-		</div>
-
-		<div class="form-group">
-			<label for="us_css1">Primary Color Scheme (Loaded 1st)</label>
-			<select class="form-control" name="us_css1" id="us_css1" >
-				<option selected="selected"><?=$settings->us_css1?></option>
-				<?php
-				$css_userspice=glob('../users/css/color_schemes/*.css');
-				$css_custom=glob('../usersc/css/color_schemes/*.css');
-				foreach(array_merge($css_userspice,$css_custom) as $filename){
-				echo "<option value=".$filename.">".$filename."";
-				}
-				?>
-			</select>
-		</div>
-
-		<div class="form-group">
-			<label for="us_css2">Secondary UserSpice CSS (Loaded 2nd)</label>
-			<select class="form-control" name="us_css2" id="us_css2">
-				<option selected="selected"><?=$settings->us_css2?></option>
-				<?php
-				$css_userspice=glob('../users/css/*.css');
-				$css_custom=glob('../usersc/css/*.css');
-				foreach(array_merge($css_userspice,$css_custom) as $filename){
-				echo "<option value=".$filename.">".$filename."";
-				}
-				?>
-			</select>
-		</div>
-
-		<div class="form-group">
-			<label for="us_css3">Custom UserSpice CSS (Loaded 3rd)</label>
-			<select class="form-control" name="us_css3" id="us_css3">
-				<option selected="selected"><?=$settings->us_css3?></option>
-				<?php
-				$css_userspice=glob('../users/css/*.css');
-				$css_custom=glob('../usersc/css/*.css');
-				foreach(array_merge($css_userspice,$css_custom) as $filename){
-				echo "<option value=".$filename.">".$filename."";
-				}
-				?>
-			</select>
-		</div>
-
-		<p><input class='btn btn-large btn-primary' type='submit' name="css" value='Save CSS Settings'/></p>
-		</form>
-	</div> <!-- /col1/3 -->
-</div> <!-- /row -->
+        <!-- Right Panel -->
 
 
 
-<?php if ($settings->css_sample){?>
-<div class="row">
+        <script type="text/javascript">
+        $(document).ready(function() {
+          $('[data-toggle="popover"]').popover();
 
-	<div class="col-md-12 text-center">
-	<h2>Bootstrap Class Examples</h2>
-	<hr />
-	<button type="button" name="button" class="btn btn-primary">primary</button>
-	<button type="button" name="button" class="btn btn-info">info</button>
-	<button type="button" name="button" class="btn btn-warning">warning</button>
-	<button type="button" name="button" class="btn btn-danger">danger</button>
-	<button type="button" name="button" class="btn btn-success">success</button>
-	<button type="button" name="button" class="btn btn-default">default</button>
-	<hr />
-	<div class="jumbotron"><h1>Jumbotron</h1></div>
-	<div class="well"><p>well</p></div>
-	<h1>This is H1</h1>
-	<h2>This is H2</h2>
-	<h3>This is H3</h3>
-	<h4>This is H4</h4>
-	<h5>This is H5</h5>
-	<h6>This is H6</h6>
-	<p>This is paragraph</p>
-	<a href="#">This is a link</a><br><br>
+          //Transaction total in the lower right
+          function messages(data) {
+            $('#messages').removeClass();
+            $('#message').text("");
+            $('#messages').show();
+            if(data.success == "true"){
+              $('#messages').addClass("sufee-alert alert with-close alert-success alert-dismissible fade show");
+            }else{
+              $('#messages').addClass("sufee-alert alert with-close alert-success alert-dismissible fade show");
+            }
+            $('#message').text(data.msg);
+            $('#messages').delay(3000).fadeOut('slow');
 
-	</div>
-</div>
-<?php } ?>
+          }
 
+          $( ".toggle" ).change(function() { //use event delegation
+            var value = $(this).prop("checked");
+            $(this).prop("checked",value);
 
+            var field = $(this).attr("id"); //the id in the input tells which field to update
+            var desc = $(this).attr("data-desc"); //For messages
+            var formData = {
+              'value' 				: value,
+              'field'					: field,
+              'desc'					: desc,
+              'type'          : 'toggle',
+            };
 
+            $.ajax({
+              type 		: 'POST',
+              url 		: 'parsers/admin_settings.php',
+              data 		: formData,
+              dataType 	: 'json',
+            })
 
+            .done(function(data) {
+              messages(data);
+            })
+          });
 
+          $("#force_user_pr").click(function(data) {
+            console.log("clicked");
+            var formData = {
+              'type'								: 'resetPW'
+            };
+            $.ajax({
+              type 		: 'POST',
+              url 		: 'parsers/admin_settings.php',
+              data 		: formData,
+              dataType 	: 'json',
+              encode 		: true
+            })
+            .done(function(data) {
+              messages(data);
+            })
+          });
 
-</div> <!-- /container -->
-</div> <!-- /#page-wrapper -->
+          $( ".ajxnum" ).change(function() { //use event delegation
+            var value = $(this).val();
+            // console.log(value);
 
-<!-- footers -->
-<?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; // the final html footer copyright row + the external js calls ?>
+            var field = $(this).attr("id"); //the id in the input tells which field to update
+            var desc = $(this).attr("data-desc"); //For messages
+            var formData = {
+              'value' 				: value,
+              'field'					: field,
+              'desc'					: desc,
+              'type'          : 'num',
+            };
 
-<!-- Place any per-page javascript here -->
-	<script type="text/javascript">
-	$(document).ready(function(){
+            $.ajax({
+              type 		: 'POST',
+              url 		: 'parsers/admin_settings.php',
+              data 		: formData,
+              dataType 	: 'json',
+            })
 
-	$("#times").load("times.php" );
+            .done(function(data) {
+              messages(data);
+            })
+          });
 
-	var timesRefresh = setInterval(function(){
-	$("#times").load("times.php" );
-	}, 30000);
+          $( ".ajxtxt" ).change(function() { //use event delegation
+            var value = $(this).val();
+            console.log(value);
 
+            var field = $(this).attr("id"); //the id in the input tells which field to update
+            var desc = $(this).attr("data-desc"); //For messages
+            var formData = {
+              'value' 				: value,
+              'field'					: field,
+              'desc'					: desc,
+              'type'          : 'txt',
+            };
 
-  $('[data-toggle="tooltip"]').tooltip();
-	$('[data-toggle="popover"]').popover();
-// -------------------------------------------------------------------------
-		});
-	</script>
+            $.ajax({
+              type 		: 'POST',
+              url 		: 'parsers/admin_settings.php',
+              data 		: formData,
+              dataType 	: 'json',
+            })
 
-<?php require_once $abs_us_root.$us_url_root.'users/includes/html_footer.php'; // currently just the closing /body and /html ?>
+            .done(function(data) {
+              messages(data);
+            })
+          });
+
+          // Toggle menu
+          $('#menuToggle').on('click', function() {
+            $('body').toggleClass('open');
+			$(".dropdown-toggle").dropdown('toggle');
+
+          });
+
+          $('.search-trigger').on('click', function() {
+            $('.search-trigger').parent('.header-left').addClass('open');
+          });
+
+          $('.search-close').on('click', function() {
+            $('.search-trigger').parent('.header-left').removeClass('open');
+          });
+        });
+      </script>
+      <?php foreach($usplugins as $k=>$v){
+        if($v == 1){
+        if(file_exists($abs_us_root.$us_url_root."usersc/plugins/".$k."/footer.php")){
+          include($abs_us_root.$us_url_root."usersc/plugins/".$k."/footer.php");
+          }
+        }
+      }?>
+    </body>
+    </html>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+  <name>Performance Checker Plugin</name>
+  <author>Dan Hoover</author>
+<!-- Feel free to include your github repo here -->
+  <website>https://www.userspice.com</website>
+
+<!-- the version of the plugin iteself -->
+  <version>1.0.0</version>
+
+<!-- release date of THIS version -->
+  <release>April 12,2019</release>
+
+<!-- the last version of UserSpice you tested the plugin with -->
+  <tested>4.4</tested>
+
+<!-- What does your plugin do? -->
+  <description>Helps find bottlenecks in your code by checking the performance of each page.</description>
+
+  <!-- This is the launch button in the plugin manager. If it is blank or missing, Configure Plugin will show up. -->
+    <button>Plugin Details</button>
+</plugin>

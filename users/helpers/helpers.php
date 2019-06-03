@@ -18,22 +18,103 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 //echo "helpers included";
+
+//NOTE: Plugin data is called at the bottom of this file
 require_once("us_helpers.php");
 require_once("users_online.php");
 require_once("language.php");
+require_once("backup_util.php");
+require_once("class.treeManager.php");
+require_once("menus.php");
+require_once("forms.php");
+require_once("tables.php");
+
+define("ABS_US_ROOT",$abs_us_root);
+define("US_URL_ROOT",$us_url_root);
+require_once($abs_us_root.$us_url_root."users/vendor/autoload.php");
+if(file_exists($abs_us_root.$us_url_root.'usersc/vendor/autoload.php')){
+  require_once($abs_us_root.$us_url_root."usersc/vendor/autoload.php");
+}
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+require_once("permissions.php");
+require_once("users.php");
+
+$usfeatures = parse_ini_file($abs_us_root.$us_url_root."users/features.ini.php",true);
+// var_dump($usfeatures);
+
+if($usfeatures['messaging'] == 1) {require_once("messaging.php");}
+if($usfeatures['dbmenu'] == 1) {require_once("dbmenu.php");}
+if($usfeatures['forms_legacy'] == 1) {require_once("forms_legacy.php");}
+if($usfeatures['reauth'] == 1) {require_once("reauth.php");}
+if($usfeatures['notifications'] == 1) {require_once("notifications.php");}
+if($usfeatures['fingerprinting'] == 1) {require_once("fingerprinting.php");}
+if($usfeatures['sessions'] == 1) {require_once("sessions.php");}
+if($usfeatures['saas'] == 1) {require_once("saas.php");}
 
 
+require_once $abs_us_root.$us_url_root.'usersc/includes/custom_functions.php';
+
+
+// Readeable file size
+function size($path) {
+    $bytes = sprintf('%u', filesize($path));
+
+    if ($bytes > 0) {
+        $unit = intval(log($bytes, 1024));
+        $units = array('B', 'KB', 'MB', 'GB');
+
+        if (array_key_exists($unit, $units) === true) {
+            return sprintf('%d %s', $bytes / pow(1024, $unit), $units[$unit]);
+        }
+    }
+
+    return $bytes;
+}
 
 //escapes strings and sets character set
 function sanitize($string) {
 	return htmlentities($string, ENT_QUOTES, 'UTF-8');
 }
 
+//returns the name of the current page
 function currentPage() {
 	$uri = $_SERVER['PHP_SELF'];
 	$path = explode('/', $uri);
 	$currentPage = end($path);
 	return $currentPage;
+}
+
+//returns the id of the current page
+function currentPageId($uri) {
+  $abs_us_root=$_SERVER['DOCUMENT_ROOT'];
+  $self_path=explode("/", $_SERVER['PHP_SELF']);
+  $self_path_length=count($self_path);
+  $file_found=FALSE;
+
+  for($i = 1; $i < $self_path_length; $i++){
+  	array_splice($self_path, $self_path_length-$i, $i);
+  	$us_url_root=implode("/",$self_path)."/";
+
+  	if (file_exists($abs_us_root.$us_url_root.'z_us_root.php')){
+  		$file_found=TRUE;
+  		break;
+  	}else{
+  		$file_found=FALSE;
+  	}
+  }
+
+  $urlRootLength=strlen($us_url_root);
+  $path=substr($uri,$urlRootLength,strlen($uri)-$urlRootLength);
+    $db = DB::getInstance();
+    $query = $db->query("SELECT id FROM pages WHERE page = ?",array($path));
+    $count = $query->count();
+    if($count>0){
+        $result = $query->first();
+        return $result->id;    //Return the id of the page we're on
+    } else {
+        return 0; //Fail nicely
+    }
 }
 
 function currentFolder() {
@@ -63,16 +144,24 @@ function money($ugly){
 }
 
 function name_from_id($id){
-	$nfi = DB::getInstance()->get('users', array('id', '=', $id));
-	return $nfi->first()->username;
+	$db = DB::getInstance();
+	$query = $db->query("SELECT username FROM users WHERE id = ? LIMIT 1",array($id));
+	$count=$query->count();
+	if ($count > 0) {
+		$results=$query->first();
+		return ucfirst($results->username);
+	} else {
+		return "-";
+	}
 }
 
 function display_errors($errors = array()){
 	$html = '<ul class="bg-danger">';
 	foreach($errors as $error){
 		if(is_array($error)){
+			//echo "<br>"; Patch from user SavaageStyle - leaving here in case of rollback
 			$html .= '<li class="text-danger">'.$error[0].'</li>';
-			$html .= '<script>jQuery("#'.$error[1].'").parent().closest("div").addClass("has-error");</script>';
+			$html .= '<script>jQuery("#'.$error[0].'").parent().closest("div").addClass("has-error");</script>';
 		}else{
 			$html .= '<li class="text-danger">'.$error.'</li>';
 		}
@@ -95,36 +184,36 @@ function display_successes($successes = array()){
 	return $html;
 }
 
-function email($to,$subject,$body,$attachment=false){
+function email($to,$subject,$body,$opts=[],$attachment=false){
+/*you can now pass in
+$opts = array(
+  'email' => 'from_email@aol.com',
+  'name'  => 'Bob Smith'
+);
+*/
 	$db = DB::getInstance();
 	$query = $db->query("SELECT * FROM email");
 	$results = $query->first();
 
-	$from = $results->from_email;
-	$from_name=$results->from_name;
-	$smtp_server=$results->smtp_server;
-	$smtp_port=$results->smtp_port;
-	$smtp_username=$results->email_login;
-	$smtp_password=$results->email_pass;
-	$smtp_transport=$results->transport;
-
 	$mail = new PHPMailer;
 
-	// $mail->SMTPDebug = 3;                               // Enable verbose debug output
+	$mail->SMTPDebug = $results->debug_level;               // Enable verbose debug output
+  if($results->isSMTP == 1){$mail->isSMTP();}             // Set mailer to use SMTP
+	$mail->Host = $results->smtp_server;  									// Specify SMTP server
+	$mail->SMTPAuth = $results->useSMTPauth;                // Enable SMTP authentication
+	$mail->Username = $results->email_login;                 // SMTP username
+	$mail->Password = htmlspecialchars_decode($results->email_pass);    // SMTP password
+	$mail->SMTPSecure = $results->transport;                            // Enable TLS encryption, `ssl` also accepted
+	$mail->Port = $results->smtp_port;                                  // TCP port to connect to
 
-	$mail->isSMTP();                                      // Set mailer to use SMTP
-	$mail->Host = $smtp_server;  // Specify main and backup SMTP servers
-	$mail->SMTPAuth = true;                               // Enable SMTP authentication
-	$mail->Username = $smtp_username;                 // SMTP username
-	$mail->Password = $smtp_password;                           // SMTP password
-	$mail->SMTPSecure = $smtp_transport;                            // Enable TLS encryption, `ssl` also accepted
-	$mail->Port = $smtp_port;                                    // TCP port to connect to
+	if(isset($opts['email']) && isset($opts['name'])){
+  $mail->setFrom($opts['email'], $opts['name']);
+}else{
+  $mail->setFrom($results->from_email, $results->from_name);
+}
 
-	$mail->setFrom($from, $from_name);
-
-	$mail->addAddress(rawurldecode($to));     // Add a recipient, name is optional
-
-	$mail->isHTML(true);                                  // Set email format to HTML
+	$mail->addAddress(rawurldecode($to));                   // Add a recipient, name is optional
+  if($results->isHTML == 'true'){$mail->isHTML(true); }                  // Set email format to HTML
 
 	$mail->Subject = $subject;
 	$mail->Body    = $body;
@@ -170,7 +259,7 @@ function inputBlock($type,$label,$id,$divAttr=array(),$inputAttr=array(),$helper
 	$html = '<div'.$divAttrStr.'>';
 	$html .= '<label for="'.$id.'">'.$label.'</label>';
 	if($helper != ''){
-		$html .= '<button class="help-trigger"><span class="glyphicon glyphicon-question-sign"></span></button>';
+		$html .= '<button class="help-trigger"><span class="fa fa-question"></span></button>';
 	}
 	$html .= '<input type="'.$type.'" id="'.$id.'" name="'.$id.'"'.$inputAttrStr.'>';
   if($helper != ''){
@@ -181,29 +270,122 @@ function inputBlock($type,$label,$id,$divAttr=array(),$inputAttr=array(),$helper
 }
 
 //preformatted var_dump function
-function dump($var){
-	echo "<pre>";
-	var_dump($var);
-	echo "</pre>";
+function dump($var,$adminOnly=false,$localhostOnly=false){
+    if($adminOnly && isAdmin() && !$localhostOnly){
+        echo "<pre>";
+        var_dump($var);
+        echo "</pre>";
+    }
+    if($localhostOnly && isLocalhost() && !$adminOnly){
+        echo "<pre>";
+        var_dump($var);
+        echo "</pre>";
+    }
+    if($localhostOnly && isLocalhost() && $adminOnly && isAdmin()){
+        echo "<pre>";
+        var_dump($var);
+        echo "</pre>";
+    }
+    if(!$localhostOnly && !$adminOnly){
+        echo "<pre>";
+        var_dump($var);
+        echo "</pre>";
+    }
 }
 
 //preformatted dump and die function
-function dnd($var){
-	echo "<pre>";
-	var_dump($var);
-	echo "</pre>";
-	die();
+function dnd($var,$adminOnly=false,$localhostOnly=false){
+    if($adminOnly && isAdmin() && !$localhostOnly){
+        echo "<pre>";
+        var_dump($var);
+        echo "</pre>";
+        die();
+    }
+    if($localhostOnly && isLocalhost() && !$adminOnly){
+        echo "<pre>";
+        var_dump($var);
+        echo "</pre>";
+        die();
+    }
+    if($localhostOnly && isLocalhost() && $adminOnly && isAdmin()){
+        echo "<pre>";
+        var_dump($var);
+        echo "</pre>";
+        die();
+    }
+    if(!$localhostOnly && !$adminOnly){
+        echo "<pre>";
+        var_dump($var);
+        echo "</pre>";
+        die();
+    }
 }
 
 function bold($text){
-	echo "<text padding='1em' align='center'><h4><span style='background:white'>";
+	echo "<span><ext padding='1em' align='center'><h4><span style='background:white'>";
 	echo $text;
 	echo "</h4></span></text>";
 }
+
+function err($text){
+	echo "<span><text padding='1em' align='center'><font color='red'><h4></span>";
+	echo $text;
+	echo "</h4></span></font></text>";
+}
+
 function redirect($location){
 	header("Location: {$location}");
 }
 
 function output_message($message) {
 return $message;
+}
+
+
+//PLUGIN Hooks
+$usplugins = parse_ini_file($abs_us_root.$us_url_root."usersc/plugins/plugins.ini.php",true);
+foreach($usplugins as $k=>$v){
+  if($v == 1){
+  if(file_exists($abs_us_root.$us_url_root."usersc/plugins/".$k."/functions.php")){
+    include($abs_us_root.$us_url_root."usersc/plugins/".$k."/functions.php");
+    }
+  }
+}
+
+function write_php_ini($array, $file)
+{
+    $res = array();
+    foreach($array as $key => $val)
+    {
+        if(is_array($val))
+        {
+            $res[] = "[$key]";
+            foreach($val as $skey => $sval) $res[] = "$skey = ".(is_numeric($sval) ? $sval : '"'.$sval.'"');
+        }
+        else $res[] = "$key = ".(is_numeric($val) ? $val : '"'.$val.'"');
+    }
+    safefilerewrite($file, implode("\r\n", $res));
+}
+
+function safefilerewrite($fileName, $dataToSave)
+{
+$security1 = ';<?php';
+$security2 = ';die();';
+
+  if ($fp = fopen($fileName, 'w'))
+    {
+        $startTime = microtime(TRUE);
+        do
+        {            $canWrite = flock($fp, LOCK_EX);
+           // If lock not obtained sleep for 0 - 100 milliseconds, to avoid collision and CPU load
+           if(!$canWrite) usleep(round(rand(0, 100)*1000));
+        } while ((!$canWrite)and((microtime(TRUE)-$startTime) < 5));
+
+        //file was locked so now we can store information
+        if ($canWrite)
+        {            fwrite($fp, $security1.PHP_EOL.$security2.PHP_EOL.$dataToSave);
+            flock($fp, LOCK_UN);
+        }
+        fclose($fp);
+    }
 }

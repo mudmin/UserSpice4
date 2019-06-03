@@ -8,15 +8,10 @@
 
 
 body {
-    margin-top: 50px;
     background-color: #222;
 }
 
-@media(min-width:768px) {
-    body {
-        margin-top: 50px;
-    }
-}
+
 
 #wrapper {
     padding-left: 0;
@@ -24,6 +19,7 @@ body {
 
 #page-wrapper {
     width: 100%;
+    padding-top: 90px;
     background-color: #fff;
 }
 
@@ -35,10 +31,6 @@ body {
 @media(min-width:768px) {
     #wrapper {
         padding-left: 225px;
-    }
-
-    #page-wrapper {
-        padding-top: 30px;
     }
 }
 
@@ -67,7 +59,7 @@ body {
 .top-nav>.open>a:focus {
     color: #fff;
 	background-color: #000;
-    
+
 }
 
 .top-nav>.open>.dropdown-menu {
@@ -226,6 +218,11 @@ ul.alert-dropdown {
 .panel-yellow > a:hover {
     color: #df8a13;
 }
-.dropdown-menu {width: 205px;}
-.btn {width: 100%;}
+
 .top-nav {color:white;}
+
+.navbar-noborder { border-radius: 0 !important; margin-bottom: 0 !important;}
+
+.normal {
+    font-weight: normal !important;
+}

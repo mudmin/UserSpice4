@@ -1,5 +1,6 @@
 <?php
 /*
+this is a user-facing page
 UserSpice 4
 An Open Source PHP User Management System
 by the UserSpice Team at http://UserSpice.com
@@ -19,10 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 ?>
 <div class="row">
-<div class="col-xs-12">
-<div class="jumbotron text-center">
-<h2>Oops...something went wrong, maybe an old reset link you clicked on. Click below to try again</h2>
-<p><a href="forgot_password.php" class="btn btn-primary">Reset Password</a></p>
-</div>	
-</div><!-- /.col -->
+  <div class="col-sm-12">
+    <h2><?=lang("VER_OOPS");?></h2>
+    <p><a href="forgot_password.php" class="btn btn-primary"><?=lang("PW_RESET");?></a></p>
+    <br />
+  </div><!-- /.col -->
 </div><!-- /.row -->
