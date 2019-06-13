@@ -51,7 +51,7 @@ if (isset($user) && $user->isLoggedIn()) {
 
 			$html .= '
 				<div class="col-lg-12 panel-default notification-row" data-id="'. $i .'">
-					<div id="notification_' . $notif->id . '" class="col-lg-12 list-group-item list-group-item-action notif-style">
+					<div id="notification_' . $notif->id . '" class="col-lg-12 list-group-item list-group-item-action notif-style mb-2">
 						<div class="row">
 							<div class="col-lg-9">
 			';
@@ -64,7 +64,7 @@ if (isset($user) && $user->isLoggedIn()) {
 			if($_POST['new_all'] == 'new'){
 				$html .='
 							<div class="col-lg-3 small text-center">
-								<a href="#" onclick="dismissNotif([' . $notif->id . '])" style="text-decoration: none; font-size: 24px"><i class="fa fa-window-close" aria-hidden="true" data-html="true" data-toggle="tooltip" data-placement="top" title="Dismiss<br>Notification"></i></a>
+								<a href="#" onclick="dismissNotif([' . $notif->id . '])" style="text-decoration: none; font-size: 24px"><i class="fa fa-window-close" aria-hidden="true" data-html="true" data-toggle="tooltip" data-placement="top" title="Dismiss Notification"></i></a>
 								<br>
 								('.time2str($notif->date_created).')
 							</div>
@@ -109,9 +109,9 @@ if (isset($user) && $user->isLoggedIn()) {
 		}
 
     $html .= '
-        <div class="col-lg-12 text-center pt-4">
-            <button onclick="displayNotifications('new')" class="btn btn-primary">New Notifications</button>
-            <button onclick="displayNotifications('all')" class="btn btn-primary">All Notifications</button>
+        <div class="col-lg-12 text-center py-4">
+            <button onclick="displayNotifications(\'new\')" class="btn btn-primary">New Notifications</button>
+            <button onclick="displayNotifications(\'all\')" class="btn btn-primary">All Notifications</button>
         </div>
     ';
 
