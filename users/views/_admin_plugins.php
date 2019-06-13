@@ -122,7 +122,7 @@ $token = Token::generate();
               <?php pluginStatus($usplugins[$t]); ?>
           </td>
           <td align="center">
-            <form class="" action="admin.php?view=plugins" method="post">
+            <form autocomplete="off" class="" action="admin.php?view=plugins" method="post">
               <input type="hidden" name="jump" value="#ctrl-<?=$xml->name?>">
               <input type="hidden" name="plugin" value="<?=$t?>">
               <?php if($usplugins[$t] == 1){ ?>
@@ -142,7 +142,7 @@ $token = Token::generate();
           </td>
           <td align="center">
             <?php
-            if(file_exists($abs_us_root.$us_url_root.'usersc/plugins/'.$t.'/configure.php') && ($usplugins[$t] == 1 || $usplugins[$t] == 0)){?>
+              if(file_exists($abs_us_root.$us_url_root.'usersc/plugins/'.$t.'/configure.php') && ($usplugins[$t] == 1)){?>
               <a class="btn btn-primary" href="<?=$us_url_root.'users/admin.php?view=plugins_config&plugin='.$t?>" role="button">
                 <?php
                 if($xml->button != ''){

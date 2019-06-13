@@ -119,7 +119,7 @@ if (!empty($_POST)) {
               <h4 class="modal-title">Log Type Exemption Addition</h4>
             </div>
             <div class="modal-body">
-              <form class="form-signup" action="logsman.php" method="POST">
+              <form autocomplete="off" class="form-signup" action="logsman.php" method="POST">
                 <div class="panel-body">
 
                   <label>Log Type: </label>

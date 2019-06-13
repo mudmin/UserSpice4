@@ -388,7 +388,7 @@ $pagename = lang('AB_PAGENAME');
     <div class="col-sm-12">
       <?php if(extension_loaded('zip') == false){
         echo "<strong>".lang('AB_ZIP')."</strong><br>";}?>
-      <form class="form-horizontal form-label-left" action="<?=$us_url_root?>users/admin.php?view=backup" name="backup" method="POST">
+      <form autocomplete="off" class="form-horizontal form-label-left" action="<?=$us_url_root?>users/admin.php?view=backup" name="backup" method="POST">
 
         <!-- backup_dest Option -->
         <div class="form-group">
@@ -466,7 +466,7 @@ $pagename = lang('AB_PAGENAME');
 
         <h2><?=lang('AB_EXIST_BACKUP');?><span class="badge bg-green" style="color: white;"><?=sizeof($allBackupFiles)?></span></h2>
 
-        <form name="delete" action="<?=$us_url_root?>users/admin.php?view=backup" method="post">
+        <form autocomplete="off" name="delete" action="<?=$us_url_root?>users/admin.php?view=backup" method="post">
 
           <table id="backups" class='table table-striped' cellspacing="0" width="100%" >
 

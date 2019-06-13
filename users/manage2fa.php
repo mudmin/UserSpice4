@@ -47,16 +47,13 @@ if (!empty($_POST)) {
         if($expire==1) $successes[] = lang("2FA_EXP");
         $msg1 = lang("2FA_EXPD");
         $msg2 = lang("2FA_FP");
-        else $successes[] = $msg1." ".$expire." ".$msg2;
+      }else{ $successes[] = $msg1." ".$expire." ".$msg2;
       }
     }
   }
 }
 ?>
 
-<div id="page-wrapper">
-  <div class="container">
-    <div class="well">
       <div class="row">
         <div class="col-sm-12 col-md-3">
           <p><a href="../users/account.php" class="btn btn-primary"><?=lang("ACCT_HOME");?></a></p>
@@ -121,10 +118,7 @@ if (!empty($_POST)) {
             </div>
           </form><br />
         </div>
-      </div>
-    </div>
-  </div>
-</div>
+
 
 <?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; ?>
 <script>

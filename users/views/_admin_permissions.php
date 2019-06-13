@@ -67,7 +67,7 @@ $count = 0;
     <?php
     echo resultBlock($errors,$successes);
     ?>
-    <form name='adminPermissions' action='admin.php?view=permissions' method='post'>
+    <form autocomplete="off" name='adminPermissions' action='admin.php?view=permissions' method='post'>
       <h2>Create a new permission level</h2><br>
       <p>
         <label>Permission Name:</label>

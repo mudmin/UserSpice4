@@ -108,16 +108,12 @@ if (isset($user) && $user->isLoggedIn()) {
 			';
 		}
 
-		$html .= '
-			<div class="col-lg-6 text-center" style="padding-bottom: 15px">
-				<br>
-				<button onclick="displayNotifications(\'new\')" class="btn btn-block btn-primary">Only New Notifications</button>
-			</div>
-			<div class="col-lg-6 text-center" style="padding-bottom: 15px">
-				<br>
-				<button onclick="displayNotifications(\'all\')" class="btn btn-block btn-primary">Show All Notifications</button>
-			</div>
-		';
+    $html .= '
+        <div class="col-lg-12 text-center pt-4">
+            <button onclick="displayNotifications('new')" class="btn btn-primary">New Notifications</button>
+            <button onclick="displayNotifications('all')" class="btn btn-primary">All Notifications</button>
+        </div>
+    ';
 
 		$html .= '
 			<script>

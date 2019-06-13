@@ -66,7 +66,7 @@ powerful things to your site.</p>
 to access the admin.php page.  Then you can come in here and grant that access level permission to a particular section of the dashboard.
 Please note, some actions are limited by default to users of the master account or admins (permission level 2) and cannot be overriden on this
 page. You have been warned!</p>
-<form class="" action="" method="post">
+<form autocomplete="off" class="" action="" method="post">
 <input type="hidden" name="csrf" value="<?=$token?>" />
 <table class="table table-striped table-hover">
   <thead>

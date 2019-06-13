@@ -9,7 +9,7 @@
 	}else{
 		Redirect::to($us_url_root."admin.php?view=forms_edit&edit=".$edit."&err=Field+not+found.");
 	} ?>
-	<form class="" name="createForm" action="admin.php?view=forms_edit&edit=<?=$edit?>" method="post">
+	<form autocomplete="off" class="" name="createForm" action="admin.php?view=forms_edit&edit=<?=$edit?>" method="post">
 		<input type="hidden" name="editing" value="<?=$field?>">
 		<div class="form-group">
 			<label for="">Label when displaying forms</label>
@@ -91,7 +91,7 @@
 						<tr>
 							<td><?=$k?></td>
 							<td><?=$v?></td>
-							<td><form class="" action="" name="deleteForm" method="post">
+							<td><form autocomplete="off" class="" action="" name="deleteForm" method="post">
 								<input type="hidden" name="toDelete" value="<?=$k?>">
 								<input type="submit" name="deleteValidation" class="btn" value="Delete This"></form></td>
 							</tr>

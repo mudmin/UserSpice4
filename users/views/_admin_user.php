@@ -400,7 +400,7 @@ if(!empty($_POST)) {
       </div><!--/col-2-->
 
       <div class="col-sm-12 col-sm-10">
-        <form class="form" id='adminUser' name='adminUser' action='admin.php?view=user&id=<?=$userId?>' method='post'>
+        <form autocomplete="off" class="form" id='adminUser' name='adminUser' action='admin.php?view=user&id=<?=$userId?>' method='post'>
 
           <h3><?=$userdetails->fname?> <?=$userdetails->lname?> - <?=$userdetails->username?></h3>
           <div class="panel panel-default">

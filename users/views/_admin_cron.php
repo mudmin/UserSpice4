@@ -150,7 +150,7 @@ if (!empty($_POST)) {
                     <h4 class="modal-title">Cron Addition</h4>
                   </div>
                   <div class="modal-body">
-                    <form class="form-signup" action="admin.php?view=cron" method="POST">
+                    <form autocomplete="off" class="form-signup" action="admin.php?view=cron" method="POST">
                       <div class="panel-body">
 
                         <label>Cron Name: </label><input type="text" class="form-control" id="name" name="name" placeholder="Cron Name" required>

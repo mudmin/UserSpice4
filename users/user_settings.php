@@ -247,9 +247,6 @@ if(!empty($_POST)) {
 $user2 = new User();
 $userdetails=$user2->data();
 ?>
-<div id="page-wrapper">
-    <div class="container">
-        <div class="well">
             <div class="row">
                 <div class="col-sm-12 col-md-2">
                     <p><img src="<?=$grav; ?>" class="img-thumbnail" alt="Generic placeholder thumbnail"></p>
@@ -346,16 +343,8 @@ $userdetails=$user2->data();
 
                 </div>
             </div>
-        </div>
-
-
-    </div> <!-- /container -->
-
-</div> <!-- /#page-wrapper -->
-
 
 <!-- footers -->
-<?php require_once $abs_us_root . $us_url_root . 'usersc/templates/' . $settings->template . '/container_close.php'; //custom template container    ?>
 
 <?php require_once $abs_us_root . $us_url_root . 'users/includes/page_footer.php'; ?>
 

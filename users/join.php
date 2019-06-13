@@ -260,8 +260,7 @@ if(Input::exists()){
 
 ?>
 <?php header('X-Frame-Options: DENY'); ?>
-<div id="page-wrapper">
-<div class="container">
+
 <?php
 if($settings->registration==1) {
   if($settings->glogin==1 && !$user->isLoggedIn()){
@@ -277,9 +276,6 @@ else {
 }
 includeHook($hooks,'bottom');
 ?>
-
-</div>
-</div>
 
 <!-- footers -->
 <?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; // the final html footer copyright row + the external js calls ?>

@@ -17,13 +17,13 @@ if($c > 0){
           <td><?=$f->form_descrip?></td>
           <td><?php if($f->validation != ''  && $f->validation !='[]'){echo "<font color='green'>Yes</font>";}else{echo "<font color='red'>No</font>";}?></td>
           <td>
-            <form class="" action="" method="post">
+            <form autocomplete="off" class="" action="" method="post">
               <input type="hidden" name="field" value="<?=$f->id?>">
               <input type="submit" name="edit_field" value="Edit">
             </form>
           </td>
           <td>
-            <form class="" action="" method="post">
+            <form autocomplete="off" class="" action="" method="post">
               <input type="hidden" name="delete" value="<?=$f->id?>">
               <input type="submit" name="delete_field" value="Delete">
             </form>

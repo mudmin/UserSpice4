@@ -17,4 +17,3 @@
 <p>This is paragraph</p>
 <a href="#">This is a link</a><br><br>
 <div class="jumbotron"><h1>Jumbotron</h1></div>
-<div class="well"><p>well</p></div>

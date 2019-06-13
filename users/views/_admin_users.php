@@ -233,7 +233,7 @@ if (!empty($_POST)) {
         <h4 class="modal-title">User Addition</h4>
       </div>
       <div class="modal-body">
-        <form class="form-signup" action="admin.php?view=users" method="POST">
+        <form autocomplete="off" class="form-signup" action="admin.php?view=users" method="POST">
           <div class="panel-body">
             <?php if($settings->auto_assign_un==0) {?><label>Username: </label>&nbsp;&nbsp;<span id="usernameCheck" class="small"></span><input type="text" class="form-control" id="username" name="username" placeholder="Username" autocomplete="off" value="<?php if (!$form_valid && !empty($_POST)){ echo $username;} ?>" required><?php } ?>
               <label>First Name: </label><input type="text" class="form-control" id="fname" name="fname" placeholder="First Name" value="<?php if (!$form_valid && !empty($_POST)){ echo $fname;} ?>" required autocomplete="off">

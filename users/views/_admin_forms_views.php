@@ -77,7 +77,7 @@ if(!empty($_POST['delete_view'])){
 
       <h4>Select a form to create a view</h4>
       <?php if($formsC > 0){ ?>
-        <h4><form class="" action="" method="post">
+        <h4><form autocomplete="off" class="" action="" method="post">
           <select class="" name="select_form">
             <?php foreach($forms as $f) { ?>
               <option value="<?=$f->form?>"><?=$f->form?></option>
@@ -96,7 +96,7 @@ if(!empty($_POST['delete_view'])){
     <?php
     if(isset($find)){ //creating new view?>
       <table id="views" class='table table-hover table-list-search'>
-        <form class="" action="" method="post">
+        <form autocomplete="off" class="" action="" method="post">
           <h4>Select the fields you would like to include in your custom view</h4>
           <thead>
             <tr>
@@ -128,12 +128,12 @@ if(!empty($_POST['delete_view'])){
     <div class="row">
       <div class="col-sm-12">
 
-        <div class="well">
+        <div class="card">
 
 
           <h2>Preview</h2>
           <?php displayView($demo,['nosubmit'=>1]);?>
-        </div>
+
         <?php
       } //end demo
       ?>

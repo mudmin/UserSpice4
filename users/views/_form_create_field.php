@@ -1,4 +1,4 @@
-<form class="" action="" method="post">
+<form autocomplete="off" class="" action="" method="post">
   <div class="form-group">
     <label for="">Field type</label>
     <select class="form-control" name="field_type" id="field_type" required>

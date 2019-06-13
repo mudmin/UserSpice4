@@ -42,10 +42,6 @@ $google2fa_url = $google2fa->getQRCodeGoogleUrl(
 $msg1 = lang("REDIR_2FA_VER");
 $msg2 = lang("2FA_FAIL");
 ?>
-
-<div id="page-wrapper">
-  <div class="container">
-    <div class="well">
       <div class="row">
       	<div class="col-sm-12 col-md-3">
               <p><a href="account.php" class="btn btn-primary"><?=lang("ACCT_HOME")?></a></p>
@@ -66,9 +62,6 @@ $msg2 = lang("2FA_FAIL");
               </p>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
 
 <!-- footers -->
 <?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; // the final html footer copyright row + the external js calls ?>

@@ -182,7 +182,7 @@ $token = Token::generate();
   <?php echo resultBlock($errors,$successes); ?>
 
   <h2>Configure Details for Permission Level: <?=$permissionDetails['name']?></h2><br>
-  <form name='adminPermission' action='admin.php?view=permission&id=<?=$permissionId?>' method='post'>
+  <form autocomplete="off" name='adminPermission' action='admin.php?view=permission&id=<?=$permissionId?>' method='post'>
     <div class="row">
       <div class="col-sm-12">
         <h3>Permission ID - <?=$permissionDetails['id']?></h3>
@@ -235,7 +235,7 @@ $token = Token::generate();
         <div class="tab-content" id="v-pills-tabContent">
           <div class="tab-pane fade show active" id="ManageUsersTab" role="tabpanel" aria-labelledby="ManageUsers">
             <h3>Manage Users</h3>
-            <form class="" action="<?=$us_url_root?>users/admin.php" method="get">
+            <form autocomplete="off" class="" action="<?=$us_url_root?>users/admin.php" method="get">
               <strong>Find user(s) to manage</strong>
               <div class="input-group">
                 <input type="hidden" name="view" value="permission">
@@ -272,7 +272,7 @@ $token = Token::generate();
                         <?php
                         if(!in_array($r->id,$master_account)){
                           ?>
-                          <form class="" action="admin.php?view=permission&id=<?=$permissionId?>&query=<?=$query?>" method="post">
+                          <form autocomplete="off" class="" action="admin.php?view=permission&id=<?=$permissionId?>&query=<?=$query?>" method="post">
                             <input type="hidden" name="user" value="<?=$r->id?>">
                             <input type="hidden" name="csrf" value="<?=$token?>" >
                             <?php

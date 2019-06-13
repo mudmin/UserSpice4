@@ -162,7 +162,7 @@ if(!empty($_POST)){
 
 ?>
 <div class="content mt-3">
-<form name='update' action='admin.php?view=email' method='post'>
+<form autocomplete="off" name='update' action='admin.php?view=email' method='post'>
 <h2 class="mb-3">Email Server Settings</h2>
   <p>
     These settings control all things email-related for the server including emailing your users and verifying the user's email address.
@@ -268,6 +268,7 @@ if(!empty($_POST)){
   </div>
   <div class="form-group">
   <label>Root URL of your UserSpice install <a href="#!" tabindex="-1" title="Note" data-trigger="click" class="nounderline" data-toggle="popover" data-content="Including http or https protocol (VERY Important). Default location would be: <?=$urlProtocol.$_SERVER['HTTP_HOST'].$us_url_root?>"><i class="fa fa-question-circle"></i></a></label>
+  <br>Put http://yourdomain.com/ with the final / below
   <input required  size='50' class='form-control' type='text' name='verify_url' value='<?=$results->verify_url?>' />
   </div>
   <div class="form-group">
