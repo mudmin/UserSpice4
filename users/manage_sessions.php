@@ -27,8 +27,6 @@ if (!empty($_POST)) {
 }
 ?>
 
-<div id="page-wrapper">
-  <div class="container">
       <div class="row">
         <div class="col-12 col-md-3">
           <p><a href="../users/account.php" class="btn btn-primary">Account Home</a></p>
@@ -93,8 +91,7 @@ if (!empty($_POST)) {
             </div>
           </form><br />
         </div>
-    </div>
-  </div>
+
 
 <?php require_once $abs_us_root.$us_url_root.'usersc/templates/'.$settings->template.'/container_close.php'; //custom template container ?>
 <!-- footers -->

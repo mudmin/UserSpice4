@@ -526,14 +526,16 @@ function formField($o, $v = []){
               $order = 10;
               $form = $name.'_form';
               $check = checkFormName($name,['existing']);
+
               if($check['success']==true){
-                $test = $db->query("SELECT * FROM $name")->first();
+                $test = $db->query("SHOW TABLES LIKE '$name' ")->count();
                 //we want to make sure the requested table is really there
-                if ($test == []){
+                if ($test < 1){
                   bold("<br>Sorry! The table you're requesting does not exist!");
                   exit;
                 }else{
-                  $count = $db->query("SELECT form FROM us_forms WHERE form = ?",array($name))->count();
+                                    $count = $db->query("SELECT form FROM us_forms WHERE form = ?",array($name))->count();
+
                   if($count < 1){
                     $db->insert('us_forms',['form'=>$name]);
                     $id = $db->lastId();

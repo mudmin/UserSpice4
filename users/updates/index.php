@@ -36,8 +36,6 @@ if(!$db->error()) {
     }
   }
   ?>
-  <div id="page-wrapper">
-    <div class="container">
       <div class="row">
         <div class="col-sm-12">
           <?php
@@ -85,8 +83,7 @@ if(!$db->error()) {
           <?php } ?>
         </div>
       </div>
-    </div>
-  </div>
+
   <?php
 } else {
   $errorMsg=$db->errorString();

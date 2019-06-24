@@ -14,7 +14,7 @@
 </header>
 
 <div class="content mt-3">
-  <form class="" action="admin.php?tab=4" name="social" method="post">
+  <form autocomplete="off" class="" action="admin.php?tab=4" name="social" method="post">
     <h2>Social Login Settings</h2>
     <strong>Please note:</strong> Social logins require that you do some configuration on your own with Google and/or Facebook.It is strongly recommended that you  <a href="http://www.userspice.com/documentation-social-logins/" target="_blank"><font color="blue">check the documentation at UserSpice.com.</font></a><br><br>
     <div class="row">

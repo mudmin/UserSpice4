@@ -79,7 +79,7 @@ foreach (fetchGroupsByMenu($menuId) as $g) {
 
 <div class="content mt-3">
   <h2>Edit Nav Item</h2>
-  <form name='edit_menu_item' action='admin.php?view=nav_item&id=<?=$menuId?>&action=edit' method='post'>
+  <form autocomplete="off" name='edit_menu_item' action='admin.php?view=nav_item&id=<?=$menuId?>&action=edit' method='post'>
 
     <div class="form-group">
       <label>Parent</label>

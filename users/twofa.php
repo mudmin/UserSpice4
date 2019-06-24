@@ -116,10 +116,6 @@ if (!empty($_POST)) {
 $dest=Input::get('dest');
 $redirect=Input::get('redirect');
 ?>
-<div id="page-wrapper">
-
-  <div class="container">
-
     <!-- Page Heading -->
     <div class="row">
 <?=resultBlock($errors,$successes);?>
@@ -141,8 +137,7 @@ $redirect=Input::get('redirect');
     </div>
      </div>
    </form><br />
-   </div>
-   </div>
+
 
 
   </div>

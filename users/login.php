@@ -134,8 +134,6 @@ if (!empty($_POST['login_hook'])) {
     }
     $token = Token::generate();
     ?>
-    <div id="page-wrapper">
-      <div class="container">
         <?=resultBlock($errors,$successes);?>
         <div class="row">
           <div class="col-sm-12">
@@ -191,10 +189,7 @@ if (!empty($_POST['login_hook'])) {
               <?php   includeHook($hooks,'bottom');?>
                 <?php languageSwitcher();?>
             </div>
-          </div>
-        </div>
 
-        <?php require_once $abs_us_root.$us_url_root.'usersc/templates/'.$settings->template.'/container_close.php'; //custom template container ?>
 
         <!-- footers -->
         <?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; // the final html footer copyright row + the external js calls ?>

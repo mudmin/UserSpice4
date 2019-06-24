@@ -884,32 +884,38 @@ if(!function_exists('hasPerm')) {
 		if(is_null($id)) {
 			global $user;
 			if($user->isLoggedIn()) $id=$user->data()->id;
-			else return false;
+			else {
+				return false;
+			}
 		}
-		if($id=='') return false;
+		if($id=='') {
+			return false;
+		}
 		$db = DB::getInstance();
 		global $user;
 		global $master_account;
 		//Grant access if master user
 		$access = 0;
-		if($id==null) $id=$user->data()->id;
+		if($id==null) {
+			$id=$user->data()->id;
+		}
 
-		foreach($permissions as $permission){
+		if(count($permissions)>0) {
 
-			if ($access == 0){
-				$query = $db->query("SELECT id FROM user_permission_matches  WHERE user_id = ? AND permission_id = ?",array($id,$permission));
+			if($access == 0) {
+				$query = $db->query("SELECT id FROM user_permission_matches  WHERE user_id = ? AND permission_id IN (".substr(str_repeat(",?",count($permissions)),1).")", array_merge([$id],$permissions));
 				$results = $query->count();
-				if ($results > 0){
+				if($results > 0) {
 					$access = 1;
 				}
 			}
 		}
-		if ($access == 1){
+		if($access == 1) {
 			return true;
 		}
-		if (in_array($user->data()->id, $master_account) && !$deny_master_account){
+		if(in_array($user->data()->id, $master_account) && !$deny_master_account) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
@@ -1754,17 +1760,22 @@ if(!function_exists('languageSwitcher')) {
 			$hooks = $db->query("SELECT * FROM us_plugin_hooks WHERE page = ? AND disabled = 0",[$opts['page']])->results();
 		}
 			$data = [];
+      $data['post'] = [];
+      $data['form'] = [];
+      $data['body'] = [];
+      $data['bottom'] = [];
+      $counter = 0;
 			foreach($hooks as $h){
 				if($h->position == "post"){
-					$data['post'] = $h->folder.'/'.$h->hook;
+					$data['post'][$counter] = $h->folder.'/'.$h->hook;
 				}elseif($h->position == "form"){
-					$data['form'] = $h->folder.'/'.$h->hook;
+					$data['form'][$counter] = $h->folder.'/'.$h->hook;
 				}elseif($h->position == "body"){
-					$data['body'] = $h->folder.'/'.$h->hook;
+					$data['body'][$counter] = $h->folder.'/'.$h->hook;
 				}elseif($h->position == "bottom"){
-					$data['bottom'] = $h->folder.'/'.$h->hook;
+					$data['bottom'][$counter] = $h->folder.'/'.$h->hook;
 				}
-
+        $counter++;
 			}
 					return $data;
 	}
@@ -1773,15 +1784,15 @@ if(!function_exists('languageSwitcher')) {
 if(!function_exists('includeHook')) {
 	function includeHook($hooks,$position) {
 		global $db, $abs_us_root, $us_url_root, $usplugins;
-		if(isset($hooks[$position]) && file_exists($abs_us_root.$us_url_root.'usersc/plugins/'.$hooks[$position]) && $hooks[$position] != ''){
-			$plugin = strstr($hooks[$position], '/', 'before_needle');
+    foreach($hooks[$position] as $h)
+		if(isset($h) && file_exists($abs_us_root.$us_url_root.'usersc/plugins/'.$h) && $h != ''){
+			$plugin = strstr($h, '/', 'before_needle');
 			if($usplugins[$plugin] == 1){//only include this file if plugin is installed and active.
-			include $abs_us_root.$us_url_root.'usersc/plugins/'.$hooks[$position];
+			include $abs_us_root.$us_url_root.'usersc/plugins/'.$h;
 			}
 		}else{
 			//automatically disable hook ...eventually
 		}
-
 }
 }
 

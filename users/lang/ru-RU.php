@@ -387,3 +387,4 @@ if(file_exists($abs_us_root.$us_url_root."usersc/lang/".$lang["THIS_CODE"].".php
   include($abs_us_root.$us_url_root."usersc/lang/".$lang["THIS_CODE"].".php");
 }
 ?>
+>>>>>>> upstream/master

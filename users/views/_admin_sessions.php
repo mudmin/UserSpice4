@@ -64,7 +64,7 @@ if (!empty($_POST)) {
   <h2>Session Administrator</h2>
   <hr>
   <?=resultBlock($errors,$successes);?>
-  <form class="verify-admin" action="?view=sessions" method="POST" id="payment-form">
+  <form autocomplete="off" class="verify-admin" action="?view=sessions" method="POST" id="payment-form">
     <h4>Active Sessions</h4>
     <table class="table table-bordered">
       <?php

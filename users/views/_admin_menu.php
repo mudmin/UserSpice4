@@ -4,7 +4,7 @@
 <!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
 <head>
-
+<meta charset="utf-8"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <link rel="stylesheet" href="css/dashboard/normalize.css">
   <link rel="stylesheet" href="css/dashboard/bootstrap.min.css">
   <link rel="stylesheet" href="<?=$us_url_root?>users/fonts/css/font-awesome.min.css">
@@ -153,6 +153,7 @@ function activeDropdown($View, $dropId, $Area = false){
 
         </ul>
       </div><!-- /.navbar-collapse --><div class="feedback left">
+<?php if(in_array($user->data()->id, $master_account)){?>
       <div class="tooltips">
           <div class="btn-group dropup">
             <button type="button" class="btn btn-primary dropdown-toggle btn-circle btn-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -178,6 +179,7 @@ function activeDropdown($View, $dropId, $Area = false){
             </ul>
           </div>
       </div>
+  <?php } ?>
     </div>
     </nav>
 

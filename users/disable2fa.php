@@ -48,10 +48,6 @@ if (!empty($_POST)) {
       }
     }
 ?>
-
-<div id="page-wrapper">
-  <div class="container">
-    <div class="well">
       <div class="row">
       	<div class="col-sm-12 col-md-3">
               <p><a href="../users/account.php" class="btn btn-primary"><?=lang("ACCT_HOME")?>/a></p>
@@ -77,10 +73,6 @@ if (!empty($_POST)) {
                </div>
              </form><br />
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
 
 <?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; ?>
 <?php require_once $abs_us_root.$us_url_root.'users/includes/html_footer.php'; ?>

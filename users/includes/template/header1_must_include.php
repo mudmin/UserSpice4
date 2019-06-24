@@ -44,7 +44,7 @@ if($settings->allow_language == 0 || !isset($user) || !$user->isLoggedIn()){
 include $abs_us_root.$us_url_root.'users/lang/'.$_SESSION['us_lang'].".php";
 //check for a custom page
 $currentPage = currentPage();
-$currentPage = currentPage();
+
 if(isset($_GET['err'])){
 	$err = Input::get('err');
 }
@@ -135,7 +135,7 @@ else $pageTitle = '';
 <!DOCTYPE html>
 <html lang="<?=$html_lang ?>">
 <head>
-	<link rel="shortcut icon" href="<?=$us_url_root?>favicon.ico">
+	<link rel="shortcut icon" href="/favicon.ico">
 
 	<?php
 	if(file_exists($abs_us_root.$us_url_root.'usersc/includes/head_tags.php')){

@@ -69,7 +69,7 @@ if(!empty($_POST)){
     <h2>View Security Events</h2>
     If someone tries to do something without permission it is logged here.<br>
     Note that this helps check for both security breaches AND figuring out that you have not given someone proper permissions.<br><br>
-    <form class="" action="admin.php?view=security_logs" method="post">
+    <form autocomplete="off" class="" action="admin.php?view=security_logs" method="post">
       <table id="paginate" class="table table-hover">
         <thead>
 

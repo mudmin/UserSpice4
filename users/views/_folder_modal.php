@@ -22,7 +22,7 @@
                 <tr>
                   <td><?=$f?></td>
                   <td>
-                    <form class="" action="admin.php?view=pages" method="post">
+                    <form autocomplete="off" class="" action="admin.php?view=pages" method="post">
                       <input type="hidden" name="csrf" value="<?=$csrf;?>" />
                       <input type="hidden" name="folder" value="<?=$f?>">
                       <div class="btn-group pull-right"><input class="btn btn-danger" type="submit" name="removeFolder" value="Remove"></div>
@@ -38,7 +38,7 @@
           </tbody>
         </table>
         <div class="form-group">
-          <form class="inline-form" action="admin.php?view=pages" method="POST" id="newFormForm">
+          <form autocomplete="off" class="inline-form" action="admin.php?view=pages" method="POST" id="newFormForm">
             <strong>Add a folder to monitoring:</strong><br>
             Must end with a <strong>/</strong>, for example:<br>
             <strong>users/cron/</strong><br>

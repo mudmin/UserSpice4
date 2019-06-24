@@ -57,9 +57,6 @@ $signupdate = $raw['month']."/".$raw['day']."/".$raw['year'];
 $userdetails = fetchUserDetails(NULL, NULL, $get_info_id); //Fetch user details
 ?>
 
-<div id="page-wrapper">
-<div class="container">
-<div class="well">
 <div class="row">
 	<div class="col-sm-12 col-md-3">
 		<p>
@@ -95,11 +92,9 @@ $userdetails = fetchUserDetails(NULL, NULL, $get_info_id); //Fetch user details
 
 </div>
 
-</div>
-	<?php languageSwitcher(); ?>
-</div> <!-- /container -->
 
-</div> <!-- /#page-wrapper -->
+	<?php languageSwitcher(); ?>
+
 
 <!-- footers -->
 

@@ -78,7 +78,7 @@ $count = $adminNotificationsQ->count();
   <?php if($count > 0) {?><label><input type="checkbox" class="checkAllMsg" />
     [ check/uncheck all ]</label><?php } ?>                         <div class="btn-group pull-right"><button type="button" class="btn btn-info" data-toggle="modal" data-target="#composemass"><i class="fa fa-plus"></i> New Mass Notification</button></div>
     <br><br>
-    <form name="threads" action="admin.php?view=notifications" method="post">
+    <form autocomplete="off" name="threads" action="admin.php?view=notifications" method="post">
       <table id="paginate" class="table table-striped">
         <thead>
           <tr>
@@ -133,7 +133,7 @@ $count = $adminNotificationsQ->count();
                   <h4 class="modal-title">New Mass Notification</h4>
                 </div>
                 <div class="modal-body">
-                  <form name="create_mass_message" action="admin.php?view=notifications" method="post">
+                  <form autocomplete="off" name="create_mass_message" action="admin.php?view=notifications" method="post">
 
                     <label>Content:</label>
                     <textarea rows="5" cols="80" class="form-control" name="message"></textarea>

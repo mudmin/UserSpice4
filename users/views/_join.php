@@ -27,7 +27,7 @@ Special thanks to John Bovey for the password strenth feature.
     if (!$form_valid && Input::exists()){?>
       <?php if(!$validation->errors()=='') {?><div class="alert alert-danger"><?=display_errors($validation->errors());?></div><?php } ?>
     <?php }
-
+    includeHook($hooks,'body');
     ?>
 
     <form class="form-signup" action="<?=$form_action;?>" method="<?=$form_method;?>">

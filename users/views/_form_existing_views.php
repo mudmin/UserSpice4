@@ -24,7 +24,7 @@ if($previewsC > 0){
           <td>displayView(<?=$v->id?>);</td>
           <td><a class="btn btn-default" href="admin.php?view=form_preview&demo=<?=$v->id?>">Preview</a></td>
           <td>
-            <form class="" action="" method="post">
+            <form autocomplete="off" class="" action="" method="post">
               <input type="hidden" name="delete_view" value="<?=$v->id?>">
               <input type="submit" name="submit" value="Delete" class="btn btn-danger">
             </form>

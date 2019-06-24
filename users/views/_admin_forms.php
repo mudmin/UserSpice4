@@ -40,7 +40,7 @@
         <div class="modal-body">
           <p>Please give the new form a name:</p>
           <div class="form-group">
-            <form class="inline-form" action="" method="POST" id="newFormForm">
+            <form autocomplete="off" class="inline-form" action="" method="POST" id="newFormForm">
               <input size="50" type="text" name="name" value="" class="form-control" placeholder="Lowercase letters and numbers only"><br />
               <div class="btn-group pull-right"><input class='btn btn-primary' type='submit' name="create_form" value='Create Form' class='submit' /></div><br />
             </form>
@@ -67,7 +67,7 @@
         <div class="modal-body">
           <p>Please choose an existing table:</p>
           <div class="form-group">
-            <form class="inline-form" action="" method="POST" id="newFormFromDB">
+            <form autocomplete="off" class="inline-form" action="" method="POST" id="newFormFromDB">
               <select class="form-control" name="dbTable">
                 <?php foreach($tables as $t){ ?>
                   <option value="<?=$t?>"><?=$t?></option>
@@ -99,7 +99,7 @@
         <div class="modal-body">
           <p>Please choose a form to duplicate:</p>
           <div class="form-group">
-            <form class="inline-form" action="" method="POST" id="duplicate">
+            <form autocomplete="off" class="inline-form" action="" method="POST" id="duplicate">
               <select class="form-control" name="old">
                 <?php foreach($forms as $f){ ?>
                   <option value="<?=$f->form?>"><?=$f->form?></option>
@@ -139,7 +139,7 @@
         <div class="modal-body">
           <p>Please choose a form to delete:</p>
           <div class="form-group">
-            <form class="inline-form" action="" method="POST" id="deleteForm" required>
+            <form autocomplete="off" class="inline-form" action="" method="POST" id="deleteForm" required>
               <select class="form-control" name="deleteThisForm">
                 <option disabled selected="selected">--choose a form--</option>
                 <?php foreach($forms as $f){ ?>

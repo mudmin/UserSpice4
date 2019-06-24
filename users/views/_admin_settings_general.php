@@ -16,7 +16,7 @@
 <div class="content mt-3">
 
   <!-- Site Settings -->
-  <form class="" action="admin.php?view=<?=$view?>" name="settings" method="post">
+  <form autocomplete="off" class="" action="admin.php?view=<?=$view?>" name="settings" method="post">
     <h2 class="mb-3">Site Settings</h2>
     <div class="row">
       <div class="col-md-6">
@@ -27,14 +27,14 @@
             <!-- Site Name -->
             <div class="form-group">
               <label for="site_name">Site Name <a href="#!" tabindex="-1" title="Note" data-trigger="focus" class="nounderline" data-toggle="popover" data-content="Modify this to change the name of your site, including in the <title> tag, the maintenance page and some system emails."><i class="fa fa-question-circle"></i></a></label>
-                <input type="text" class="form-control ajxtxt" data-desc="Site Name" name="site_name" id="site_name" value="<?=$settings->site_name?>">
+                <input type="text" autocomplete="off" class="form-control ajxtxt" data-desc="Site Name" name="site_name" id="site_name" value="<?=$settings->site_name?>">
 
               </div>
 
               <!-- Copyright Option -->
               <div class="form-group">
                 <label for="copyright">Copyright Message <a href="#!" tabindex="-1" title="Note" data-trigger="focus" class="nounderline" data-toggle="popover" data-content="This message will be at the bottom of every page. The copyright symbol and year are automatically added."><i class="fa fa-question-circle"></i></a></label>
-                <input type="text" class="form-control ajxtxt" data-desc="Copyright Message" name="copyright" id="copyright" value="<?=$settings->copyright?>">
+                <input type="text" autocomplete="off" class="form-control ajxtxt" data-desc="Copyright Message" name="copyright" id="copyright" value="<?=$settings->copyright?>">
               </div>
 
               <!-- Site Offline -->
@@ -176,7 +176,7 @@
                   <a name="cron"></a>
                   <div class="form-group">
                     <label for="cron_ip">Only allow cron jobs from the following IP <a href="#!" tabindex="-1" title="Note" data-trigger="focus" class="nounderline" data-toggle="popover" data-content="Cron jobs are automated server tasks that can make your life easier.  You may want to make sure, though, that they originate from you and not someone else.  You can whitelist an ip address here."><i class="fa fa-question-circle"></i></a></label>
-                    <input type="text" class="form-control ajxtxt" data-desc="Cron Job IP" name="cron_ip" id="cron_ip" value="<?=$settings->cron_ip?>" placeholder="<?php if($settings->cron_ip == ''){echo 'No security is IP is set';}?>">
+                    <input type="text" autocomplete="off" class="form-control ajxtxt" data-desc="Cron Job IP" name="cron_ip" id="cron_ip" value="<?=$settings->cron_ip?>" placeholder="<?php if($settings->cron_ip == ''){echo 'No security is IP is set';}?>">
                   </div>
 
 
@@ -280,7 +280,7 @@
 
                   <div class="form-group">
                     <label for="redirect_uri_after_login">Redirect After Login <a href="#!" tabindex="-1" title="Note" data-trigger="focus" class="nounderline" data-toggle="popover" data-content="The folder and file that you wish to redirect the user to after login. Default: users/account.php. Note that admins get redirected to this dashboard by default unless you intercept that call with something in usersc/scripts/custom_login_script.php"><i class="fa fa-question-circle"></i></a></label>
-                    <input type="text" class="form-control ajxtxt" data-desc="Redirect After Login" name="redirect_uri_after_login" id="redirect_uri_after_login" value="<?=$settings->redirect_uri_after_login?>">
+                    <input type="text" autocomplete="off" class="form-control ajxtxt" data-desc="Redirect After Login" name="redirect_uri_after_login" id="redirect_uri_after_login" value="<?=$settings->redirect_uri_after_login?>">
                   </div>
 
                   <!-- echouser Option -->

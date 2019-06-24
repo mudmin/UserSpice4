@@ -79,13 +79,6 @@ if(Input::exists('post')){
     }
 }
 
-?>
-
-<div id="page-wrapper">
-<div class="container">
-
-<?php
-
 if ($email_sent){
     require $abs_us_root.$us_url_root.'users/views/_verify_resend_success.php';
 }else{
@@ -93,9 +86,6 @@ if ($email_sent){
 }
 
 ?>
-</div>
-</div>
-
 <?php require_once $abs_us_root.$us_url_root.'users/includes/page_footer.php'; // the final html footer copyright row + the external js calls ?>
 
   <!-- Place any per-page javascript here -->
