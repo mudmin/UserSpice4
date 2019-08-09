@@ -272,6 +272,25 @@ class Validate
 							$this->addError(["{$display} $str",$item]);
 						}
 						break;
+							
+						case 'is_permitted_maildomain':
+                            			$str = lang("VAL_MAILDOMAIN");
+                            			$pos = strpos($value, "@");
+                            			$maildomain = substr($value,$pos+1, strlen($value));
+
+                            			$query = "SELECT reg_restriction_maildomain FROM settings WHERE reg_restriction_maildomain != ''";
+                            			$result = $this->_db->query($query);
+
+                            			if ($result->count()>0)
+                            			{
+                                			$permitteddomains  = $result->first()->reg_restriction_maildomain;
+                                			$validdomains = explode(";", $permitteddomains);
+
+                                			if (!in_array($maildomain, $validdomains)) {
+                                    				$this->addError(["{$display} $str",$item]);
+                                			}
+                            			}
+			                        break;
 					}
 				}
 			}
