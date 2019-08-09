@@ -69,7 +69,10 @@
               </select>
             </div>
 
-
+            <div class="form-group">
+                <label for="reg_restriction_maildomain">Restrict registration to selected domains <a href="#!" class="nounderline" title="Note" data-toggle="popover" data-content="Want to restrict registration to selected email domains? If you want to allow more than one domain, seperate them by semicolon. For example: userspice.com;example.com;php.net"><i class="fa fa-question-circle"></i></a></label>
+                <input id="reg_restriction_maildomain" class="form-control ajxtxt" data-desc="Restrict registration" name="reg_restriction_maildomain" value="<?=$settings->reg_restriction_maildomain?>">
+            </div>
 
 
           </div>
