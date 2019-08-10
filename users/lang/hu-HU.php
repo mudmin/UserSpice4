@@ -150,6 +150,7 @@ $lang = array_merge($lang,array(
 		"VAL_INT"					=> "egész számnak kell lennie",
 		"VAL_EMAIL"				=> "érvényes e-mail címnek kell lennie",
 		"VAL_NO_EMAIL"		=> "nem lehet e-mail cím",
+		"VAL_MAILDOMAIN"		=> "must comply with the permitted maildomain list",
 		"VAL_SERVER"			=> "létező szerverhez kell tartoznia",
 		"VAL_LESS"				=> "kevesebbnek kell lennie, mint",
 		"VAL_GREAT"				=> "többnek kell lennie, mint",
