@@ -143,6 +143,7 @@ $lang = array_merge($lang,array(
 		"VAL_INT"					=> "يجب ان يكون عدد صحيحاً",
 		"VAL_EMAIL"				=> "يجب ان يكون بريد الكتروني صالح",
 		"VAL_NO_EMAIL"		=> "لا يمكنك استخدام بريد الكتروني",
+		"VAL_MAILDOMAIN"		=> "must comply with the permitted maildomain list",
 		"VAL_SERVER"			=> "يجب أن ينتمي إلى خادم صالح",
 		"VAL_LESS"				=> "يجب ان يكون اقل من",
 		"VAL_GREAT"				=> "يجب ان يكون اكبر من",
