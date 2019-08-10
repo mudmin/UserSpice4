@@ -226,6 +226,7 @@ if(!empty($_POST)) {
             'display' => 'Email',
             'required' => true,
             'valid_email' => true,
+            'is_permitted_maildomain' => true,
             'unique_update' => 'users,'.$userId,
             'min' => 3,
             'max' => 75
