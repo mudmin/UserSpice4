@@ -154,6 +154,7 @@ $lang = array_merge($lang,array(
 		"VAL_INT"					=> "অবশ্যই সংখ্যা হতে হবে",
 		"VAL_EMAIL"				=> "অবশ্যই একটি সঠিক ইমেইল হতে হবে",
 		"VAL_NO_EMAIL"		=> "একটি ইমেইল ঠিকানা হতে পারবে না",
+		"VAL_MAILDOMAIN"		=> "must comply with the permitted maildomain list",
 		"VAL_SERVER"			=> "অবশ্যই একটি নির্দিষ্ট এবং সঠিক সার্ভার হতে হবে",
 		"VAL_LESS"				=> "অবশ্যই এর থেকে ছোট হতে হবে ",
 		"VAL_GREAT"				=> "অবশ্যই এর থেকে বড় হতে হবে ",
