@@ -578,6 +578,7 @@ CREATE TABLE `settings` (
   `saas` tinyint(1) DEFAULT NULL,
   `redirect_uri_after_login` text,
   `show_tos` tinyint(1) DEFAULT '1'
+  `reg_restriction_maildomain` text,  
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
