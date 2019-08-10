@@ -115,6 +115,7 @@ if(Input::exists()){
                 'display' => lang("GEN_EMAIL"),
                 'required' => true,
                 'valid_email' => true,
+                'is_permitted_maildomain' => true,
                 'unique' => 'users',
           ),
 
@@ -148,6 +149,7 @@ if(Input::exists()){
                   'display' => lang("GEN_EMAIL"),
                   'required' => true,
                   'valid_email' => true,
+                  'is_permitted_maildomain' => true,
                   'unique' => 'users',
             ),
 
