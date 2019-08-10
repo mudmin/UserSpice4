@@ -71,6 +71,7 @@ if (!empty($_POST)) {
           'display' => 'Email',
           'required' => true,
           'valid_email' => true,
+          'is_permitted_maildomain' => true,
           'unique' => 'users',
         ),
 
@@ -104,6 +105,7 @@ if (!empty($_POST)) {
             'display' => 'Email',
             'required' => true,
             'valid_email' => true,
+            'is_permitted_maildomain' => true,
             'unique' => 'users',
           ),
 
